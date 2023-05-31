@@ -1,25 +1,40 @@
 box::use(
-  shiny[bootstrapPage, div, moduleServer, NS, renderUI, tags, uiOutput],
+  sh = shiny,
+  bsl = bslib,
+  dp = dplyr,
+  sass,
+  magrittr[`%>%`],
+)
+
+box::use(
+  nb = app / logic / navbox,
+  theme = app / logic / theme,
 )
 
 #' @export
 ui <- function(id) {
-  ns <- NS(id)
-  bootstrapPage(
-    uiOutput(ns("message"))
+  ns <- sh$NS(id)
+  bsl$page(
+    theme = theme$light %>%
+      bsl$bs_add_rules(sass$sass_file("app/styles/navbox.scss")),
+    sh$div(
+      class = "h1 d-flex justify-content-center",
+      "Visualisation and Analysis Platform"
+    ),
+    sh$div(
+      class = "d-flex flex-wrap align-items-stretch justify-content-center",
+      !!!nb$navbox_map(nb$navbox_data)
+    ),
+    sh$div(
+      class = "h3 d-flex justify-content-center",
+      "SRQ Logo"
+    )
   )
 }
 
 #' @export
 server <- function(id) {
-  moduleServer(id, function(input, output, session) {
-    output$message <- renderUI({
-      div(
-        style = "display: flex; justify-content: center; align-items: center; height: 100vh;",
-        tags$h1(
-          tags$a("Check out Rhino docs!", href = "https://appsilon.github.io/rhino/")
-        )
-      )
-    })
+  sh$moduleServer(id, function(input, output, session) {
+
   })
 }
