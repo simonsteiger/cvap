@@ -7,7 +7,7 @@ box::use(
 
 #' @export
 navbox_map <- function(id, data) {
-  stopifnot(all(c("name", "tag") %in% colnames(data)))
+  stopifnot(all(c("title", "url", "tag") %in% colnames(data)))
 
   pr$map(
     seq_len(nrow(data)),
@@ -19,7 +19,7 @@ navbox_map <- function(id, data) {
 navbox <- function(id, data) {
   sh$div(
     class = "navbox card",
-    sh$h3(class = "name", data$name),
+    sh$h3(class = "title", data$title),
     sh$div(
       class = "d-flex flex-wrap",
       pr$map2(
@@ -27,7 +27,7 @@ navbox <- function(id, data) {
         pr$list_flatten(data$tag),
         \(num, tag) sh$actionButton(
           class = "tag",
-          sh$NS(id, paste("vap", tolower(data$name), num, sep = "-")), tag
+          sh$NS(id, paste("vap", tolower(data$url), num, sep = "_")), tag
         )
       )
     )
@@ -36,11 +36,17 @@ navbox <- function(id, data) {
 
 #' @export
 navbox_data <- tbl$tibble(
-  name = c(
+  title = c(
     "Indikatorer",
     "Behandling",
     "Inklusionsmått",
     "Kvalitetssäkring"
+  ),
+  url = c(
+    "Indikatorer",
+    "Behandling",
+    "Inklusionsmatt",
+    "Kvalitetssakring"
   ),
   tag = list(
     list(

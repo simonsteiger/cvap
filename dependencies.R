@@ -3,6 +3,7 @@ library(rhino)
 library(shiny)
 library(bslib)
 library(tidyr)
+library(shiny.router)
 
 # swk dependencies
 

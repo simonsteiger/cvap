@@ -1,6 +1,6 @@
 $tertiary: #f8f9fb;
 $hover-color: #f1e2cb;
-$recipe-width: 350px;
+$box-width: 350px;
 $spacer-single: 0.3rem;
 $spacer-double: 0.6rem;
 $spacer-triple: 0.9rem;
@@ -8,14 +8,13 @@ $spacer-triple: 0.9rem;
 .navbox {
   display: inline-block;
   padding: 0 $spacer $spacer $spacer;
-  background-color: $tertiary;
-  border: $border-width solid $border-color;
+  border: $border-width solid white;
   @include border-radius;
-  @include box-shadow;
+  box-shadow: 0 1rem 3rem rgba($black, .275);
   outline: 0;
-  width: $recipe-width;
+  width: $box-width;
   
-  .name {
+  .title {
     padding-bottom: $spacer-single;
   }
 
