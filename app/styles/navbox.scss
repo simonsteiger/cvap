@@ -1,5 +1,5 @@
+@import "hover";
 $tertiary: #f8f9fb;
-$hover-color: #f1e2cb;
 $box-width: 350px;
 $spacer-single: 0.3rem;
 $spacer-double: 0.6rem;
@@ -25,10 +25,7 @@ $spacer-triple: 0.9rem;
     margin: $spacer-single 0;
     text-align: left;
     
-    &:hover {
-      background-color: $hover-color;
-      transition: all ease-in-out 300ms;
-    }
+    @include standard-hover;
   }
   
   margin: $grid-gutter-width;

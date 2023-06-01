@@ -1,0 +1,8 @@
+$hover-color: #f1e2cb;
+
+@mixin standard-hover($color: $hover-color) {
+    &:hover {
+        background-color: $color;
+        transition: all ease-in-out 300ms;
+      }
+}
