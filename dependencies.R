@@ -2,6 +2,7 @@
 library(rhino)
 library(shiny)
 library(bslib)
+library(tidyr)
 
 # swk dependencies
 

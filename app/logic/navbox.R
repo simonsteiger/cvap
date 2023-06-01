@@ -6,23 +6,29 @@ box::use(
 )
 
 #' @export
-navbox_map <- function(data) {
+navbox_map <- function(id, data) {
+  stopifnot(all(c("name", "tag") %in% colnames(data)))
+
   pr$map(
     seq_len(nrow(data)),
-    ~ navbox(data[.x, ])
+    ~ navbox(id, data[.x, ])
   )
 }
 
 #' @export
-navbox <- function(data) {
+navbox <- function(id, data) {
   sh$div(
-    class = "recipe",
+    class = "navbox card",
     sh$h3(class = "name", data$name),
     sh$div(
       class = "d-flex flex-wrap",
-      pr$map(
-        pr$list_flatten(data$tags),
-        ~ sh$div(class = "tags", .x)
+      pr$map2(
+        seq_along(pr$list_flatten(data$tag)),
+        pr$list_flatten(data$tag),
+        \(num, tag) sh$actionButton(
+          class = "tag",
+          sh$NS(id, paste("vap", tolower(data$name), num, sep = "-")), tag
+        )
       )
     )
   )
@@ -36,7 +42,7 @@ navbox_data <- tbl$tibble(
     "Inklusionsmått",
     "Kvalitetssäkring"
   ),
-  tags = list(
+  tag = list(
     list(
       "Sjukdomsduration vid nydiagnosticerad RA",
       "Befolkningsjämförelse av antal personer med RA och biologiska läkemedel",

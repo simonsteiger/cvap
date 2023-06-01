@@ -2,13 +2,16 @@ box::use(
   sh = shiny,
   bsl = bslib,
   dp = dplyr,
+  tdr = tidyr,
+  pr = purrr,
   sass,
   magrittr[`%>%`],
 )
 
 box::use(
   nb = app / logic / navbox,
-  theme = app / logic / theme,
+  app / logic / theme,
+  app / view / menu,
 )
 
 #' @export
@@ -19,12 +22,9 @@ ui <- function(id) {
       bsl$bs_add_rules(sass$sass_file("app/styles/navbox.scss")),
     sh$div(
       class = "h1 d-flex justify-content-center",
-      "Visualisation and Analysis Platform"
+      "Visualiserings- och analysplattform"
     ),
-    sh$div(
-      class = "d-flex flex-wrap align-items-stretch justify-content-center",
-      !!!nb$navbox_map(nb$navbox_data)
-    ),
+    menu$ui("menu", nb$navbox_data),
     sh$div(
       class = "h3 d-flex justify-content-center",
       "SRQ Logo"
@@ -35,6 +35,6 @@ ui <- function(id) {
 #' @export
 server <- function(id) {
   sh$moduleServer(id, function(input, output, session) {
-
+    menu$server("menu", nb$navbox_data)
   })
 }

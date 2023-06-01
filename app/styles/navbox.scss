@@ -1,11 +1,11 @@
 $tertiary: #f8f9fb;
-$hover-color: #f2dac0;
+$hover-color: #f1e2cb;
 $recipe-width: 350px;
 $spacer-single: 0.3rem;
 $spacer-double: 0.6rem;
 $spacer-triple: 0.9rem;
 
-.recipe {
+.navbox {
   display: inline-block;
   padding: 0 $spacer $spacer $spacer;
   background-color: $tertiary;
@@ -19,11 +19,12 @@ $spacer-triple: 0.9rem;
     padding-bottom: $spacer-single;
   }
 
-  .tags {
+  .tag {
     background-color: $secondary;
     border-radius: 12px;
     padding: $spacer-double $spacer-triple;
     margin: $spacer-single 0;
+    text-align: left;
     
     &:hover {
       background-color: $hover-color;
