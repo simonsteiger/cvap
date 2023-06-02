@@ -10,9 +10,8 @@ box::use(
 )
 
 box::use(
-  nb = app / logic / navbox,
-  app / logic / theme,
   aui = app / logic / aux_ui,
+  app / logic / theme,
   app / view / home,
   app / view / vap / vap_indikatorer_1,
   app / view / vap / vap_indikatorer_2,
@@ -34,7 +33,7 @@ ui <- function(id) {
     theme = theme$light %>%
       bsl$bs_add_rules(sass$sass_file("app/styles/navbox.scss")),
     rt$router_ui(
-      rt$route("/", home$ui(ns("home"), nb$navbox_data)),
+      rt$route("/", home$ui(ns("home"), aui$navbox_data)),
       rt$route("vap_indikatorer_1", vap_indikatorer_1$ui(ns("vap_indikatorer_1"))),
       rt$route("vap_indikatorer_2", vap_indikatorer_2$ui(ns("vap_indikatorer_2"))),
       rt$route("vap_indikatorer_3", vap_indikatorer_3$ui(ns("vap_indikatorer_3"))),
@@ -55,7 +54,7 @@ server <- function(id) {
   sh$moduleServer(id, function(input, output, session) {
     rt$router_server("/")
 
-    home$server("home", nb$navbox_data)
+    home$server("home", aui$navbox_data)
     vap_indikatorer_1$server("vap_indikatorer_1")
     vap_indikatorer_2$server("vap_indikatorer_2")
     vap_indikatorer_3$server("vap_indikatorer_3")

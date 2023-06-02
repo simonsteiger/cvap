@@ -5,7 +5,6 @@ box::use(
 )
 
 box::use(
-    nb = app / logic / navbox,
     aui = app / logic / aux_ui,
 )
 
@@ -19,7 +18,7 @@ ui <- function(id, data) {
             aui$row(
                 center = sh$div(
                     class = "d-flex flex-wrap align-items-stretch justify-content-center mx-5",
-                    !!!nb$navbox_map(id, data)
+                    !!!aui$navbox_map(id, data)
                 )
             ),
             aui$row(

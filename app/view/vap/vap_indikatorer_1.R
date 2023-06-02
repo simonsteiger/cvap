@@ -14,13 +14,13 @@ ui <- function(id) {
     sh$tagList(
         aui$container_fluid(
             aui$row(
-                left = sh$div(aui$return_button(ns("return"))),
+                left = sh$div(aui$btn_return(ns("return"))),
                 center = aui$head()
             ),
             aui$row(
                 center = sh$div(
                     class = "d-flex flex-column align-items-center m-5",
-                    aui$vap_card("Indikatorer_1", bsl$nav_panel("bla", "test"))
+                    aui$card("Indikatorer_1", bsl$nav_panel("bla", "test"))
                 )
             )
         )
@@ -30,6 +30,6 @@ ui <- function(id) {
 #' @export
 server <- function(id) {
     sh$moduleServer(id, function(input, output, session) {
-        ase$observe_return(input)
+        ase$obs_return(input)
     })
 }

@@ -1,38 +1,6 @@
 box::use(
-  dp = dplyr,
-  sh = shiny,
-  pr = purrr,
-  tbl = tibble,
+    tbl = tibble,
 )
-
-#' @export
-navbox_map <- function(id, data) {
-  stopifnot(all(c("title", "url", "tag") %in% colnames(data)))
-
-  pr$map(
-    seq_len(nrow(data)),
-    ~ navbox(id, data[.x, ])
-  )
-}
-
-#' @export
-navbox <- function(id, data) {
-  sh$div(
-    class = "navbox card",
-    sh$h3(class = "title", data$title),
-    sh$div(
-      class = "d-flex flex-wrap",
-      pr$map2(
-        seq_along(pr$list_flatten(data$tag)),
-        pr$list_flatten(data$tag),
-        \(num, tag) sh$actionButton(
-          class = "tag",
-          sh$NS(id, paste("vap", tolower(data$url), num, sep = "_")), tag
-        )
-      )
-    )
-  )
-}
 
 #' @export
 navbox_data <- tbl$tibble(
