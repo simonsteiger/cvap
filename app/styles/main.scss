@@ -3,3 +3,8 @@
 .hover {
     @include standard-hover
 }
+
+.container {
+    justify-content: center;
+    max-width: auto;
+}

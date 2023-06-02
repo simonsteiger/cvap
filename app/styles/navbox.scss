@@ -7,7 +7,7 @@ $spacer-triple: 0.9rem;
 
 .navbox {
   display: inline-block;
-  padding: 0 $spacer $spacer $spacer;
+  padding: $spacer;
   border: $border-width solid white;
   @include border-radius;
   box-shadow: 0 1rem 3rem rgba($black, .275);

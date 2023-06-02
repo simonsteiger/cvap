@@ -12,10 +12,17 @@ box::use(
 ui <- function(id) {
     ns <- sh$NS(id)
     sh$tagList(
-        sh$div(
-            class = "d-flex flex-column align-items-center",
-            sh$div(aui$return_button(ns("return"))),
-            sh$div("this is VAP behandling 4")
+        aui$container_fluid(
+            aui$row(
+                left = sh$div(aui$return_button(ns("return"))),
+                center = aui$head()
+            ),
+            aui$row(
+                center = sh$div(
+                    class = "d-flex flex-column align-items-center m-5",
+                    aui$vap_card("Behandling_4", bsl$nav_panel("bla", "test"))
+                )
+            )
         )
     )
 }

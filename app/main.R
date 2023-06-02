@@ -12,7 +12,8 @@ box::use(
 box::use(
   nb = app / logic / navbox,
   app / logic / theme,
-  app / view / menu,
+  aui = app / logic / aux_ui,
+  app / view / home,
   app / view / vap / vap_indikatorer_1,
   app / view / vap / vap_indikatorer_2,
   app / view / vap / vap_indikatorer_3,
@@ -32,12 +33,8 @@ ui <- function(id) {
   bsl$page(
     theme = theme$light %>%
       bsl$bs_add_rules(sass$sass_file("app/styles/navbox.scss")),
-    sh$div(
-      class = "h1 d-flex justify-content-center",
-      "Visualiserings- och analysplattform"
-    ),
     rt$router_ui(
-      rt$route("/", menu$ui(ns("menu"), nb$navbox_data)),
+      rt$route("/", home$ui(ns("home"), nb$navbox_data)),
       rt$route("vap_indikatorer_1", vap_indikatorer_1$ui(ns("vap_indikatorer_1"))),
       rt$route("vap_indikatorer_2", vap_indikatorer_2$ui(ns("vap_indikatorer_2"))),
       rt$route("vap_indikatorer_3", vap_indikatorer_3$ui(ns("vap_indikatorer_3"))),
@@ -49,10 +46,6 @@ ui <- function(id) {
       rt$route("vap_inklusionsmatt_1", vap_inklusionsmatt_1$ui(ns("vap_inklusionsmatt_1"))),
       rt$route("vap_kvalitetssakring_1", vap_kvalitetssakring_1$ui(ns("vap_kvalitetssakring_1"))),
       rt$route("vap_kvalitetssakring_2", vap_kvalitetssakring_2$ui(ns("vap_kvalitetssakring_2"))),
-    ),
-    sh$div(
-      class = "h3 d-flex justify-content-center",
-      "SRQ Logo"
     )
   )
 }
@@ -62,7 +55,7 @@ server <- function(id) {
   sh$moduleServer(id, function(input, output, session) {
     rt$router_server("/")
 
-    menu$server("menu", nb$navbox_data)
+    home$server("home", nb$navbox_data)
     vap_indikatorer_1$server("vap_indikatorer_1")
     vap_indikatorer_2$server("vap_indikatorer_2")
     vap_indikatorer_3$server("vap_indikatorer_3")
