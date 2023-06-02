@@ -4,6 +4,7 @@ box::use(
     dp = dplyr,
     pr = purrr,
     ts = tidyselect,
+    rl = rlang,
 )
 
 box::use(
@@ -53,4 +54,4 @@ out <-
         ))
     )
 
-fst$write_fst(out, "app/logic/data/vap_behandling_4.fst")
+fst$write_fst(out, "app/logic/data/vap_indikatorer_3.fst")
