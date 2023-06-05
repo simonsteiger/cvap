@@ -2,9 +2,11 @@
 library(rhino)
 library(shiny)
 library(bslib)
+library(bsicons)
 library(tidyr)
 library(shiny.router)
 library(shinyWidgets)
+library(reactable)
 
 # sk dependencies
 library(box)

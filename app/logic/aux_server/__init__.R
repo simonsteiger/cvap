@@ -1,6 +1,6 @@
 box::use(
     app / logic / aux_server / obs_return,
-    app / logic / aux_server / rct_summarise,
+    app / logic / aux_server / synopsise,
     app / logic / aux_server / sift_cols,
     app / logic / aux_server / sift_vars,
 )
@@ -9,7 +9,7 @@ box::use(
 obs_return <- obs_return$obs_return
 
 #' @export
-rct_summarise <- rct_summarise$rct_summarise
+synopsise <- synopsise$synopsise
 
 #' @export
 sift_cols <- sift_cols$sift_cols

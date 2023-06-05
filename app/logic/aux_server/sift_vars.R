@@ -13,10 +13,10 @@ box::use(
 sift_vars <- function(data, input, skip = NULL) {
   stopifnot(sh$is.reactive(data))
 
-  vars <- sh$reactive(names(data()))
+  vars <- sh$reactive(colnames(data()))
 
   sh$reactive({
-    each_var <- pr$map(vars(), \(var) sift_cols(data()[[var]], input[[var]], var, skip))
+    each_var <- pr$map(vars(), \(v) sift_cols(data()[[v]], input[[paste0("sift-", v)]], v, skip))
     pr$reduce(each_var, `&`)
   })
 }
