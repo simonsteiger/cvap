@@ -11,7 +11,7 @@ box::use(
 )
 
 #' @export
-rea_summarise <- function(.data, .fn, .var, .by, riket = TRUE, ...) {
+rct_summarise <- function(.data, .fn, .var, .by, riket = TRUE, ...) {
     stopifnot(sh$is.reactive(.data))
 
     dots <- rl$list2(...)

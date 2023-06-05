@@ -8,8 +8,8 @@ sift_cols <- function(col, val, var, skip) {
     if (var %in% skip || # dev-specified skip var
         is.null(val) || # input name unavailable (hidden)
         any(str_detect(val, "Alla?$|Båda")) || # user-specified skip
-        var == "tidig_ra" && FALSE %in% val # tidig_ra needed special treatment
-    ) {
+        var == "tidig_ra" && FALSE %in% val
+    ) { # tidig_ra needed special treatment
         return(TRUE)
     } else if (is.logical(val)) { # logical before numeric to not treat logical as numeric
         return(as.logical(col) == val)
@@ -24,7 +24,7 @@ sift_cols <- function(col, val, var, skip) {
     } else if (is.factor(col)) {
         return(!is.na(col) & col %in% val)
     } else {
-        # No input matching variable name, so don't filter
+        # No control, so don't filter
         TRUE
     }
 }

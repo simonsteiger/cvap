@@ -6,6 +6,7 @@ box::use(
 box::use(
     aui = app / logic / aux_ui,
     ase = app / logic / aux_server,
+    app / view / sift,
 )
 
 #' @export
@@ -31,5 +32,6 @@ ui <- function(id) {
 server <- function(id) {
     sh$moduleServer(id, function(input, output, session) {
         ase$obs_return(input)
+
     })
 }

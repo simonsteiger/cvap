@@ -1,13 +1,16 @@
 box::use(
-    app / logic / aux_ui / btn_return,
-    app / logic / aux_ui / card,
-    app / logic / aux_ui / container_fluid,
-    app / logic / aux_ui / head,
-    app / logic / aux_ui / logo,
-    app / logic / aux_ui / row,
-    app / logic / aux_ui / navbox,
-    app / logic / aux_ui / navbox_data,
-    app / logic / aux_ui / navbox_map,
+    app / logic / aux_ui / static / btn_return,
+    app / logic / aux_ui / static / card,
+    app / logic / aux_ui / static / container_fluid,
+    app / logic / aux_ui / static / head,
+    app / logic / aux_ui / static / logo,
+    app / logic / aux_ui / static / row,
+    app / logic / aux_ui / static / navbox,
+    app / logic / aux_ui / static / navbox_data,
+    app / logic / aux_ui / static / navbox_map,
+    app / logic / aux_ui / input / inp_daterange,
+    app / logic / aux_ui / input / inp_radio_sex,
+    app / logic / aux_ui / input / inp_slider_age,
 )
 
 #' @export
@@ -36,3 +39,12 @@ navbox_data <- navbox_data$navbox_data
 
 #' @export
 navbox_map <- navbox_map$navbox_map
+
+#' @export
+inp_daterange <- inp_daterange$inp_daterange
+
+#' @export
+inp_radio_sex <- inp_radio_sex$inp_radio_sex
+
+#' @export
+inp_slider_age <- inp_slider_age$inp_slider_age

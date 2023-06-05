@@ -4,6 +4,7 @@ library(shiny)
 library(bslib)
 library(tidyr)
 library(shiny.router)
+library(shinyWidgets)
 
 # sk dependencies
 library(box)

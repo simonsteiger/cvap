@@ -3,7 +3,7 @@ box::use(
 )
 
 box::use(
-    app / logic / aux_ui / navbox[...]
+    app / logic / aux_ui / static / navbox[...]
 )
 
 #' @export

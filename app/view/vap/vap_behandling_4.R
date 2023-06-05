@@ -6,6 +6,7 @@ box::use(
 box::use(
     aui = app / logic / aux_ui,
     ase = app / logic / aux_server,
+    app / view / sift,
 )
 
 #' @export

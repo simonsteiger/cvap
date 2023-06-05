@@ -10,6 +10,7 @@ box::use(
 )
 
 box::use(
+  ski = swissknife / skinit,
   aui = app / logic / aux_ui,
   app / logic / theme,
   app / view / home,
@@ -25,6 +26,8 @@ box::use(
   app / view / vap / vap_kvalitetssakring_1,
   app / view / vap / vap_kvalitetssakring_2,
 )
+
+ski$read_dir("app/logic/data/")
 
 #' @export
 ui <- function(id) {
@@ -61,7 +64,7 @@ server <- function(id) {
     vap_indikatorer_4$server("vap_indikatorer_4")
     vap_behandling_1$server("vap_behandling_1")
     vap_behandling_2$server("vap_behandling_2")
-    vap_behandling_3$server("vap_behandling_3")
+    vap_behandling_3$server("vap_behandling_3", list_df$vap_indikatorer_3)
     vap_behandling_4$server("vap_behandling_4")
     vap_inklusionsmatt_1$server("vap_inklusionsmatt_1")
     vap_kvalitetssakring_1$server("vap_kvalitetssakring_1")

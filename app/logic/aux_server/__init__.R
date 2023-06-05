@@ -1,5 +1,8 @@
 box::use(
     app / logic / aux_server / obs_return,
+    app / logic / aux_server / rct_summarise,
+    app / logic / aux_server / sift_cols,
+    app / logic / aux_server / sift_vars,
 )
 
 #' @export
