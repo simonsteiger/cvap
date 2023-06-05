@@ -21,6 +21,7 @@ ski$read_dir("/Users/simonsteiger/Desktop/data/fst/")
 list_df$basdata <- list_df$basdata %>%
     srqprep$prep_recode(diagnoskod_1, srqdict$rec_dxcat, .new_name = dxcat) %>%
     dp$filter(dxcat == "RA") %>%
+    dp$mutate(lan = ifelse(lan == "Örebro", "Orebro", lan)) %>%
     dp$select(patientkod, fodelsedag, dxcat, lan, tillhor)
 
 list_df$besoksdata <- list_df$besoksdata %>%

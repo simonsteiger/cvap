@@ -1,14 +1,18 @@
 box::use(
     stats,
+    magrittr[`%>%`],
     sh = shiny,
     bsl = bslib,
     bsi = bsicons,
     rtbl = reactable,
+    e4r = echarts4r,
+    em = echarts4r.maps,
 )
 
 box::use(
     aui = app / logic / aux_ui,
     ase = app / logic / aux_server,
+    geo = app / logic / data / geojson,
     app / view / sift,
     app / view / synopsis,
 )
@@ -41,10 +45,11 @@ ui <- function(id) {
                         ),
                         bsl$nav_panel(
                             "tab2",
+                            e4r$echarts4rOutput(ns("bar"))
                         ),
                         bsl$nav_panel(
                             "tab3",
-                            "Just some text"
+                            e4r$echarts4rOutput(ns("map"))
                         )
                     )
                 )
@@ -58,7 +63,7 @@ server <- function(id, data) {
     sh$moduleServer(id, function(input, output, session) {
         ase$obs_return(input)
 
-        sieve <- sift$server("sift", sh$reactive(data), input)
+        sieve <- sift$server("sift", sh$reactive(data))
 
         synopsis <- synopsis$server(
             "summary",
@@ -70,8 +75,26 @@ server <- function(id, data) {
         )
 
         output$table <- rtbl$renderReactable({
-            # sh$req(is.data.frame(synopsis()))
+            sh$req(is.data.frame(synopsis()))
             rtbl$reactable(synopsis())
+        })
+
+        output$bar <- e4r$renderEcharts4r({
+            sh$req(is.data.frame(synopsis()))
+            synopsis() %>%
+                e4r$e_charts(lan) %>%
+                e4r$e_bar(patientens_globala) %>%
+                e4r$e_flip_coords()
+        })
+
+        output$map <- e4r$renderEcharts4r({
+            sh$req(is.data.frame(synopsis()))
+            synopsis() %>%
+                e4r$e_charts(lan) %>%
+                e4r$e_map_register("Sweden", geo$sweden_json_small) %>%
+                e4r$e_map(patientens_globala, map = "Sweden", nameProperty = "NAME_1") %>%
+                e4r$e_visual_map(patientens_globala) %>%
+                e4r$e_theme("infographic")
         })
     })
 }

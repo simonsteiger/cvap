@@ -13,7 +13,7 @@ ui <- function(id, ...) {
 }
 
 #' @export
-server <- function(id, data, input) {
+server <- function(id, data) {
     sh$moduleServer(id, function(input, output, session) {
         ase$sift_vars(data, input)
     })

@@ -7,6 +7,11 @@ library(tidyr)
 library(shiny.router)
 library(shinyWidgets)
 library(reactable)
+library(echarts4r)
+library(raster)
+library(sp)
+library(geojsonio)
+library(rmapshaper)
 
 # sk dependencies
 library(box)
