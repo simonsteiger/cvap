@@ -13,15 +13,18 @@ ui <- function(id, data) {
     sh$tagList(
         aui$container_fluid(
             aui$row(
+                colwidths = c(2, 8, 2),
                 center = aui$head()
             ),
             aui$row(
+                colwidths = c(2, 8, 2),
                 center = sh$div(
                     class = "d-flex flex-wrap align-items-stretch justify-content-center mx-5",
                     !!!aui$navbox_map(id, data)
                 )
             ),
             aui$row(
+                colwidths = c(2, 8, 2),
                 center = aui$logo()
             )
         )

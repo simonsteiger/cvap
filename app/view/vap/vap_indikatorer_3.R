@@ -8,6 +8,8 @@ box::use(
     rtbl = reactable,
     e4r = echarts4r,
     em = echarts4r.maps,
+    sw = shinyWidgets,
+    ht = htmltools,
 )
 
 box::use(
@@ -36,21 +38,30 @@ ui <- function(id) {
             ),
             aui$row(
                 center = sh$div(
-                    class = "d-flex flex-column align-items-center m-5",
-                    aui$card(
-                        title = "Behandling_3",
-                        sidebar = bsl$sidebar(sift$ui(ns("sift"), !!!inputs), width = 300),
-                        bsl$nav_panel(
-                            "tab1",
-                            rtbl$reactableOutput(ns("table"))
+                    bsl$layout_column_wrap(
+                        class = "my-3",
+                        width = NULL, height = 650,
+                        style = ht$css(grid_template_columns = "1fr 4fr"),
+                        aui$card(
+                            header = "Inputs",
+                            body = sift$ui(ns("sift"), !!!inputs)
                         ),
-                        bsl$nav_panel(
-                            "tab2",
-                            e4r$echarts4rOutput(ns("bar"))
+                        aui$card(
+                            header = "Barplot",
+                            body = e4r$echarts4rOutput(ns("bar"))
                         ),
-                        bsl$nav_panel(
-                            "tab3",
-                            e4r$echarts4rOutput(ns("map"))
+                    ),
+                    bsl$layout_column_wrap(
+                        class = "my-3",
+                        width = NULL, height = 650,
+                        style = ht$css(grid_template_columns = "2fr 1fr"),
+                        aui$card(
+                            header = "Table",
+                            body = rtbl$reactableOutput(ns("table"))
+                        ),
+                        aui$card(
+                            header = "Map",
+                            body = e4r$echarts4rOutput(ns("map"))
                         )
                     )
                 )

@@ -4,12 +4,12 @@ box::use(
 
 #' @export
 #' A vanilla navset_card_tab container for VAPs
-card <- function(title, sidebar, ...) {
-    bsl$navset_card_tab(
-        height = 650,
-        full_screen = TRUE,
-        title = title,
-        sidebar = sidebar,
-        ...
+card <- function(header = NULL, body = NULL, footer = NULL) {
+    bsl$card(
+        bsl$card_header(header),
+        bsl$card_body(body),
+        bsl$card_footer(footer),
+        min_height = 650,
+        full_screen = TRUE
     )
 }

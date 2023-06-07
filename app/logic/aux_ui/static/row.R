@@ -3,7 +3,7 @@ box::use(
 )
 
 #' @export
-row <- function(left = NULL, center = NULL, right = NULL, colwidths = c(2, 8, 2)) {
+row <- function(left = NULL, center = NULL, right = NULL, colwidths = c(1, 10, 1)) {
     cols <- paste0("col-", colwidths)
     sh$div(
         class = "row",

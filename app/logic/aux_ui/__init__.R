@@ -1,5 +1,6 @@
 box::use(
     app / logic / aux_ui / static / btn_return,
+    app / logic / aux_ui / static / navset_card_tab,
     app / logic / aux_ui / static / card,
     app / logic / aux_ui / static / container_fluid,
     app / logic / aux_ui / static / head,
@@ -18,6 +19,9 @@ btn_return <- btn_return$btn_return
 
 #' @export
 card <- card$card
+
+#' @export
+navset_card_tab <- navset_card_tab$navset_card_tab
 
 #' @export
 container_fluid <- container_fluid$container_fluid
