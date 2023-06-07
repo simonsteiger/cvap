@@ -23,6 +23,8 @@ sift_cols <- function(col, val, var, skip) {
         return(!is.na(col) & col >= min(val) & col <= max(val))
     } else if (is.factor(col)) {
         return(!is.na(col) & col %in% val)
+    } else if (is.character(col)) {
+        return(!is.na(col) & col %in% val)
     } else {
         # No control, so don't filter
         TRUE
