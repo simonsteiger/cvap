@@ -1,17 +1,33 @@
 box::use(
+    stats,
+    magrittr[`%>%`],
     sh = shiny,
     bsl = bslib,
+    bsi = bsicons,
+    dp = dplyr,
+    rtbl = reactable,
+    e4r = echarts4r,
+    em = echarts4r.maps,
 )
 
 box::use(
     aui = app / logic / aux_ui,
     ase = app / logic / aux_server,
+    geo = app / logic / data / geojson,
     app / view / sift,
+    app / view / synopsis,
 )
 
 #' @export
 ui <- function(id) {
     ns <- sh$NS(id)
+
+    inputs <- sh$tagList(
+        aui$inp_daterange(sh$NS("sift", "ordinerat"), "Välj datum"),
+        aui$inp_radio_sex(sh$NS("sift", "kon")),
+        aui$inp_slider_age(sh$NS("sift", "ar"))
+    )
+
     sh$tagList(
         aui$container_fluid(
             aui$row(
@@ -21,7 +37,22 @@ ui <- function(id) {
             aui$row(
                 center = sh$div(
                     class = "d-flex flex-column align-items-center m-5",
-                    aui$card("Indikatorer_3", bsl$nav_panel("bla", "test"))
+                    aui$card(
+                        title = "Behandling_3",
+                        sidebar = bsl$sidebar(sift$ui(ns("sift"), !!!inputs), width = 300),
+                        bsl$nav_panel(
+                            "tab1",
+                            rtbl$reactableOutput(ns("table"))
+                        ),
+                        bsl$nav_panel(
+                            "tab2",
+                            e4r$echarts4rOutput(ns("bar"))
+                        ),
+                        bsl$nav_panel(
+                            "tab3",
+                            e4r$echarts4rOutput(ns("map"))
+                        )
+                    )
                 )
             )
         )
@@ -29,9 +60,45 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id) {
+server <- function(id, data) {
     sh$moduleServer(id, function(input, output, session) {
         ase$obs_return(input)
 
+        sieve <- sift$server("sift", sh$reactive(data))
+
+        synopsis <- synopsis$server(
+            "summary",
+            sh$reactive(data[sieve(), ]),
+            .fn = stats$median,
+            .var = "patientens_globala",
+            .by = c("lan", "ordinerat"),
+            na.rm = TRUE
+        )
+
+        output$table <- rtbl$renderReactable({
+            sh$req(is.data.frame(synopsis()))
+            rtbl$reactable(synopsis())
+        })
+
+        output$bar <- e4r$renderEcharts4r({
+            sh$req(is.data.frame(synopsis()))
+            synopsis() %>%
+                ase$plot_bar(
+                    x = "lan",
+                    y = "patientens_globala",
+                    group = "ordinerat"
+                )
+        })
+
+        output$map <- e4r$renderEcharts4r({
+            sh$req(is.data.frame(synopsis()))
+            synopsis() %>%
+                ase$plot_map(
+                    geo = geo$sweden_json_small,
+                    x = "lan",
+                    y = "patientens_globala",
+                    group = "ordinerat"
+                )
+        })
     })
 }

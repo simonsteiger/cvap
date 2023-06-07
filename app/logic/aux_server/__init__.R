@@ -4,6 +4,7 @@ box::use(
     app / logic / aux_server / sift_cols,
     app / logic / aux_server / sift_vars,
     app / logic / aux_server / plot_bar,
+    app / logic / aux_server / plot_map,
 )
 
 #' @export
@@ -20,3 +21,6 @@ sift_vars <- sift_vars$sift_vars
 
 #' @export
 plot_bar <- plot_bar$plot_bar
+
+#' @export
+plot_map <- plot_map$plot_map

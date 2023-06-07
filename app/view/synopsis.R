@@ -1,9 +1,12 @@
 box::use(
+    magrittr[`%>%`],
     fst,
     stats,
     sh = shiny,
     dp = dplyr,
     gg = ggplot2,
+    ts = tidyselect,
+    lub = lubridate,
 )
 
 box::use(
@@ -24,8 +27,9 @@ server <- function(id, data, ...) { # pass the data of the current vap
         stopifnot(sh$is.reactive(data))
 
         sh$reactive(
+            data() %>%
+            dp$mutate(dp$across(ts$where(lub$is.Date), \(x) lub$floor_date(x, "years"))) %>%
             ase$synopsise(
-                .data = data(),
                 ...
             )
         )
