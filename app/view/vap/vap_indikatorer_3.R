@@ -78,34 +78,40 @@ server <- function(id, data) {
             sh$reactive(data[sieve(), ]),
             .fn = stats$median,
             .var = "patientens_globala",
-            .by = c("lan", "ordinerat"),
+            .by = c("lan", "visit_group"),
             na.rm = TRUE
         )
 
         output$table <- rtbl$renderReactable({
-            sh$req(is.data.frame(synopsis()))
-            rtbl$reactable(synopsis())
+            rtbl$reactable(
+                synopsis() %>%
+                    dp$arrange(lan, visit_group)
+            )
         })
 
+        # Turn into module
+        bar <- ase$plot_bar(
+            synopsis,
+            x = "lan",
+            y = "patientens_globala",
+            group = "visit_group"
+        )
+
+        # Turn into module
+        map <- ase$plot_map(
+            synopsis,
+            geo = geo$sweden_json_small,
+            x = "lan",
+            y = "patientens_globala",
+            group = "visit_group"
+        )
+
         output$bar <- e4r$renderEcharts4r({
-            sh$req(is.data.frame(synopsis()))
-            synopsis() %>%
-                ase$plot_bar(
-                    x = "lan",
-                    y = "patientens_globala",
-                    group = "ordinerat"
-                )
+            bar()
         })
 
         output$map <- e4r$renderEcharts4r({
-            sh$req(is.data.frame(synopsis()))
-            synopsis() %>%
-                ase$plot_map(
-                    geo = geo$sweden_json_small,
-                    x = "lan",
-                    y = "patientens_globala",
-                    group = "ordinerat"
-                )
+            map()
         })
     })
 }

@@ -53,6 +53,7 @@ out <-
             diff >= 120 & diff <= 365 ~ "Uppföljning",
             .default = NA
         ))
-    )
+    ) %>%
+    dp$filter(!is.na(visit_group))
 
 fst$write_fst(out, "app/logic/data/vap_indikatorer_3.fst")

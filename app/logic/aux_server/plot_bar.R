@@ -1,5 +1,6 @@
 box::use(
     magrittr[`%>%`],
+    sh = shiny,
     e4r = echarts4r,
     dp = dplyr,
     ts = tidyselect,
@@ -7,12 +8,18 @@ box::use(
 
 #' @export
 plot_bar <- function(.data, x, y, group = NULL) {
+    stopifnot(sh$is.reactive(.data))
+
     if (!is.null(group)) {
-        .data <- dp$group_by(.data, .data[[group]])
+        out <- sh$reactive(dp$group_by(.data(), .data[[group]]))
+    } else {
+        out <- .data
     }
 
-    .data %>%
-        e4r$e_charts_(x) %>%
-        e4r$e_bar_(y) %>%
-        e4r$e_flip_coords()
+    sh$reactive(
+        out() %>%
+            e4r$e_charts_(x) %>%
+            e4r$e_bar_(y) %>%
+            e4r$e_flip_coords()
+    )
 }
