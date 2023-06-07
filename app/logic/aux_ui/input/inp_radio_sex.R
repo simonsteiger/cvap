@@ -6,7 +6,7 @@ box::use(
 #' @export
 inp_radio_sex <- function(id) {
   sh$div(
-    class = "mb-4",
+    class = "mb-3 mx-1",
     sw$prettyRadioButtons(
       inputId = id,
       label = "Välj kön",

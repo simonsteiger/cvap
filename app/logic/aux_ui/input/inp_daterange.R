@@ -5,7 +5,7 @@ box::use(
 
 inp_daterange <- function(id, label, start = lub$ymd("2020-01-01"), end = lub$ymd("2021-12-31")) {
     sh$div(
-        class = "mb-4",
+        class = "mb-3 mx-1",
         sh$dateRangeInput(
             inputId = id,
             label = label,

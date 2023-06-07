@@ -5,7 +5,7 @@ box::use(
 #' @export
 inp_slider_age <- function(id) {
   sh$div(
-    class = "mb-4",
+    class = "mb-3 mx-1",
     sh$sliderInput(
       inputId = id,
       label = "Välj åldersintervall",

@@ -25,9 +25,9 @@ ui <- function(id) {
     ns <- sh$NS(id)
 
     inputs <- sh$tagList(
-        aui$inp_daterange(sh$NS("sift", "ordinerat"), "Välj datum"),
-        aui$inp_radio_sex(sh$NS("sift", "kon")),
-        aui$inp_slider_age(sh$NS("sift", "ar"))
+        aui$inp_daterange(sh$NS(ns("sift"), "ordinerat"), "Välj datum"),
+        aui$inp_radio_sex(sh$NS(ns("sift"), "kon")),
+        aui$inp_slider_age(sh$NS(ns("sift"), "ar"))
     )
 
     sh$tagList(
@@ -38,10 +38,8 @@ ui <- function(id) {
             ),
             aui$row(
                 center = sh$div(
-                    bsl$layout_column_wrap(
-                        class = "my-3",
-                        width = NULL, height = 650,
-                        style = ht$css(grid_template_columns = "1fr 4fr"),
+                    aui$layout_column_wrap(
+                        grid_template_columns = "1fr 4fr",
                         aui$card(
                             header = "Inputs",
                             body = sift$ui(ns("sift"), !!!inputs)
@@ -51,10 +49,8 @@ ui <- function(id) {
                             body = e4r$echarts4rOutput(ns("bar"))
                         ),
                     ),
-                    bsl$layout_column_wrap(
-                        class = "my-3",
-                        width = NULL, height = 650,
-                        style = ht$css(grid_template_columns = "2fr 1fr"),
+                    aui$layout_column_wrap(
+                        grid_template_columns = "2fr 1fr",
                         aui$card(
                             header = "Table",
                             body = rtbl$reactableOutput(ns("table"))

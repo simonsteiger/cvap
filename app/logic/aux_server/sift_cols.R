@@ -7,7 +7,7 @@ box::use(
 sift_cols <- function(col, val, var, skip) {
     if (var %in% skip || # dev-specified skip var
         is.null(val) || # input name unavailable (hidden)
-        any(str_detect(val, "Alla?$|Båda")) || # user-specified skip
+        any(str$str_detect(val, "Alla?$|Båda")) || # user-specified skip
         var == "tidig_ra" && FALSE %in% val
     ) { # tidig_ra needed special treatment
         return(TRUE)
@@ -17,9 +17,9 @@ sift_cols <- function(col, val, var, skip) {
         return(!is.na(col) & col >= as.numeric(val))
     } else if (is.numeric(col) && length(val) == 2) { # numeric range
         return(!is.na(col) & col >= min(val) & col <= max(val))
-    } else if (is.Date(col) && length(val) == 1) {
+    } else if (lub$is.Date(col) && length(val) == 1) {
         return(!is.na(col) & col >= val)
-    } else if (is.Date(col) && length(val) == 2) { # date range
+    } else if (lub$is.Date(col) && length(val) == 2) { # date range
         return(!is.na(col) & col >= min(val) & col <= max(val))
     } else if (is.factor(col)) {
         return(!is.na(col) & col %in% val)

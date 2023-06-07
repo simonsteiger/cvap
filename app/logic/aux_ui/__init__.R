@@ -2,6 +2,7 @@ box::use(
     app / logic / aux_ui / static / btn_return,
     app / logic / aux_ui / static / navset_card_tab,
     app / logic / aux_ui / static / card,
+    app / logic / aux_ui / static / layout_column_wrap,
     app / logic / aux_ui / static / container_fluid,
     app / logic / aux_ui / static / head,
     app / logic / aux_ui / static / logo,
@@ -22,6 +23,9 @@ card <- card$card
 
 #' @export
 navset_card_tab <- navset_card_tab$navset_card_tab
+
+#' @export
+layout_column_wrap <- layout_column_wrap$layout_column_wrap
 
 #' @export
 container_fluid <- container_fluid$container_fluid

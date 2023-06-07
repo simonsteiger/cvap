@@ -3,7 +3,7 @@ box::use(
 )
 
 #' @export
-#' A vanilla navset_card_tab container for VAPs
+#' A vanilla card container for VAPs
 card <- function(header = NULL, body = NULL, footer = NULL) {
     bsl$card(
         bsl$card_header(header),
