@@ -15,7 +15,7 @@ box::use(
 box::use(
     aui = app / logic / aux_ui,
     ase = app / logic / aux_server,
-    geo = app / logic / data / geojson,
+    # geo = app / logic / data / geojson,
     app / view / sift,
     app / view / synopsis,
 )
@@ -42,7 +42,7 @@ ui <- function(id) {
                         grid_template_columns = "1fr 4fr",
                         aui$card(
                             header = "Inputs",
-                            body = sift$ui(ns("sift"), !!!inputs)
+                            body = sift$ui(ns("sift"), accordion_inputs)
                         ),
                         aui$card(
                             header = "Barplot",
@@ -67,7 +67,7 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id, data) {
+server <- function(id, data, geo) {
     sh$moduleServer(id, function(input, output, session) {
         ase$obs_return(input)
 
@@ -100,7 +100,7 @@ server <- function(id, data) {
         # Turn into module
         map <- ase$plot_map(
             synopsis,
-            geo = geo$sweden_json_small,
+            geo = geo,
             x = "lan",
             y = "patientens_globala",
             group = "visit_group"
