@@ -15,9 +15,11 @@ box::use(
 box::use(
     aui = app / logic / aux_ui,
     ase = app / logic / aux_server,
-    # geo = app / logic / data / geojson,
-    app / view / sift,
-    app / view / synopsis,
+    app / view / wrangle / sift,
+    app / view / wrangle / synopsis,
+    app / view / output / table,
+    app / view / output / bar,
+    app / view / output / map,
 )
 
 #' @export
@@ -82,36 +84,33 @@ server <- function(id, data, geo) {
             na.rm = TRUE
         )
 
-        output$table <- rtbl$renderReactable({
-            rtbl$reactable(
-                synopsis() %>%
-                    dp$arrange(lan, visit_group)
-            )
-        })
+        table <- table$server(
+            "output",
+            synopsis,
+            arrange = c("lan", "visit_group")
+        )
 
-        # Turn into module
-        bar <- ase$plot_bar(
+        bar <- bar$server(
+            "output",
             synopsis,
             x = "lan",
             y = "patientens_globala",
             group = "visit_group"
         )
 
-        # Turn into module
-        map <- ase$plot_map(
+        map <- map$server(
+            "output",
             synopsis,
-            geo = geo,
+            geo,
             x = "lan",
             y = "patientens_globala",
             group = "visit_group"
         )
 
-        output$bar <- e4r$renderEcharts4r({
-            bar()
-        })
+        output$table <- rtbl$renderReactable(table())
 
-        output$map <- e4r$renderEcharts4r({
-            map()
-        })
+        output$bar <- e4r$renderEcharts4r(bar())
+
+        output$map <- e4r$renderEcharts4r(map())
     })
 }

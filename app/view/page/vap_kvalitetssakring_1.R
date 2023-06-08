@@ -6,7 +6,7 @@ box::use(
 box::use(
     aui = app / logic / aux_ui,
     ase = app / logic / aux_server,
-    app / view / sift,
+    app / view / wrangle / sift,
 )
 
 #' @export
@@ -21,7 +21,7 @@ ui <- function(id) {
             aui$row(
                 center = sh$div(
                     class = "d-flex flex-column align-items-center m-5",
-                    aui$card("Behandling_1", bsl$nav_panel("bla", "test"))
+                    aui$card("Kvalitetssakring_1", bsl$nav_panel("bla", "test"))
                 )
             )
         )

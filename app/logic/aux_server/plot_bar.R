@@ -20,6 +20,7 @@ plot_bar <- function(.data, x, y, group = NULL) {
         out() %>%
             e4r$e_charts_(x) %>%
             e4r$e_bar_(y) %>%
-            e4r$e_flip_coords()
+            e4r$e_flip_coords() %>%
+            e4r$e_tooltip()
     )
 }

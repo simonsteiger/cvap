@@ -6,7 +6,7 @@ box::use(
 box::use(
     aui = app / logic / aux_ui,
     ase = app / logic / aux_server,
-    app / view / sift,
+    app / view / wrangle / sift,
 )
 
 #' @export
@@ -21,7 +21,7 @@ ui <- function(id) {
             aui$row(
                 center = sh$div(
                     class = "d-flex flex-column align-items-center m-5",
-                    aui$card("Behandling_2", bsl$nav_panel("bla", "test"))
+                    aui$card("Indikatorer_3", bsl$nav_panel("bla", "test"))
                 )
             )
         )
@@ -32,5 +32,6 @@ ui <- function(id) {
 server <- function(id) {
     sh$moduleServer(id, function(input, output, session) {
         ase$obs_return(input)
+
     })
 }
