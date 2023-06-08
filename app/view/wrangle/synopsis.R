@@ -26,7 +26,7 @@ ui <- function(id, ...) {
 }
 
 #' @export
-server <- function(id, .data, ...) { # pass the data of the current vap
+server <- function(id, .data, group, ...) { # pass the data of the current vap
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
 
@@ -38,19 +38,38 @@ server <- function(id, .data, ...) { # pass the data of the current vap
                 ase$synopsise(...)
         )
 
-        fct_var <- sh$reactive(
-            out() %>%
-                dp$select(ts$where(is.factor)) %>%
-                colnames()
-        )
-
         sh$reactive(
-            srqprep$prep_custom_order(
-                out(),
-                .reorder = "lan",
-                .by = dots$.var,
-                .data[[fct_var()]] == levels(.data[[fct_var()]])[2]
-            )
+            if (is.factor(.data()[[group]])) {
+                fct_var <- sh$reactive(
+                    out() %>%
+                        dp$select(ts$where(is.factor)) %>%
+                        colnames()
+                )
+
+                return(
+                    srqprep$prep_custom_order(
+                        out(),
+                        .reorder = "lan",
+                        .by = dots$.var,
+                        .data[[fct_var()]] == levels(.data[[fct_var()]])[2]
+                    )
+                )
+            } else if (lub$is.Date(.data()[[group]])) {
+                date_var <- sh$reactive(
+                    out() %>%
+                        dp$select(ts$where(lub$is.Date)) %>%
+                        colnames()
+                )
+
+                return(
+                    srqprep$prep_custom_order(
+                        out(),
+                        .reorder = "lan",
+                        .by = dots$.var,
+                        .data[[date_var()]] == max(.data[[date_var()]])
+                    )
+                )
+            }
         )
     })
 }

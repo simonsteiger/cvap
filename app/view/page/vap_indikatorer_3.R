@@ -27,7 +27,7 @@ ui <- function(id) {
     ns <- sh$NS(id)
 
     inputs <- sh$tagList(
-        aui$inp_daterange(sh$NS(ns("sift"), "ordinerat"), "Välj datum"),
+        aui$inp_daterange(sh$NS(ns("sift"), "ordinerat"), "Välj tidsfönster för ordineringsdatum"),
         aui$inp_radio_sex(sh$NS(ns("sift"), "kon")),
         aui$inp_slider_age(sh$NS(ns("sift"), "alder"))
     )
@@ -78,6 +78,7 @@ server <- function(id, data, geo) {
         synopsis <- synopsis$server(
             "summary",
             sh$reactive(data[sieve(), ]),
+            group = "visit_group",
             .fn = stats$median,
             .var = "patientens_globala",
             .by = c("lan", "visit_group"),

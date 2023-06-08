@@ -16,7 +16,9 @@ ski$read_dir("/Users/simonsteiger/Desktop/data/fst/")
 out <- list_df$basdata %>%
     dp$filter(tidig_ra == 1) %>% # also check for dxcat == "RA"?
     dp$mutate(
-        min_inkl_diag = pmin(diagnosdatum1, inkluderad, na.rm = TRUE)
+        alder = lub$interval(fodelsedag, inkluderad) / lub$dyears(1),
+        min_inkl_diag = pmin(diagnosdatum1, inkluderad, na.rm = TRUE),
+        lan = ifelse(lan == "Örebro", "Orebro", lan)
     ) %>%
     srqprep$prep_dynamic_groups(
         .start = srqdate$no_limit,
@@ -27,4 +29,4 @@ out <- list_df$basdata %>%
         .default = FALSE
     )
 
-fst$write_fst(out, "app/logic/data/vap_behandling_1.fst")
+fst$write_fst(out, "app/logic/data/vap_indikatorer_1.fst")
