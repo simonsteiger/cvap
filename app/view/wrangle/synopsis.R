@@ -30,7 +30,7 @@ server <- function(id, .data, group, ...) { # pass the data of the current vap
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
 
-        dots <- rl$list2(...)
+        dots <- rl$quos(...)
 
         out <- sh$reactive(
             .data() %>%
@@ -50,7 +50,7 @@ server <- function(id, .data, group, ...) { # pass the data of the current vap
                     srqprep$prep_custom_order(
                         out(),
                         .reorder = "lan",
-                        .by = dots$.var,
+                        .by = rl$quo_get_expr(dots$.var),
                         .data[[fct_var()]] == levels(.data[[fct_var()]])[2]
                     )
                 )
@@ -65,7 +65,7 @@ server <- function(id, .data, group, ...) { # pass the data of the current vap
                     srqprep$prep_custom_order(
                         out(),
                         .reorder = "lan",
-                        .by = dots$.var,
+                        .by = rl$quo_get_expr(dots$.var),
                         .data[[date_var()]] == max(.data[[date_var()]])
                     )
                 )

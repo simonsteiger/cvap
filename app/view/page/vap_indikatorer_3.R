@@ -41,7 +41,7 @@ ui <- function(id) {
             aui$row(
                 center = sh$div(
                     aui$layout_column_wrap(
-                        grid_template_columns = "1fr 4fr",
+                        grid_template_columns = "1fr 3fr 2fr",
                         aui$card(
                             header = "Inputs",
                             body = sift$ui(ns("sift"), !!!inputs)
@@ -50,16 +50,20 @@ ui <- function(id) {
                             header = "Barplot",
                             body = e4r$echarts4rOutput(ns("bar"))
                         ),
+                        aui$card(
+                            header = "Map",
+                            body = e4r$echarts4rOutput(ns("map"))
+                        )
                     ),
                     aui$layout_column_wrap(
-                        grid_template_columns = "2fr 1fr",
+                        grid_template_columns = "3fr 2fr",
                         aui$card(
                             header = "Table",
                             body = rtbl$reactableOutput(ns("table"))
                         ),
                         aui$card(
-                            header = "Map",
-                            body = e4r$echarts4rOutput(ns("map"))
+                            header = "Text",
+                            body = "Summary text"
                         )
                     )
                 )

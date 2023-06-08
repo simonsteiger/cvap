@@ -14,7 +14,7 @@ box::use(
 
 #' @export
 synopsise <- function(.data, .fn, .var, .by, riket = TRUE, ...) {
-    dots <- rl$list2(...)
+    dots <- rl$quos(...)
 
     if (riket) {
         .data <- srqprep$prep_riket(.data, .var, .fn, .by, !!!dots)
