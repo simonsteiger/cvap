@@ -1,6 +1,7 @@
 box::use(
     fst,
     magrittr[`%>%`],
+    lub = lubridate,
     dp = dplyr,
     pr = purrr,
     ts = tidyselect,
@@ -47,6 +48,7 @@ list_df$bas_bio <-
 out <-
     dp$left_join(list_df$bas_bio, list_df$besoksdata, by = "patientkod") %>%
     dp$mutate(
+        alder = lub$interval(fodelsedag, datum) / lub$dyears(1),
         diff = as.numeric(datum - prep_start),
         visit_group = factor(dp$case_when(
             diff >= -30 & diff <= 7 ~ "Behandlingsstart",

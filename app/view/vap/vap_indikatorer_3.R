@@ -27,7 +27,7 @@ ui <- function(id) {
     inputs <- sh$tagList(
         aui$inp_daterange(sh$NS(ns("sift"), "ordinerat"), "Välj datum"),
         aui$inp_radio_sex(sh$NS(ns("sift"), "kon")),
-        aui$inp_slider_age(sh$NS(ns("sift"), "ar"))
+        aui$inp_slider_age(sh$NS(ns("sift"), "alder"))
     )
 
     sh$tagList(
@@ -42,7 +42,7 @@ ui <- function(id) {
                         grid_template_columns = "1fr 4fr",
                         aui$card(
                             header = "Inputs",
-                            body = sift$ui(ns("sift"), accordion_inputs)
+                            body = sift$ui(ns("sift"), !!!inputs)
                         ),
                         aui$card(
                             header = "Barplot",
