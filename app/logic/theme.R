@@ -9,7 +9,7 @@ light <- bsl$bs_theme(
   fg = "#4161ab",
   primary = "#f8b859",
   secondary = "#e8e9f3",
-  success = "#E0A969",
+  success = "#a8e069",
   info = "#e8e9f3",
   warning = "#c26130",
   danger = "#FF00E3",

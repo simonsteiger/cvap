@@ -20,6 +20,7 @@ box::use(
     app / view / output / table,
     app / view / output / bar,
     app / view / output / map,
+    app / view / output / overview,
 )
 
 #' @export
@@ -39,13 +40,22 @@ ui <- function(id) {
                 center = aui$head()
             ),
             aui$row(
+                colwidths = c(2, 10, 0),
+                left = bsl$card(
+                    class = "my-3",
+                    height = "650px",
+                    bsl$card_header(
+                        sh$div(
+                            class = "d-flex justify-content-between align-items-center",
+                            "Översikt",
+                            aui$btn_modal(ns("go"), "Filtermeny", "Bekräfta", "Stäng", inputs)
+                        )
+                    ),
+                    bsl$card_body(sh$htmlOutput(ns("overview")))
+                ),
                 center = sh$div(
                     aui$layout_column_wrap(
-                        grid_template_columns = "1fr 3fr 2fr",
-                        aui$card(
-                            header = "Inputs",
-                            body = sift$ui(ns("sift"), !!!inputs)
-                        ),
+                        grid_template_columns = "3fr 2fr",
                         aui$card(
                             header = "Barplot",
                             body = e4r$echarts4rOutput(ns("bar"))
@@ -56,14 +66,14 @@ ui <- function(id) {
                         )
                     ),
                     aui$layout_column_wrap(
-                        grid_template_columns = "3fr 2fr",
-                        aui$card(
-                            header = "Table",
-                            body = rtbl$reactableOutput(ns("table"))
-                        ),
+                        grid_template_columns = "2fr 3fr",
                         aui$card(
                             header = "Text",
                             body = "Summary text"
+                        ),
+                        aui$card(
+                            header = "Table",
+                            body = rtbl$reactableOutput(ns("table"))
                         )
                     )
                 )
@@ -77,11 +87,19 @@ server <- function(id, data, geo) {
     sh$moduleServer(id, function(input, output, session) {
         ase$obs_return(input)
 
-        sieve <- sift$server("sift", sh$reactive(data))
+        icons <- sh$eventReactive(input$go, {
+            res <- overview$server("sift")
+            res()
+        })
+
+        sifted <- sh$eventReactive(input$go, {
+            sieve <- sift$server("sift", sh$reactive(data))
+            data[sieve(), ]
+        })
 
         dat_synopsis <- synopsis$server(
             "summary",
-            sh$reactive(data[sieve(), ]),
+            sifted,
             group = "inkluderad",
             .fn = mean,
             .var = "visit_group",
@@ -111,6 +129,8 @@ server <- function(id, data, geo) {
             y = "visit_group",
             group = "inkluderad"
         )
+
+        output$overview <- sh$renderUI(icons())
 
         output$table <- rtbl$renderReactable(table())
 

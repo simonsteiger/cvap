@@ -1,5 +1,7 @@
 box::use(
     app / logic / aux_ui / static / btn_return,
+    app / logic / aux_ui / static / btn_dropdown,
+    app / logic / aux_ui / static / btn_modal,
     app / logic / aux_ui / static / navset_card_tab,
     app / logic / aux_ui / static / card,
     app / logic / aux_ui / static / layout_column_wrap,
@@ -17,6 +19,12 @@ box::use(
 
 #' @export
 btn_return <- btn_return$btn_return
+
+#' @export
+btn_dropdown <- btn_dropdown$btn_dropdown
+
+#' @export
+btn_modal <- btn_modal$btn_modal
 
 #' @export
 card <- card$card
