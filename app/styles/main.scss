@@ -4,6 +4,10 @@
     @include standard-hover
 }
 
+.hover-success {
+    @include standard-hover($color: #80c531)
+}
+
 .container {
     justify-content: center;
     max-width: auto;

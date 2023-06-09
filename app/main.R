@@ -61,9 +61,26 @@ server <- function(id) {
     rt$router_server("/")
 
     home$server("home", aui$navbox_data)
-    vap_indikatorer_1$server("vap_indikatorer_1", list_df$vap_indikatorer_1, geo)
-    vap_indikatorer_2$server("vap_indikatorer_2", list_df$vap_indikatorer_2, geo)
-    vap_indikatorer_3$server("vap_indikatorer_3", list_df$vap_indikatorer_3, geo)
+
+    vap_indikatorer_1$server(
+      "vap_indikatorer_1",
+      trigger = input$vap_indikatorer_1,
+      data = list_df$vap_indikatorer_1,
+      geo = geo
+    )
+
+    vap_indikatorer_2$server(
+      "vap_indikatorer_2",
+      data = list_df$vap_indikatorer_2,
+      geo = geo
+    )
+
+    vap_indikatorer_3$server(
+      "vap_indikatorer_3",
+      data = list_df$vap_indikatorer_3,
+      geo = geo
+    )
+
     vap_indikatorer_4$server("vap_indikatorer_4")
     vap_behandling_1$server("vap_behandling_1")
     vap_behandling_2$server("vap_behandling_2")

@@ -54,7 +54,7 @@ btn_modal <- function(id, title, confirm_btn_name = "Save changes", close_btn_na
                         sh$tags$button(
                             id = id,
                             type = "button",
-                            class = "btn btn-success action-button hover p-2",
+                            class = "btn btn-success action-button hover-success p-2",
                             `data-bs-dismiss` = "modal",
                             confirm_btn_name
                         )
