@@ -20,7 +20,6 @@ synopsise <- function(.data, .fn, .var, .by, riket = TRUE, ...) {
         .data <- srqprep$prep_riket(.data, .var, .fn, .by, !!!dots)
     }
 
-
     out <- .data %>%
         dp$summarise(
             dp$across(.data[[.var]], \(x) .fn(x, !!!dots)),

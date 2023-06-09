@@ -79,7 +79,7 @@ server <- function(id, data, geo) {
 
         sieve <- sift$server("sift", sh$reactive(data))
 
-        synopsis <- synopsis$server(
+        dat_synopsis <- synopsis$server(
             "summary",
             sh$reactive(data[sieve(), ]),
             group = "inkluderad",
@@ -91,13 +91,13 @@ server <- function(id, data, geo) {
 
         table <- table$server(
             "output",
-            synopsis,
+            dat_synopsis,
             arrange = c("lan", "inkluderad")
         )
 
         bar <- bar$server(
             "output",
-            synopsis,
+            dat_synopsis,
             x = "lan",
             y = "visit_group",
             group = "inkluderad"
@@ -105,7 +105,7 @@ server <- function(id, data, geo) {
 
         map <- map$server(
             "output",
-            synopsis,
+            dat_synopsis,
             geo,
             x = "lan",
             y = "visit_group",

@@ -50,6 +50,7 @@ pop <-
 
 simplified_pop <-
     pop %>%
+    dp$mutate(lan = ifelse(lan == "Örebro", "Orebro", lan)) %>%
     dp$filter(Year == max(Year)) %>%
     dp$select(-Year)
 

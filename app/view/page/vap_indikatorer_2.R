@@ -14,9 +14,11 @@ box::use(
 )
 
 box::use(
+    swissknife / skwrangle[`%per100k%`],
     aui = app / logic / aux_ui,
     ase = app / logic / aux_server,
     app / view / wrangle / sift,
+    app / view / wrangle / squash,
     app / view / wrangle / synopsis,
     app / view / output / table,
     app / view / output / bar,
@@ -28,7 +30,7 @@ ui <- function(id) {
     ns <- sh$NS(id)
 
     inputs <- sh$tagList(
-        aui$inp_daterange(sh$NS(ns("sift"), "inkluderad"), "Välj tidsfönster för inklusionsdatum"),
+        aui$inp_daterange(sh$NS(ns("sift"), "ordinerat"), "Välj tidsfönster för inklusionsdatum"),
         aui$inp_radio_sex(sh$NS(ns("sift"), "kon"))
     )
 
@@ -79,47 +81,45 @@ server <- function(id, data, geo) {
 
         sieve <- sift$server("sift", sh$reactive(data))
 
-        synopsis <- synopsis$server(
-            "prestep",
+        dat_squash <- squash$server(
+            "sqash",
             sh$reactive(data[sieve(), ]),
-            group = "ordinerat",
-            .fn = dp$count, # can't pass a character vector to count, must pass a df!
-            .var = "lan",
-            .by = NULL,
-            riket = TRUE,
-            .data[["ordinerat"]]
+            .name = "n",
+            .fn = dp$n,
+            .by = c("lan", "population", "ordinerat")
         )
 
-        # synopsis <- synopsis$server(
-        #     "summary",
-        #     sh$reactive(data[sieve(), ]),
-        #     group = "ordinerat",
-        #     .fn = `/`,
-        #     .var = "visit_group",
-        #     .by = c("lan", "ordinerat"),
-        #     na.rm = TRUE
-        # )
+        dat_synopsis <- synopsis$server(
+            "summary",
+            dat_squash,
+            group = "ordinerat",
+            .fn = `%per100k%`,
+            .var = "n",
+            .by = c("lan", "ordinerat", "population"),
+            riket = FALSE,
+            .data[["population"]]
+        )
 
         table <- table$server(
             "output",
-            synopsis,
+            dat_synopsis,
             arrange = c("lan", "ordinerat")
         )
 
         bar <- bar$server(
             "output",
-            synopsis,
+            dat_synopsis,
             x = "lan",
-            y = "visit_group",
+            y = "n",
             group = "ordinerat"
         )
 
         map <- map$server(
             "output",
-            synopsis,
+            dat_synopsis,
             geo,
             x = "lan",
-            y = "visit_group",
+            y = "n",
             group = "ordinerat"
         )
 

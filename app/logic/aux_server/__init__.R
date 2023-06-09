@@ -1,5 +1,6 @@
 box::use(
     app / logic / aux_server / obs_return,
+    app / logic / aux_server / squash,
     app / logic / aux_server / synopsise,
     app / logic / aux_server / sift_cols,
     app / logic / aux_server / sift_vars,
@@ -9,6 +10,9 @@ box::use(
 
 #' @export
 obs_return <- obs_return$obs_return
+
+#' @export
+squash <- squash$squash
 
 #' @export
 synopsise <- synopsise$synopsise
