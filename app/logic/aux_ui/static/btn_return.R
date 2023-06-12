@@ -8,6 +8,6 @@ btn_return <- function(id) {
         id,
         label = "Tillbaka",
         icon = sh$icon("angles-left"),
-        class = "hover p-2"
+        class = "hover"
     )
 }

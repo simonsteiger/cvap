@@ -9,7 +9,7 @@ btn_modal <- function(id, title, label_confirm = "Save changes", label_close = "
 
     sh$div(
         sh$tags$button(
-            class = "btn btn-secondary hover p-2",
+            class = "btn btn-secondary hover",
             type = "button",
             `data-bs-toggle` = "modal",
             `data-bs-target` = paste("#inputModal", id, sep = "-"),
@@ -47,14 +47,14 @@ btn_modal <- function(id, title, label_confirm = "Save changes", label_close = "
                         class = "modal-footer",
                         sh$tags$button(
                             type = "button",
-                            class = "btn btn-secondary hover p-2",
+                            class = "btn btn-secondary hover",
                             `data-bs-dismiss` = "modal",
                             label_close
                         ),
                         sh$tags$button(
                             id = id,
                             type = "button",
-                            class = "btn btn-success action-button hover-success p-2",
+                            class = "btn btn-success action-button hover-success",
                             `data-bs-dismiss` = "modal",
                             label_confirm
                         )

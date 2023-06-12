@@ -60,7 +60,10 @@ ui <- function(id) {
                     aui$layout_column_wrap(
                         grid_template_columns = "3fr 2fr",
                         aui$card(
-                            header = "Barplot",
+                            header = sh$div(
+                                class = "d-flex justify-content-between align-items-center",
+                                "Barplot", aui$inp_toggle_sort(ns("sort"))
+                            ),
                             body = e4r$echarts4rOutput(ns("bar"))
                         ),
                         aui$card(

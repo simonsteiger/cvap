@@ -63,7 +63,7 @@ ui <- function(id) {
                         ),
                         aui$card(
                             header = "Map",
-                            body = e4r$echarts4rOutput(ns("map"))
+                            # body = e4r$echarts4rOutput(ns("map"))
                         )
                     ),
                     aui$layout_column_wrap(
@@ -121,14 +121,14 @@ server <- function(id, access_page, data, geo) {
             group = "visit_group"
         )
 
-        map <- map$server(
-            "output",
-            dat_synopsis,
-            geo,
-            x = "lan",
-            y = "patientens_globala",
-            group = "visit_group"
-        )
+        # map <- map$server(
+        #     "output",
+        #     dat_synopsis,
+        #     geo,
+        #     x = "lan",
+        #     y = "patientens_globala",
+        #     group = "visit_group"
+        # )
 
         output$overview <- sh$renderUI(icons())
 
@@ -136,6 +136,6 @@ server <- function(id, access_page, data, geo) {
 
         output$bar <- e4r$renderEcharts4r(bar())
 
-        output$map <- e4r$renderEcharts4r(map())
+        # output$map <- e4r$renderEcharts4r(map())
     })
 }
