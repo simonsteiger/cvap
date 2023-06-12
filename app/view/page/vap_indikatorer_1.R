@@ -36,6 +36,7 @@ ui <- function(id) {
     sh$tagList(
         aui$container_fluid(
             aui$row(
+                class_row = "m-4 d-flex align-items-center",
                 left = sh$div(aui$btn_return(ns("return"))),
                 center = aui$head()
             ),

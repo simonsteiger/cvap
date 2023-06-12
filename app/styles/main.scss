@@ -7,12 +7,3 @@
 .hover-success {
     @include standard-hover($color: #80c531)
 }
-
-.container {
-    justify-content: center;
-    max-width: auto;
-}
-
-.bslib-sidebar-layout>.collapse-toggle {
-    top: calc(1.5rem + var(--bslib-sidebar-overlap-counter, 0) * calc(1rem + 1.5rem));
-}
