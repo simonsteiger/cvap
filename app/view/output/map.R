@@ -26,3 +26,15 @@ server <- function(id, .data, geo, x, y, group) {
         )
     })
 }
+
+#' @export
+wrap <- function(args) {
+    server(
+        id = args$id,
+        .data = args$.data,
+        geo = args$geo,
+        x = args$x,
+        y = args$y,
+        group = args$group
+    )
+}

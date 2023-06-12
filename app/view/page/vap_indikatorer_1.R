@@ -23,17 +23,6 @@ box::use(
     app / view / output / overview,
 )
 
-wrap_plot_map <- function(args) {
-    map$server(
-        id = args$id,
-        .data = args$.data,
-        geo = args$geo,
-        x = args$x,
-        y = args$y,
-        group = args$group
-    )
-}
-
 worker <- ase$initialize_worker()
 
 #' @export
@@ -75,7 +64,7 @@ ui <- function(id) {
                             body = e4r$echarts4rOutput(ns("bar"))
                         ),
                         aui$card(
-                            header = "Map",
+                            header = sh$htmlOutput(ns("loader")),
                             body = e4r$echarts4rOutput(ns("map"))
                         )
                     ),
@@ -134,15 +123,6 @@ server <- function(id, access_page, data, geo) {
             group = "inkluderad"
         )
 
-        # map <- map$server(
-        #     "output",
-        #     dat_synopsis,
-        #     geo,
-        #     x = "lan",
-        #     y = "visit_group",
-        #     group = "inkluderad"
-        # )
-
         output$overview <- sh$renderUI(icons())
 
         output$table <- rtbl$renderReactable(table())
@@ -150,8 +130,7 @@ server <- function(id, access_page, data, geo) {
         output$bar <- e4r$renderEcharts4r(bar())
 
         reactive_args <- sh$reactive({
-            input$go
-            print("Triggered")
+            list(input$go, access_page)
             list(
                 id = "output",
                 .data = dat_synopsis,
@@ -162,13 +141,31 @@ server <- function(id, access_page, data, geo) {
             )
         })
 
-        promise_map <- worker$run_job("map1", wrap_plot_map, reactive_args)
+        promise_map <- worker$run_job("map1", map$wrap, reactive_args)
+
+        output$loader <- sh$renderUI({
+            task <- promise_map()
+            if (!task$resolved) {
+                sh$tagList(
+                    sh$div(
+                        class = "d-flex justify-content-between align-items-center",
+                        sh$div(sh$tags$strong("Ritar karta, var god vänta...")),
+                        sh$div(
+                            class = "spinner-border spinner-border-sm",
+                            role = "status"
+                        )
+                    )
+                )
+            } else {
+                "Map"
+            }
+        })
 
         output$map <- e4r$renderEcharts4r({
             if (!is.null(promise_map()$result)) {
                 res <- promise_map()$result
                 res()
             }
-            })
+        })
     })
 }
