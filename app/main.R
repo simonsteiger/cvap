@@ -64,19 +64,21 @@ server <- function(id) {
 
     vap_indikatorer_1$server(
       "vap_indikatorer_1",
-      trigger = input$vap_indikatorer_1,
+      access_page = input$vap_indikatorer_1,
       data = list_df$vap_indikatorer_1,
       geo = geo
     )
 
     vap_indikatorer_2$server(
       "vap_indikatorer_2",
+      access_page = input$vap_indikatorer_2,
       data = list_df$vap_indikatorer_2,
       geo = geo
     )
 
     vap_indikatorer_3$server(
       "vap_indikatorer_3",
+      access_page = input$vap_indikatorer_3,
       data = list_df$vap_indikatorer_3,
       geo = geo
     )

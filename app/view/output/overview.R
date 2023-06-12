@@ -2,6 +2,42 @@ box::use(
     sh = shiny,
     dp = dplyr,
     bsl = bslib,
+    pr = purrr,
+)
+
+icon_kon <- function(input) {
+    sh$tagList(
+        dp$case_match(input,
+            "Kvinna" ~ sh$tagList(sh$icon("venus")),
+            "Man" ~ sh$tagList(sh$icon("mars")),
+            .default = sh$tagList(sh$icon("venus-mars"))
+        ),
+        input
+    )
+}
+
+icon_alder <- function(input) {
+    sh$tagList(
+        dp$case_when(
+            max(input) < 40 ~ sh$tagList(sh$icon("children")),
+            min(input) > 70 ~ sh$tagList(sh$icon("person-cane")),
+            .default = sh$tagList(sh$icon("people-group"))
+        ),
+        paste0(paste0(input, collapse = " till "), " år")
+    )
+}
+
+icon_date <- function(input) {
+    sh$tagList(
+        sh$icon("calendar"), paste0(input, collapse = " till ")
+    )
+}
+
+make_icon <- list(
+    kon = icon_kon,
+    alder = icon_alder,
+    inkluderad = icon_date,
+    ordinerat = icon_date
 )
 
 #' @export
@@ -13,48 +49,62 @@ ui <- function(id) {
 #' @export
 server <- function(id) {
     sh$moduleServer(id, function(input, output, session) {
-        icon_kon <- sh$reactive(
-            dp$case_match(input$kon,
-                "Kvinna" ~ sh$tagList(sh$icon("venus")),
-                "Man" ~ sh$tagList(sh$icon("mars")),
-                .default = sh$tagList(sh$icon("venus-mars"))
-            )
-        )
-
-        icon_alder <- sh$reactive(
-            dp$case_when(
-                max(input$alder) < 40 ~ sh$tagList(sh$icon("children")),
-                min(input$alder) > 70 ~ sh$tagList(sh$icon("person-cane")),
-                .default = sh$tagList(sh$icon("people-group"))
-            )
-        )
-
-        sh$reactive(
-            sh$tagList(
-                icon_alder(), paste0(paste0(input$alder, collapse = " till "), " år"),
-                sh$hr(),
-                icon_kon(), input$kon,
-                sh$hr(),
-                sh$icon("calendar"), paste0(input$inkluderad, collapse = " till ")
-            )
-        )
+        pr$map(names(input), \(name) {
+            if (which(names(input) == name) == length(names(input))) {
+                make_icon[[name]](input[[name]])
+            } else {
+                sh$tagList(make_icon[[name]](input[[name]]), sh$hr())
+            }
+        })
     })
 }
 
-# div(
-#   class = "card-sammanfattning",
-#   card(
-#     card_header(
-#       class = "bg-dark",
-#       "Översikt"
-#     ),
-#     card_body(
-#       height = 200,
-#       icon_age(), paste0(paste0(input$age, collapse = " till "), " år"),
-#       hr(),
-#       icon_sex(), input$sex,
-#       hr(),
-#       icon("calendar"), paste0(input$timeframe, collapse = " till ")
+# test_fn_icon_kon <- function(input) {
+#     sh$tagList(
+#         dp$case_match(input,
+#             "Kvinna" ~ sh$tagList(sh$icon("venus")),
+#             "Man" ~ sh$tagList(sh$icon("mars")),
+#             .default = sh$tagList(sh$icon("venus-mars"))
+#         ),
+#         paste0(paste0(input, collapse = " till "), " år")
 #     )
-#   )
+# }
+# #
+# test_fn_icon_alder <- function(input) {
+#     sh$tagList(
+#         dp$case_when(
+#             max(input) < 40 ~ sh$tagList(sh$icon("children")),
+#             min(input) > 70 ~ sh$tagList(sh$icon("person-cane")),
+#             .default = sh$tagList(sh$icon("people-group"))
+#         ),
+#         paste0(paste0(input, collapse = " till "), " år")
+#     )
+# }
+# #
+# test_fn_icon_date <- function(input) {
+#     sh$tagList(
+#         sh$icon("calendar"), paste0(input, collapse = " till ")
+#     )
+# }
+# #
+# test_fns_icon <- list(
+#     kon = test_fn_icon_kon,
+#     alder = test_fn_icon_alder,
+#     inkluderad = test_fn_icon_date,
+#     ordinerat = test_fn_icon_date
 # )
+# #
+# input <- list(kon = "Man", alder = c(18, 100), ordinerat = c("2020-01-01", "2021-01-01"))
+# #
+# res <- pr$map(names(input), \(name) {
+#     if (which(names(input) == name) == length(names(input))) {
+#         test_fns_icon[[name]](input[[name]])
+#     } else {
+#         sh$tagList(test_fns_icon[[name]](input[[name]]), sh$hr())
+#     }
+# })
+# 
+# pr$map(
+#     names(input), \(name) ifelse(which(names(input) == name) == length(names(input)), TRUE, FALSE)
+# )
+# 

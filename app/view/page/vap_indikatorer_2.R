@@ -23,6 +23,7 @@ box::use(
     app / view / output / table,
     app / view / output / bar,
     app / view / output / map,
+    app / view / output / overview,
 )
 
 #' @export
@@ -37,17 +38,27 @@ ui <- function(id) {
     sh$tagList(
         aui$container_fluid(
             aui$row(
+                class_row = "m-4 d-flex align-items-center",
                 left = sh$div(aui$btn_return(ns("return"))),
                 center = aui$head()
             ),
             aui$row(
+                colwidths = c(2, 10, 0),
+                left = bsl$card(
+                    class = "my-3",
+                    height = "650px",
+                    bsl$card_header(
+                        sh$div(
+                            class = "d-flex justify-content-between align-items-center",
+                            "Översikt",
+                            aui$btn_modal(ns("go"), "Filtermeny", "Bekräfta", "Stäng", inputs)
+                        )
+                    ),
+                    bsl$card_body(sh$htmlOutput(ns("overview")))
+                ),
                 center = sh$div(
                     aui$layout_column_wrap(
-                        grid_template_columns = "1fr 3fr 2fr",
-                        aui$card(
-                            header = "Inputs",
-                            body = sift$ui(ns("sift"), !!!inputs)
-                        ),
+                        grid_template_columns = "3fr 2fr",
                         aui$card(
                             header = "Barplot",
                             body = e4r$echarts4rOutput(ns("bar"))
@@ -58,14 +69,14 @@ ui <- function(id) {
                         )
                     ),
                     aui$layout_column_wrap(
-                        grid_template_columns = "3fr 2fr",
-                        aui$card(
-                            header = "Table",
-                            body = rtbl$reactableOutput(ns("table"))
-                        ),
+                        grid_template_columns = "2fr 3fr",
                         aui$card(
                             header = "Text",
                             body = "Summary text"
+                        ),
+                        aui$card(
+                            header = "Table",
+                            body = rtbl$reactableOutput(ns("table"))
                         )
                     )
                 )
@@ -75,15 +86,22 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id, data, geo) {
+server <- function(id, access_page, data, geo) {
     sh$moduleServer(id, function(input, output, session) {
         ase$obs_return(input)
 
-        sieve <- sift$server("sift", sh$reactive(data))
+        icons <- sh$eventReactive(list(input$go, access_page), {
+            overview$server("sift")
+        })
+
+        sifted <- sh$eventReactive(list(input$go, access_page), {
+            sieve <- sift$server("sift", sh$reactive(data))
+            data[sieve(), ]
+        })
 
         dat_squash <- squash$server(
             "sqash",
-            sh$reactive(data[sieve(), ]),
+            sifted,
             .name = "n",
             .fn = dp$n,
             .by = c("lan", "population", "ordinerat")
@@ -122,6 +140,8 @@ server <- function(id, data, geo) {
             y = "n",
             group = "ordinerat"
         )
+
+        output$overview <- sh$renderUI(icons())
 
         output$table <- rtbl$renderReactable(table())
 

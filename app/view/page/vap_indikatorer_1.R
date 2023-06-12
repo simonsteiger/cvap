@@ -84,16 +84,15 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id, trigger, data, geo) {
+server <- function(id, access_page, data, geo) {
     sh$moduleServer(id, function(input, output, session) {
         ase$obs_return(input)
 
-        icons <- sh$eventReactive(list(input$go, trigger), {
-            res <- overview$server("sift")
-            res()
+        icons <- sh$eventReactive(list(input$go, access_page), {
+            overview$server("sift")
         })
 
-        sifted <- sh$eventReactive(list(input$go, trigger), {
+        sifted <- sh$eventReactive(list(input$go, access_page), {
             sieve <- sift$server("sift", sh$reactive(data))
             data[sieve(), ]
         })

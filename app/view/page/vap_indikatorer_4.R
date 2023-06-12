@@ -35,11 +35,24 @@ ui <- function(id) {
     sh$tagList(
         aui$container_fluid(
             aui$row(
+                class_row = "m-4 d-flex align-items-center",
                 left = sh$div(aui$btn_return(ns("return"))),
                 center = aui$head()
             ),
             aui$row(
-                left = sh$div(aui$btn_dropdown(inputs)),
+                colwidths = c(2, 10, 0),
+                left = bsl$card(
+                    class = "my-3",
+                    height = "650px",
+                    bsl$card_header(
+                        sh$div(
+                            class = "d-flex justify-content-between align-items-center",
+                            "Översikt",
+                            aui$btn_modal(ns("go"), "Filtermeny", "Bekräfta", "Stäng", inputs)
+                        )
+                    ),
+                    bsl$card_body(sh$htmlOutput(ns("overview")))
+                ),
                 center = sh$div(
                     aui$layout_column_wrap(
                         grid_template_columns = "3fr 2fr",
@@ -70,15 +83,23 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id, data, geo) {
+server <- function(id, access_page, data, geo) {
     sh$moduleServer(id, function(input, output, session) {
         ase$obs_return(input)
 
-        # sieve <- sift$server("sift", sh$reactive(data))
+        # icons <- sh$eventReactive(list(input$go, access_page), {
+        #     res <- overview$server("sift")
+        #     res()
+        # })
+# 
+        # sifted <- sh$eventReactive(list(input$go, access_page), {
+        #     sieve <- sift$server("sift", sh$reactive(data))
+        #     data[sieve(), ]
+        # })
 # 
         # dat_synopsis <- synopsis$server(
         #     "summary",
-        #     sh$reactive(data[sieve(), ]),
+        #     sifted,
         #     group = "inkluderad",
         #     .fn = mean,
         #     .var = "visit_group",
@@ -108,6 +129,8 @@ server <- function(id, data, geo) {
         #     y = "visit_group",
         #     group = "inkluderad"
         # )
+# 
+        # output$overview <- sh$renderUI(icons())
 # 
         # output$table <- rtbl$renderReactable(table())
 # 
