@@ -23,6 +23,19 @@ box::use(
     app / view / output / overview,
 )
 
+wrap_plot_map <- function(args) {
+    map$server(
+        id = args$id,
+        .data = args$.data,
+        geo = args$geo,
+        x = args$x,
+        y = args$y,
+        group = args$group
+    )
+}
+
+worker <- ase$initialize_worker()
+
 #' @export
 ui <- function(id) {
     ns <- sh$NS(id)
@@ -121,14 +134,14 @@ server <- function(id, access_page, data, geo) {
             group = "inkluderad"
         )
 
-        map <- map$server(
-            "output",
-            dat_synopsis,
-            geo,
-            x = "lan",
-            y = "visit_group",
-            group = "inkluderad"
-        )
+        # map <- map$server(
+        #     "output",
+        #     dat_synopsis,
+        #     geo,
+        #     x = "lan",
+        #     y = "visit_group",
+        #     group = "inkluderad"
+        # )
 
         output$overview <- sh$renderUI(icons())
 
@@ -136,6 +149,26 @@ server <- function(id, access_page, data, geo) {
 
         output$bar <- e4r$renderEcharts4r(bar())
 
-        output$map <- e4r$renderEcharts4r(map())
+        reactive_args <- sh$reactive({
+            input$go
+            print("Triggered")
+            list(
+                id = "output",
+                .data = dat_synopsis,
+                geo = geo,
+                x = "lan",
+                y = "visit_group",
+                group = "inkluderad"
+            )
+        })
+
+        promise_map <- worker$run_job("map1", wrap_plot_map, reactive_args)
+
+        output$map <- e4r$renderEcharts4r({
+            if (!is.null(promise_map()$result)) {
+                res <- promise_map()$result
+                res()
+            }
+            })
     })
 }
