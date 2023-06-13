@@ -13,7 +13,7 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id, .data, geo, x, y, group) {
+server <- function(id, .data, geo, x, y, group, text) {
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
 
@@ -22,7 +22,8 @@ server <- function(id, .data, geo, x, y, group) {
             geo = geo,
             x = x,
             y = y,
-            group = group
+            group = group,
+            text = text
         )
     })
 }
@@ -35,6 +36,7 @@ wrap <- function(args) {
         geo = args$geo,
         x = args$x,
         y = args$y,
-        group = args$group
+        group = args$group,
+        text = args$text
     )
 }

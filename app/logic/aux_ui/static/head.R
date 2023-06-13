@@ -3,9 +3,9 @@ box::use(
 )
 
 #' @export
-head <- function(...) {
+head <- function(text = "Visualiserings- och analysplattform", ...) {
     sh$tagList(
-        sh$div(class = "fs-1 text-center", "Visualiserings- och analysplattform"),
+        sh$div(class = "fs-1 text-center", text),
         ...
     )
 }

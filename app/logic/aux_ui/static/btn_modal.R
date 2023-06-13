@@ -13,7 +13,7 @@ btn_modal <- function(id, title, label_confirm = "Save changes", label_close = "
             type = "button",
             `data-bs-toggle` = "modal",
             `data-bs-target` = paste("#inputModal", id, sep = "-"),
-            "Anpassa filtren"
+            "Anpassa"
         ),
         sh$div(
             class = "modal fade",

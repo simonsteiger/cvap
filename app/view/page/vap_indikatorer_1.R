@@ -25,6 +25,8 @@ box::use(
 
 worker <- ase$initialize_worker()
 
+text <- "Sjukdomsduration vid nydiagnosticerad RA"
+
 #' @export
 ui <- function(id) {
     ns <- sh$NS(id)
@@ -38,9 +40,9 @@ ui <- function(id) {
     sh$tagList(
         aui$container_fluid(
             aui$row(
-                class_row = "m-4 d-flex align-items-center",
+                class_row = "row m-4 d-flex justify-content-center align-items-center",
                 left = sh$div(aui$btn_return(ns("return"))),
-                center = aui$head()
+                center = aui$head(text = text)
             ),
             aui$row(
                 colwidths = c(2, 10, 0),
@@ -51,7 +53,7 @@ ui <- function(id) {
                         sh$div(
                             class = "d-flex justify-content-between align-items-center",
                             "Översikt",
-                            aui$btn_modal(ns("go"), "Filtermeny", "Bekräfta", "Stäng", inputs)
+                            aui$btn_modal(ns("go"), "Filtermeny", "Bekräfta", "Avbryt", inputs)
                         )
                     ),
                     bsl$card_body(sh$htmlOutput(ns("overview")))
@@ -62,7 +64,7 @@ ui <- function(id) {
                         aui$card(
                             header = sh$div(
                                 class = "d-flex justify-content-between align-items-center",
-                                "Barplot", aui$inp_toggle_sort(ns("sort"))
+                                "Stapeldiagramm", aui$inp_toggle_sort(ns("sort"))
                             ),
                             body = e4r$echarts4rOutput(ns("bar"))
                         ),
@@ -74,11 +76,11 @@ ui <- function(id) {
                     aui$layout_column_wrap(
                         grid_template_columns = "2fr 3fr",
                         aui$card(
-                            header = "Text",
-                            body = "Summary text"
+                            header = "Sammanfattning",
+                            body = "Sample text."
                         ),
                         aui$card(
-                            header = "Table",
+                            header = "Tabell",
                             body = rtbl$reactableOutput(ns("table"))
                         )
                     )
@@ -123,7 +125,8 @@ server <- function(id, access_page, data, geo) {
             dat_synopsis,
             x = "lan",
             y = "visit_group",
-            group = "inkluderad"
+            group = "inkluderad",
+            text = text
         )
 
         output$overview <- sh$renderUI(icons())
@@ -140,7 +143,8 @@ server <- function(id, access_page, data, geo) {
                 geo = geo,
                 x = "lan",
                 y = "visit_group",
-                group = "inkluderad"
+                group = "inkluderad",
+                text = text
             )
         })
 
@@ -160,7 +164,7 @@ server <- function(id, access_page, data, geo) {
                     )
                 )
             } else {
-                "Map"
+                "Karta"
             }
         })
 

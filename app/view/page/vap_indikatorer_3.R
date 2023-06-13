@@ -23,6 +23,8 @@ box::use(
     app / view / output / overview,
 )
 
+text <- aui$navbox_data[[1]][[3]]
+
 #' @export
 ui <- function(id) {
     ns <- sh$NS(id)
@@ -118,7 +120,8 @@ server <- function(id, access_page, data, geo) {
             dat_synopsis,
             x = "lan",
             y = "patientens_globala",
-            group = "visit_group"
+            group = "visit_group",
+            text = text
         )
 
         # map <- map$server(
