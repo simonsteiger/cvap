@@ -39,8 +39,20 @@ ui <- function(id) {
     theme = theme$light %>%
       bsl$bs_add_rules(sass$sass_file("app/styles/navbox.scss")),
     rt$router_ui(
-      rt$route("/", home$ui(ns("home"), aui$navbox_data)),
-      rt$route("vap_indikatorer_1", vap_indikatorer_1$ui(ns("vap_indikatorer_1"))),
+      rt$route(
+        "/",
+        home$ui(
+          ns("home"),
+          aui$navbox_data
+        )
+      ),
+      rt$route(
+        "vap_indikatorer_1",
+        vap_indikatorer_1$ui(
+          ns("vap_indikatorer_1"),
+          list_df$vap_indikatorer_1
+        )
+      ),
       rt$route("vap_indikatorer_2", vap_indikatorer_2$ui(ns("vap_indikatorer_2"))),
       rt$route("vap_indikatorer_3", vap_indikatorer_3$ui(ns("vap_indikatorer_3"))),
       rt$route("vap_indikatorer_4", vap_indikatorer_4$ui(ns("vap_indikatorer_4"))),

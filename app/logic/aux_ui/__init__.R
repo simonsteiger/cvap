@@ -15,6 +15,7 @@ box::use(
     app / logic / aux_ui / input / inp_daterange,
     app / logic / aux_ui / input / inp_radio_sex,
     app / logic / aux_ui / input / inp_slider_age,
+    app / logic / aux_ui / input / inp_picker_lan,
     app / logic / aux_ui / input / inp_toggle_sort,
 )
 
@@ -65,6 +66,9 @@ inp_radio_sex <- inp_radio_sex$inp_radio_sex
 
 #' @export
 inp_slider_age <- inp_slider_age$inp_slider_age
+
+#' @export
+inp_picker_lan <- inp_picker_lan$inp_picker_lan
 
 #' @export
 inp_toggle_sort <- inp_toggle_sort$inp_toggle_sort

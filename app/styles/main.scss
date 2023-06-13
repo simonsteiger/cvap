@@ -1,9 +1,20 @@
 @import "hover";
+$tertiary: #f8f9fb;
+$danger: #fd5448;
+$success: #86d130;
 
 .hover {
     @include standard-hover
 }
 
 .hover-success {
-    @include standard-hover($color: #80c531)
+    @include standard-hover($color: $success)
+}
+
+.hover-danger {
+    @include standard-hover($color: $danger)
+}
+
+.bg-tertiary {
+    background-color: $tertiary;
 }

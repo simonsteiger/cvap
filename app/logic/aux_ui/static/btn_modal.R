@@ -26,7 +26,7 @@ btn_modal <- function(id, title, label_confirm = "Save changes", label_close = "
                 sh$div(
                     class = "modal-content",
                     sh$div(
-                        class = "modal-header",
+                        class = "bg-secondary modal-header",
                         sh$tags$h1(
                             class = "modal-title fs-5",
                             id = paste("inputModalLabel", id, sep = "-"),

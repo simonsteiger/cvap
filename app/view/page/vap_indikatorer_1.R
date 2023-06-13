@@ -28,13 +28,14 @@ worker <- ase$initialize_worker()
 text <- "Sjukdomsduration vid nydiagnosticerad RA"
 
 #' @export
-ui <- function(id) {
+ui <- function(id, data) {
     ns <- sh$NS(id)
 
     inputs <- sh$tagList(
         aui$inp_daterange(sh$NS(ns("sift"), "inkluderad"), "Välj tidsfönster för inklusionsdatum"),
         aui$inp_radio_sex(sh$NS(ns("sift"), "kon")),
-        aui$inp_slider_age(sh$NS(ns("sift"), "alder"))
+        aui$inp_slider_age(sh$NS(ns("sift"), "alder")),
+        aui$inp_picker_lan(sh$NS(ns("sift"), "lan"), unique(data$lan))
     )
 
     sh$tagList(

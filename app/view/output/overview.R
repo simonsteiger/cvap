@@ -33,11 +33,18 @@ icon_date <- function(input) {
     )
 }
 
+icon_lan <- function(input) {
+    sh$tagList(
+        sh$icon("location-dot"), paste0(input, collapse = ", ")
+    )
+}
+
 make_icon <- list(
     kon = icon_kon,
     alder = icon_alder,
     inkluderad = icon_date,
-    ordinerat = icon_date
+    ordinerat = icon_date,
+    lan = icon_lan
 )
 
 #' @export
@@ -49,7 +56,7 @@ ui <- function(id) {
 #' @export
 server <- function(id) {
     sh$moduleServer(id, function(input, output, session) {
-        pr$map(names(input), \(name) {
+        pr$map(names(input)[names(input) %in% names(make_icon)], \(name) {
             if (which(names(input) == name) == length(names(input))) {
                 make_icon[[name]](input[[name]])
             } else {
@@ -86,15 +93,22 @@ server <- function(id) {
 #         sh$icon("calendar"), paste0(input, collapse = " till ")
 #     )
 # }
+# 
+# test_icon_lan <- function(input) {
+#     sh$tagList(
+#         sh$icon("location-dot"), paste0(input, collapse = ", ")
+#     )
+# }
 # #
 # test_fns_icon <- list(
 #     kon = test_fn_icon_kon,
 #     alder = test_fn_icon_alder,
 #     inkluderad = test_fn_icon_date,
-#     ordinerat = test_fn_icon_date
+#     ordinerat = test_fn_icon_date,
+#     lan = test_icon_lan
 # )
 # #
-# input <- list(kon = "Man", alder = c(18, 100), ordinerat = c("2020-01-01", "2021-01-01"))
+# input <- list(kon = "Man", alder = c(18, 100), ordinerat = c("2020-01-01", "2021-01-01"), lan = c("Östra Götaland", "VVV"))
 # #
 # res <- pr$map(names(input), \(name) {
 #     if (which(names(input) == name) == length(names(input))) {
@@ -107,4 +121,6 @@ server <- function(id) {
 # pr$map(
 #     names(input), \(name) ifelse(which(names(input) == name) == length(names(input)), TRUE, FALSE)
 # )
+# #
+# 
 # 

@@ -12,7 +12,7 @@ light <- bsl$bs_theme(
   success = "#a8e069",
   info = "#e8e9f3",
   warning = "#c26130",
-  danger = "#FF00E3",
+  danger = "#fd5448",
   base_font = bsl$font_google("Fira Sans"),
   heading_font = bsl$font_google("Fira Sans"),
   code_font = bsl$font_google("Fira Sans")
