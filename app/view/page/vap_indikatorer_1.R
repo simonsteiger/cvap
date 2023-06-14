@@ -46,45 +46,30 @@ ui <- function(id, data) {
                 left = sh$div(aui$btn_return(ns("return"))),
                 center = aui$head(text = text)
             ),
-            aui$row(
-                colwidths = c(2, 10, 0),
-                left = bsl$card(
-                    class = "my-3",
-                    height = "650px",
-                    bsl$card_header(
-                        sh$div(
-                            class = "d-flex justify-content-between align-items-center",
-                            "Översikt",
-                            aui$btn_modal(ns("go"), "Filtermeny", "Bekräfta", "Avbryt", inputs)
-                        )
-                    ),
-                    bsl$card_body(sh$htmlOutput(ns("overview")), sh$textOutput(ns("test")))
+            aui$row_sidebar(
+                sidebar = aui$sidebar(
+                    header = aui$btn_modal(ns("go"), "Filtermeny", "Bekräfta", "Avbryt", inputs),
+                    body = sh$tagList(sh$htmlOutput(ns("overview")), sh$textOutput(ns("test")))
                 ),
-                center = sh$div(
-                    aui$layout_column_wrap(
-                        grid_template_columns = "3fr 2fr",
-                        aui$card(
-                            header = sh$div(
-                                class = "d-flex justify-content-between align-items-center",
-                                "Stapeldiagramm", aui$inp_toggle_sort(sh$NS(ns("output"), "sort"))
-                            ),
-                            body = e4r$echarts4rOutput(ns("bar"))
+                main = sh$tagList(
+                    aui$card(
+                        header = sh$div(
+                            class = "d-flex justify-content-between align-items-center",
+                            "Stapeldiagramm", aui$inp_toggle_sort(sh$NS(ns("output"), "sort"))
                         ),
-                        aui$card(
-                            header = sh$htmlOutput(ns("loader")),
-                            body = e4r$echarts4rOutput(ns("map"))
-                        )
+                        body = e4r$echarts4rOutput(ns("bar"))
                     ),
-                    aui$layout_column_wrap(
-                        grid_template_columns = "2fr 3fr",
-                        aui$card(
-                            header = "Sammanfattning",
-                            body = "Sample text."
-                        ),
-                        aui$card(
-                            header = "Tabell",
-                            body = rtbl$reactableOutput(ns("table"))
-                        )
+                    aui$card(
+                        header = sh$htmlOutput(ns("loader")),
+                        body = e4r$echarts4rOutput(ns("map"))
+                    ),
+                    aui$card(
+                        header = "Sammanfattning",
+                        body = "Sample text."
+                    ),
+                    aui$card(
+                        header = "Tabell",
+                        body = rtbl$reactableOutput(ns("table"))
                     )
                 )
             )

@@ -14,16 +14,15 @@ ui <- function(id) {
     ns <- sh$NS(id)
     sh$tagList(
         aui$container_fluid(
-            aui$row(
-                left = sh$div(aui$btn_return(ns("return"))),
-                center = aui$head()
-            ),
-            aui$row(
-                center = sh$div(
-                    class = "d-flex flex-column align-items-center m-5",
-                    aui$card("Inklusionsmatt_1", bsl$nav_panel("bla", "test"))
-                )
-            )
+            # aui$row_sidebar(
+            #     sidebar = bsl$card(bsl$card_header("Side")),
+            #     list(
+            #         bsl$card(bsl$card_header("Main1")),
+            #         bsl$card(bsl$card_header("Main2")),
+            #         bsl$card(bsl$card_header("Main3")),
+            #         bsl$card(bsl$card_header("Main4"))
+            #     )
+            # )
         )
     )
 }

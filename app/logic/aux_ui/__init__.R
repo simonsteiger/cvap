@@ -8,7 +8,8 @@ box::use(
     app / logic / aux_ui / static / container_fluid,
     app / logic / aux_ui / static / head,
     app / logic / aux_ui / static / logo,
-    app / logic / aux_ui / static / row,
+    app / logic / aux_ui / static / rows,
+    app / logic / aux_ui / static / sidebar,
     app / logic / aux_ui / static / navbox,
     app / logic / aux_ui / static / navbox_data,
     app / logic / aux_ui / static / navbox_map,
@@ -47,7 +48,13 @@ head <- head$head
 logo <- logo$logo
 
 #' @export
-row <- row$row
+sidebar <- sidebar$sidebar
+
+#' @export
+row_sidebar <- rows$row_sidebar
+
+#' @export
+row <- rows$row
 
 #' @export
 navbox <- navbox$navbox
