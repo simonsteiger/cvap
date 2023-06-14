@@ -17,6 +17,7 @@ box::use(
     ase = app / logic / aux_server,
     app / view / wrangle / sift,
     app / view / wrangle / synopsis,
+    app / view / wrangle / sort,
     app / view / output / table,
     app / view / output / bar,
     app / view / output / map,
@@ -57,7 +58,7 @@ ui <- function(id, data) {
                             aui$btn_modal(ns("go"), "Filtermeny", "Bekräfta", "Avbryt", inputs)
                         )
                     ),
-                    bsl$card_body(sh$htmlOutput(ns("overview")))
+                    bsl$card_body(sh$htmlOutput(ns("overview")), sh$textOutput(ns("test")))
                 ),
                 center = sh$div(
                     aui$layout_column_wrap(
@@ -65,7 +66,7 @@ ui <- function(id, data) {
                         aui$card(
                             header = sh$div(
                                 class = "d-flex justify-content-between align-items-center",
-                                "Stapeldiagramm", aui$inp_toggle_sort(ns("sort"))
+                                "Stapeldiagramm", aui$inp_toggle_sort(sh$NS(ns("output"), "sort"))
                             ),
                             body = e4r$echarts4rOutput(ns("bar"))
                         ),
@@ -108,22 +109,28 @@ server <- function(id, access_page, data, geo) {
         dat_synopsis <- synopsis$server(
             "summary",
             sifted,
-            group = "inkluderad",
             .fn = mean,
             .var = "visit_group",
             .by = c("lan", "inkluderad"),
             na.rm = TRUE
         )
 
-        table <- table$server(
+        dat_sort <- sort$server(
             "output",
             dat_synopsis,
+            group = "inkluderad",
+            .var = "visit_group"
+        )
+
+        table <- table$server(
+            "output",
+            dat_sort,
             arrange = c("lan", "inkluderad")
         )
 
         bar <- bar$server(
             "output",
-            dat_synopsis,
+            dat_sort,
             x = "lan",
             y = "visit_group",
             group = "inkluderad",
@@ -136,11 +143,11 @@ server <- function(id, access_page, data, geo) {
 
         output$bar <- e4r$renderEcharts4r(bar())
 
-        reactive_args <- sh$reactive({
+        args_map <- sh$reactive({
             list(input$go, access_page)
             list(
                 id = "output",
-                .data = dat_synopsis,
+                .data = dat_sort,
                 geo = geo,
                 x = "lan",
                 y = "visit_group",
@@ -149,7 +156,7 @@ server <- function(id, access_page, data, geo) {
             )
         })
 
-        promise_map <- worker$run_job("map1", map$wrap, reactive_args)
+        promise_map <- worker$run_job("map1", map$wrap, args_map)
 
         output$loader <- sh$renderUI({
             task <- promise_map()

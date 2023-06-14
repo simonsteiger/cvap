@@ -11,6 +11,7 @@ box::use(
     lub = lubridate,
     fct = forcats,
     str = stringr,
+    pr = purrr,
 )
 
 box::use(
@@ -27,7 +28,7 @@ ui <- function(id, ...) {
 }
 
 #' @export
-server <- function(id, .data, group, ...) {
+server <- function(id, .data, ...) {
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
 
@@ -46,40 +47,6 @@ server <- function(id, .data, group, ...) {
         syn <- sh$reactive(
             out() %>%
                 ase$synopsise(...)
-        )
-
-        sh$reactive(
-            if (is.factor(.data()[[group]])) {
-                fct_var <- sh$reactive(
-                    syn() %>%
-                        dp$select(ts$where(is.factor)) %>%
-                        colnames()
-                )
-
-                return(
-                    srqprep$prep_custom_order(
-                        syn(),
-                        .reorder = "lan",
-                        .by = rl$quo_get_expr(dots$.var),
-                        .data[[fct_var()]] == levels(.data[[fct_var()]])[2]
-                    )
-                )
-            } else if (lub$is.Date(.data()[[group]])) {
-                date_var <- sh$reactive(
-                    syn() %>%
-                        dp$select(ts$where(lub$is.Date)) %>%
-                        colnames()
-                )
-
-                return(
-                    srqprep$prep_custom_order(
-                        syn(),
-                        .reorder = "lan",
-                        .by = rl$quo_get_expr(dots$.var),
-                        .data[[date_var()]] == max(.data[[date_var()]])
-                    )
-                )
-            }
         )
     })
 }

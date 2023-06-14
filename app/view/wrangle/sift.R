@@ -1,5 +1,6 @@
 box::use(
     sh = shiny,
+    pr = purrr,
 )
 
 box::use(

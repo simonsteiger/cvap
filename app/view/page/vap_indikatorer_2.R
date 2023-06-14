@@ -56,14 +56,14 @@ ui <- function(id) {
                             aui$btn_modal(ns("go"), "Filtermeny", "Bekräfta", "Stäng", inputs)
                         )
                     ),
-                    bsl$card_body(sh$htmlOutput(ns("overview")))
+                    # bsl$card_body(sh$htmlOutput(ns("overview")))
                 ),
                 center = sh$div(
                     aui$layout_column_wrap(
                         grid_template_columns = "3fr 2fr",
                         aui$card(
                             header = "Barplot",
-                            body = e4r$echarts4rOutput(ns("bar"))
+                            # body = e4r$echarts4rOutput(ns("bar"))
                         ),
                         aui$card(
                             header = "Map",
@@ -74,11 +74,11 @@ ui <- function(id) {
                         grid_template_columns = "2fr 3fr",
                         aui$card(
                             header = "Text",
-                            body = "Summary text"
+                            # body = "Summary text"
                         ),
                         aui$card(
                             header = "Table",
-                            body = rtbl$reactableOutput(ns("table"))
+                            # body = rtbl$reactableOutput(ns("table"))
                         )
                     )
                 )
@@ -92,49 +92,49 @@ server <- function(id, access_page, data, geo) {
     sh$moduleServer(id, function(input, output, session) {
         ase$obs_return(input)
 
-        icons <- sh$eventReactive(list(input$go, access_page), {
-            overview$server("sift")
-        })
-
-        sifted <- sh$eventReactive(list(input$go, access_page), {
-            sieve <- sift$server("sift", sh$reactive(data))
-            data[sieve(), ]
-        })
-
-        dat_squash <- squash$server(
-            "sqash",
-            sifted,
-            .name = "n",
-            .fn = dp$n,
-            .by = c("lan", "population", "ordinerat")
-        )
-
-        dat_synopsis <- synopsis$server(
-            "summary",
-            dat_squash,
-            group = "ordinerat",
-            .fn = `%per100k%`,
-            .var = "n",
-            .by = c("lan", "ordinerat", "population"),
-            riket = FALSE,
-            .data[["population"]]
-        )
-
-        table <- table$server(
-            "output",
-            dat_synopsis,
-            arrange = c("lan", "ordinerat")
-        )
-
-        bar <- bar$server(
-            "output",
-            dat_synopsis,
-            x = "lan",
-            y = "n",
-            group = "ordinerat",
-            text = text
-        )
-
+        # icons <- sh$eventReactive(list(input$go, access_page), {
+        #     overview$server("sift")
+        # })
+# 
+        # sifted <- sh$eventReactive(list(input$go, access_page), {
+        #     sieve <- sift$server("sift", sh$reactive(data))
+        #     data[sieve(), ]
+        # })
+# 
+        # dat_squash <- squash$server(
+        #     "sqash",
+        #     sifted,
+        #     .name = "n",
+        #     .fn = dp$n,
+        #     .by = c("lan", "population", "ordinerat")
+        # )
+# 
+        # dat_synopsis <- synopsis$server(
+        #     "summary",
+        #     dat_squash,
+        #     group = "ordinerat",
+        #     .fn = `%per100k%`,
+        #     .var = "n",
+        #     .by = c("lan", "ordinerat", "population"),
+        #     riket = FALSE,
+        #     .data[["population"]]
+        # )
+# 
+        # table <- table$server(
+        #     "output",
+        #     dat_synopsis,
+        #     arrange = c("lan", "ordinerat")
+        # )
+# 
+        # bar <- bar$server(
+        #     "output",
+        #     dat_synopsis,
+        #     x = "lan",
+        #     y = "n",
+        #     group = "ordinerat",
+        #     text = text
+        # )
+# 
         # map <- map$server(
         #     "output",
         #     dat_synopsis,
@@ -144,11 +144,11 @@ server <- function(id, access_page, data, geo) {
         #     group = "ordinerat"
         # )
 
-        output$overview <- sh$renderUI(icons())
-
-        output$table <- rtbl$renderReactable(table())
-
-        output$bar <- e4r$renderEcharts4r(bar())
+        # output$overview <- sh$renderUI(icons())
+# 
+        # output$table <- rtbl$renderReactable(table())
+# 
+        # output$bar <- e4r$renderEcharts4r(bar())
 
         # output$map <- e4r$renderEcharts4r(map())
     })

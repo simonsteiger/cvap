@@ -54,14 +54,14 @@ ui <- function(id) {
                             aui$btn_modal(ns("go"), "Filtermeny", "Bekräfta", "Stäng", inputs)
                         )
                     ),
-                    bsl$card_body(sh$htmlOutput(ns("overview")))
+                    # bsl$card_body(sh$htmlOutput(ns("overview")))
                 ),
                 center = sh$div(
                     aui$layout_column_wrap(
                         grid_template_columns = "3fr 2fr",
                         aui$card(
                             header = "Barplot",
-                            body = e4r$echarts4rOutput(ns("bar"))
+                            # body = e4r$echarts4rOutput(ns("bar"))
                         ),
                         aui$card(
                             header = "Map",
@@ -76,7 +76,7 @@ ui <- function(id) {
                         ),
                         aui$card(
                             header = "Table",
-                            body = rtbl$reactableOutput(ns("table"))
+                            # body = rtbl$reactableOutput(ns("table"))
                         )
                     )
                 )
@@ -90,39 +90,39 @@ server <- function(id, access_page, data, geo) {
     sh$moduleServer(id, function(input, output, session) {
         ase$obs_return(input)
 
-        icons <- sh$eventReactive(list(input$go, access_page), {
-            overview$server("sift")
-        })
-
-        sifted <- sh$eventReactive(list(input$go, access_page), {
-            sieve <- sift$server("sift", sh$reactive(data))
-            data[sieve(), ]
-        })
-
-        dat_synopsis <- synopsis$server(
-            "summary",
-            sifted,
-            group = "visit_group",
-            .fn = stats$median,
-            .var = "patientens_globala",
-            .by = c("lan", "visit_group"),
-            na.rm = TRUE
-        )
-
-        table <- table$server(
-            "output",
-            dat_synopsis,
-            arrange = c("lan", "visit_group")
-        )
-
-        bar <- bar$server(
-            "output",
-            dat_synopsis,
-            x = "lan",
-            y = "patientens_globala",
-            group = "visit_group",
-            text = text
-        )
+        # icons <- sh$eventReactive(list(input$go, access_page), {
+        #     overview$server("sift")
+        # })
+# 
+        # sifted <- sh$eventReactive(list(input$go, access_page), {
+        #     sieve <- sift$server("sift", sh$reactive(data))
+        #     data[sieve(), ]
+        # })
+# 
+        # dat_synopsis <- synopsis$server(
+        #     "summary",
+        #     sifted,
+        #     group = "visit_group",
+        #     .fn = stats$median,
+        #     .var = "patientens_globala",
+        #     .by = c("lan", "visit_group"),
+        #     na.rm = TRUE
+        # )
+# 
+        # table <- table$server(
+        #     "output",
+        #     dat_synopsis,
+        #     arrange = c("lan", "visit_group")
+        # )
+# 
+        # bar <- bar$server(
+        #     "output",
+        #     dat_synopsis,
+        #     x = "lan",
+        #     y = "patientens_globala",
+        #     group = "visit_group",
+        #     text = text
+        # )
 
         # map <- map$server(
         #     "output",
@@ -133,11 +133,11 @@ server <- function(id, access_page, data, geo) {
         #     group = "visit_group"
         # )
 
-        output$overview <- sh$renderUI(icons())
-
-        output$table <- rtbl$renderReactable(table())
-
-        output$bar <- e4r$renderEcharts4r(bar())
+        # output$overview <- sh$renderUI(icons())
+# 
+        # output$table <- rtbl$renderReactable(table())
+# 
+        # output$bar <- e4r$renderEcharts4r(bar())
 
         # output$map <- e4r$renderEcharts4r(map())
     })
