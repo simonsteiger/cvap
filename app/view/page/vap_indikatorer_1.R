@@ -48,14 +48,34 @@ ui <- function(id, data) {
             ),
             aui$row_sidebar(
                 sidebar = aui$sidebar(
-                    header = aui$btn_modal(ns("go"), "Filtermeny", "Bekräfta", "Avbryt", inputs),
-                    body = sh$tagList(sh$htmlOutput(ns("overview")), sh$textOutput(ns("test")))
+                    header = aui$btn_modal(
+                        ns("go"),
+                        label = sh$tagList(sh$icon("filter"), "Anpassa"),
+                        modal_title = "Filtermeny",
+                        footer_confirm = "Bekräfta",
+                        footer_dismiss = "Avbryt",
+                        inputs
+                    ),
+                    body = sh$htmlOutput(ns("overview"))
                 ),
                 main = sh$tagList(
                     aui$card(
                         header = sh$div(
                             class = "d-flex justify-content-between align-items-center",
-                            "Stapeldiagramm", aui$inp_toggle_sort(sh$NS(ns("output"), "sort"))
+                            sh$div(
+                                class = "d-flex flex-row align-items-center",
+                                "Stapeldiagramm",
+                                aui$btn_modal(
+                                    ns("info-stapel"),
+                                    label = sh$icon("circle-info"),
+                                    modal_title = "Information om stapeldiagramm",
+                                    footer_confirm = NULL,
+                                    footer_dismiss = NULL,
+                                    class_toggle = "btn btn-transparent",
+                                    "Infotext om stapeldiagramm"
+                                )
+                            ),
+                            aui$inp_toggle_sort(sh$NS(ns("output"), "sort"))
                         ),
                         body = e4r$echarts4rOutput(ns("bar"))
                     ),
@@ -64,11 +84,23 @@ ui <- function(id, data) {
                         body = e4r$echarts4rOutput(ns("map"))
                     ),
                     aui$card(
-                        header = "Sammanfattning",
+                        header = sh$div(class = "py-card-header", "Sammanfattning"),
                         body = "Sample text."
                     ),
                     aui$card(
-                        header = "Tabell",
+                        header = sh$div(
+                            class = "d-flex flex-row align-items-center",
+                            "Tabell",
+                            aui$btn_modal(
+                                ns("info-tabell"),
+                                label = sh$icon("circle-info"),
+                                modal_title = "Information om tabell",
+                                footer_confirm = NULL,
+                                footer_dismiss = NULL,
+                                class_toggle = "btn btn-transparent",
+                                "Infotext om tabell"
+                            )
+                        ),
                         body = rtbl$reactableOutput(ns("table"))
                     )
                 )
@@ -149,7 +181,10 @@ server <- function(id, access_page, data, geo) {
                 sh$tagList(
                     sh$div(
                         class = "d-flex justify-content-between align-items-center",
-                        sh$div(sh$tags$strong("Ritar karta, var god vänta...")),
+                        sh$div(
+                            class = "py-card-header",
+                            sh$tags$strong("Ritar karta, var god vänta...")
+                        ),
                         sh$div(
                             class = "spinner-border spinner-border-sm",
                             role = "status"
@@ -157,7 +192,19 @@ server <- function(id, access_page, data, geo) {
                     )
                 )
             } else {
-                "Karta"
+                sh$div(
+                    class = "d-flex flex-row align-items-center",
+                    "Karta",
+                    aui$btn_modal(
+                        sh$NS(id, "info-karta"),
+                        label = sh$icon("circle-info"),
+                        modal_title = "Information om karta",
+                        footer_confirm = NULL,
+                        footer_dismiss = NULL,
+                        class_toggle = "btn btn-transparent",
+                        "Infotext om karta"
+                    )
+                )
             }
         })
 

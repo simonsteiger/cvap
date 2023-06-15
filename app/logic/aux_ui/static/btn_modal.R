@@ -4,17 +4,48 @@ box::use(
 )
 
 #' @export
-btn_modal <- function(id, title, label_confirm = "Save changes", label_close = "Close", ...) {
+btn_modal <- function(id, label, modal_title, footer_confirm = NULL, footer_dismiss = NULL, ...) {
     dots <- rl$list2(...)
 
-    sh$div(
-        sh$tags$button(
+    if (!is.null(footer_dismiss)) {
+        footer_dismiss <- sh$tags$button(
+            type = "button",
+            class = "btn btn-secondary hover",
+            `data-bs-dismiss` = "modal",
+            footer_dismiss
+        )
+    }
+
+    if (!is.null(footer_confirm)) {
+        footer_confirm <- sh$tags$button(
+            id = id,
+            type = "button",
+            class = "btn btn-success action-button hover-success",
+            `data-bs-dismiss` = "modal",
+            footer_confirm
+        )
+    }
+
+    if (!is.null(dots$class_toggle)) {
+        toggle <- sh$tags$button(
+            class = dots$class_toggle,
+            type = "button",
+            `data-bs-toggle` = "modal",
+            `data-bs-target` = paste("#inputModal", id, sep = "-"),
+            label
+        )
+    } else {
+        toggle <- sh$tags$button(
             class = "btn btn-secondary hover",
             type = "button",
             `data-bs-toggle` = "modal",
             `data-bs-target` = paste("#inputModal", id, sep = "-"),
-            "Anpassa"
-        ),
+            label
+        )
+    }
+
+    sh$div(
+        toggle,
         sh$div(
             class = "modal fade",
             id = paste("inputModal", id, sep = "-"),
@@ -30,7 +61,7 @@ btn_modal <- function(id, title, label_confirm = "Save changes", label_close = "
                         sh$tags$h1(
                             class = "modal-title fs-5",
                             id = paste("inputModalLabel", id, sep = "-"),
-                            title
+                            modal_title
                         ),
                         sh$tags$button(
                             type = "button",
@@ -45,19 +76,8 @@ btn_modal <- function(id, title, label_confirm = "Save changes", label_close = "
                     ),
                     sh$div(
                         class = "modal-footer",
-                        sh$tags$button(
-                            type = "button",
-                            class = "btn btn-secondary hover",
-                            `data-bs-dismiss` = "modal",
-                            label_close
-                        ),
-                        sh$tags$button(
-                            id = id,
-                            type = "button",
-                            class = "btn btn-success action-button hover-success",
-                            `data-bs-dismiss` = "modal",
-                            label_confirm
-                        )
+                        footer_dismiss,
+                        footer_confirm
                     )
                 )
             )
