@@ -53,8 +53,20 @@ ui <- function(id) {
           list_df$vap_indikatorer_1
         )
       ),
-      rt$route("vap_indikatorer_2", vap_indikatorer_2$ui(ns("vap_indikatorer_2"))),
-      rt$route("vap_indikatorer_3", vap_indikatorer_3$ui(ns("vap_indikatorer_3"))),
+      rt$route(
+        "vap_indikatorer_2",
+        vap_indikatorer_2$ui(
+          ns("vap_indikatorer_2"),
+          list_df$vap_indikatorer_2
+        )
+      ),
+      rt$route(
+        "vap_indikatorer_3",
+        vap_indikatorer_3$ui(
+          ns("vap_indikatorer_3"),
+          list_df$vap_indikatorer_3
+        )
+      ),
       rt$route("vap_indikatorer_4", vap_indikatorer_4$ui(ns("vap_indikatorer_4"))),
       rt$route("vap_behandling_1", vap_behandling_1$ui(ns("vap_behandling_1"))),
       rt$route("vap_behandling_2", vap_behandling_2$ui(ns("vap_behandling_2"))),

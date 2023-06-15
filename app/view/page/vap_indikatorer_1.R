@@ -26,7 +26,7 @@ box::use(
 
 worker <- ase$initialize_worker()
 
-text <- "Sjukdomsduration vid nydiagnosticerad RA"
+text <- aui$navbox_data$tag[[1]][[1]]
 
 #' @export
 ui <- function(id, data) {
