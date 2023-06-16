@@ -26,8 +26,8 @@ server <- function(id, .data, ...) {
 
         sh$reactive(
             .data() %>%
-            dp$mutate(dp$across(ts$where(lub$is.Date), \(x) lub$floor_date(x, "years"))) %>%
-            ase$squash(...)
+                dp$mutate(dp$across(ts$where(lub$is.Date), \(x) lub$floor_date(x, "years"))) %>%
+                ase$squash(...)
         )
     })
 }

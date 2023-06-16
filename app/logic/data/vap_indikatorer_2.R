@@ -22,7 +22,7 @@ bas_ter <- list_df$basdata %>%
     dp$select(-ts$contains(".dupl")) %>%
     dp$mutate(alder = lub$interval(fodelsedag, ordinerat) / lub$dyears(1)) %>%
     dp$filter(
-        alder >= 18,
+        alder >= 18, # QUESTION should the filters in the app take care?
         dxcat == "RA"
     ) %>%
     dp$select(patientkod, lan, kon, inkluderad, ordinerat, pagaende, utsatt)

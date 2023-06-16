@@ -74,7 +74,13 @@ ui <- function(id) {
           list_df$vap_indikatorer_4
         )
       ),
-      rt$route("vap_behandling_1", vap_behandling_1$ui(ns("vap_behandling_1"))),
+      rt$route(
+        "vap_behandling_1",
+        vap_behandling_1$ui(
+          ns("vap_behandling_1"),
+          list_df$vap_indikatorer_4
+        )
+      ),
       rt$route("vap_behandling_2", vap_behandling_2$ui(ns("vap_behandling_2"))),
       rt$route("vap_behandling_3", vap_behandling_3$ui(ns("vap_behandling_3"))),
       rt$route("vap_behandling_4", vap_behandling_4$ui(ns("vap_behandling_4"))),
@@ -120,7 +126,13 @@ server <- function(id) {
       geo = geo
     )
 
-    vap_behandling_1$server("vap_behandling_1")
+    vap_behandling_1$server(
+      "vap_behandling_1",
+      access_page = input$vap_behandling_1,
+      data = list_df$vap_behandling_1,
+      geo = geo
+    )
+
     vap_behandling_2$server("vap_behandling_2")
     vap_behandling_3$server("vap_behandling_3")
     vap_behandling_4$server("vap_behandling_4")

@@ -5,6 +5,7 @@ box::use(
     dp = dplyr,
     pr = purrr,
     lub = lubridate,
+    hw = htmlwidgets,
 )
 
 box::use(
@@ -31,7 +32,7 @@ plot_map <- function(.data, geo, x, y, group = NULL, text = "Title", register = 
 
     title <- sh$reactive(pr$map(lvls(), \(x) {
         list(
-            text = paste0(text, ", ", x), 
+            text = paste0(text, ", ", x),
             subtext = paste0("Data uttagen: ", lub$today()),
             textStyle = list(color = "black", fontWeight = "bolder")
         )

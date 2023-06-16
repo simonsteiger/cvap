@@ -15,6 +15,7 @@ box::use(
     app / logic / aux_ui / static / navbox_data,
     app / logic / aux_ui / static / navbox_map,
     app / logic / aux_ui / input / inp_daterange,
+    app / logic / aux_ui / input / inp_date,
     app / logic / aux_ui / input / inp_radio_sex,
     app / logic / aux_ui / input / inp_slider_age,
     app / logic / aux_ui / input / inp_picker_lan,
@@ -71,6 +72,9 @@ navbox_map <- navbox_map$navbox_map
 
 #' @export
 inp_daterange <- inp_daterange$inp_daterange
+
+#' @export
+inp_date <- inp_date$inp_date
 
 #' @export
 inp_radio_sex <- inp_radio_sex$inp_radio_sex
