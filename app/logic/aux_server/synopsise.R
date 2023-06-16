@@ -22,7 +22,7 @@ synopsise <- function(.data, .fn, .var, .by, riket = TRUE, ...) {
 
     out <- .data %>%
         dp$summarise(
-            dp$across(.data[[.var]], \(x) .fn(x, !!!dots)),
+            !!.var := .fn(.data[[.var]], !!!dots),
             nna = sum(is.na(.data[[.var]])),
             .by = ts$all_of(.by)
         )
