@@ -33,7 +33,7 @@ ui <- function(id, data) {
     ns <- sh$NS(id)
 
     inputs <- sh$tagList(
-        aui$inp_daterange(sh$NS(ns("sift"), "ordinerat"), "Välj tidsfönster för inklusionsdatum"),
+        aui$inp_daterange(sh$NS(ns("sift"), "ordinerat"), "Välj tidsfönster för ordinerationdatum"),
         aui$inp_radio_sex(sh$NS(ns("sift"), "kon")),
         aui$inp_slider_age(sh$NS(ns("sift"), "alder")),
         aui$inp_picker_lan(sh$NS(ns("sift"), "lan"), unique(data$lan))
@@ -114,109 +114,105 @@ server <- function(id, access_page, data, geo) {
     sh$moduleServer(id, function(input, output, session) {
         ase$obs_return(input)
 
-        sh$moduleServer(id, function(input, output, session) {
-            ase$obs_return(input)
+        icons <- sh$eventReactive(list(input$go, access_page), {
+            overview$server("sift")
+        })
 
-            icons <- sh$eventReactive(list(input$go, access_page), {
-                overview$server("sift")
-            })
+        sifted <- sh$eventReactive(list(input$go, access_page), {
+            sieve <- sift$server("sift", sh$reactive(data))
+            data[sieve(), ]
+        })
 
-            sifted <- sh$eventReactive(list(input$go, access_page), {
-                sieve <- sift$server("sift", sh$reactive(data))
-                data[sieve(), ]
-            })
+        dat_synopsis <- synopsis$server(
+            "summary",
+            sifted,
+            .fn = stats$median,
+            .var = "patientens_globala",
+            .by = c("lan", "visit_group"),
+            na.rm = TRUE
+        )
 
-            dat_synopsis <- synopsis$server(
-                "summary",
-                sifted,
-                .fn = stats$median,
-                .var = "patientens_globala",
-                .by = c("lan", "visit_group"),
-                na.rm = TRUE
-            )
+        dat_sort <- sort$server(
+            "output",
+            dat_synopsis,
+            group = "visit_group",
+            .var = "patientens_globala"
+        )
 
-            dat_sort <- sort$server(
-                "output",
-                dat_synopsis,
-                group = "visit_group",
-                .var = "patientens_globala"
-            )
+        table <- table$server(
+            "output",
+            dat_sort,
+            arrange = c("lan", "visit_group")
+        )
 
-            table <- table$server(
-                "output",
-                dat_sort,
-                arrange = c("lan", "visit_group")
-            )
+        bar <- bar$server(
+            "output",
+            dat_sort,
+            x = "lan",
+            y = "patientens_globala",
+            group = "visit_group",
+            text = text
+        )
 
-            bar <- bar$server(
-                "output",
-                dat_sort,
+        output$overview <- sh$renderUI(icons())
+
+        output$table <- rtbl$renderReactable(table())
+
+        output$bar <- e4r$renderEcharts4r(bar())
+
+        args_map <- sh$reactive({
+            list(input$go, access_page)
+            list(
+                id = "output",
+                .data = dat_sort,
+                geo = geo,
                 x = "lan",
-                y = "n",
+                y = "patientens_globala",
                 group = "visit_group",
                 text = text
             )
+        })
 
-            output$overview <- sh$renderUI(icons())
+        promise_map <- worker$run_job("map3", map$wrap, args_map)
 
-            output$table <- rtbl$renderReactable(table())
-
-            output$bar <- e4r$renderEcharts4r(bar())
-
-            args_map <- sh$reactive({
-                list(input$go, access_page)
-                list(
-                    id = "output",
-                    .data = dat_sort,
-                    geo = geo,
-                    x = "lan",
-                    y = "n",
-                    group = "visit_group",
-                    text = text
-                )
-            })
-
-            promise_map <- worker$run_job("map3", map$wrap, args_map)
-
-            output$loader <- sh$renderUI({
-                task <- promise_map()
-                if (!task$resolved) {
-                    sh$tagList(
-                        sh$div(
-                            class = "d-flex justify-content-between align-items-center",
-                            sh$div(
-                                class = "py-card-header",
-                                sh$tags$strong("Ritar karta, var god vänta...")
-                            ),
-                            sh$div(
-                                class = "spinner-border spinner-border-sm",
-                                role = "status"
-                            )
-                        )
-                    )
-                } else {
+        output$loader <- sh$renderUI({
+            task <- promise_map()
+            if (!task$resolved) {
+                sh$tagList(
                     sh$div(
-                        class = "d-flex flex-row align-items-center",
-                        "Karta",
-                        aui$btn_modal(
-                            sh$NS(id, "info-karta"),
-                            label = sh$icon("circle-info"),
-                            modal_title = "Information om karta",
-                            footer_confirm = NULL,
-                            footer_dismiss = NULL,
-                            class_toggle = "btn btn-transparent",
-                            "Infotext om karta"
+                        class = "d-flex justify-content-between align-items-center",
+                        sh$div(
+                            class = "py-card-header",
+                            sh$tags$strong("Ritar karta, var god vänta...")
+                        ),
+                        sh$div(
+                            class = "spinner-border spinner-border-sm",
+                            role = "status"
                         )
                     )
-                }
-            })
+                )
+            } else {
+                sh$div(
+                    class = "d-flex flex-row align-items-center",
+                    "Karta",
+                    aui$btn_modal(
+                        sh$NS(id, "info-karta"),
+                        label = sh$icon("circle-info"),
+                        modal_title = "Information om karta",
+                        footer_confirm = NULL,
+                        footer_dismiss = NULL,
+                        class_toggle = "btn btn-transparent",
+                        "Infotext om karta"
+                    )
+                )
+            }
+        })
 
-            output$map <- e4r$renderEcharts4r({
-                if (!is.null(promise_map()$result)) {
-                    res <- promise_map()$result
-                    res()
-                }
-            })
+        output$map <- e4r$renderEcharts4r({
+            if (!is.null(promise_map()$result)) {
+                res <- promise_map()$result
+                res()
+            }
         })
     })
 }

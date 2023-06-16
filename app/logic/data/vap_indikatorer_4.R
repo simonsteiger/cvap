@@ -6,7 +6,6 @@ box::use(
     pr = purrr,
     ts = tidyselect,
     rl = rlang,
-    tdr = tidyr,
 )
 
 box::use(
@@ -27,8 +26,7 @@ list_df$basdata <- list_df$basdata %>%
     dp$select(patientkod, fodelsedag, dxcat, lan, tillhor)
 
 list_df$besoksdata <- list_df$besoksdata %>%
-    dp$select(patientkod, datum, das28, haq, patientens_globala) %>%
-    dp$mutate(patientens_globala = as.numeric(patientens_globala)) # unparsable strings become NA
+    dp$select(patientkod, datum, das28)
 
 list_df$bio <- list_df$bio %>%
     dp$arrange(patientkod, ordinerat) %>%
@@ -50,27 +48,15 @@ out <-
     dp$left_join(list_df$bas_bio, list_df$besoksdata, by = "patientkod") %>%
     dp$mutate(
         alder = lub$interval(fodelsedag, datum) / lub$dyears(1),
-        diff = abs(as.numeric(datum - prep_start)),
+        diff = as.numeric(datum - prep_start),
         visit_group = factor(dp$case_when(
-            diff >= -30 & diff <= 7 ~ "Behandlingsstart", # use diff closest to 0
-            diff >= 120 & diff <= 365 ~ "Uppföljning", # use lowest target value (p_glob)
+            diff >= -30 & diff <= 7 ~ "Behandlingsstart",
+            diff >= 120 & diff <= 365 ~ "Uppföljning",
             .default = NA
         ))
     ) %>%
     dp$filter(!is.na(visit_group)) %>%
-    tdr$nest(.by = visit_group) %>%
-    dp$mutate(
-        # keep obs depending on visit_group, see conds in visit_group mutate comments above
-        data = pr$map2(
-            .x = data,
-            .y = c("diff", "patientens_globala"),
-            .f = \(df, .var) {
-                df %>%
-                    dp$arrange(dp$across(ts$all_of(c("patientkod", .var)))) %>%
-                    dp$distinct(.data[["patientkod"]], .keep_all = TRUE)
-            }
-        )
-    ) %>%
-    tdr$unnest(data)
+    dp$arrange(patientkod, das28) %>%
+    dp$distinct(patientkod, visit_group, .keep_all = TRUE)
 
-fst$write_fst(out, "app/logic/data/vap_indikatorer_3.fst")
+fst$write_fst(out, "app/logic/data/vap_indikatorer_4.fst")
