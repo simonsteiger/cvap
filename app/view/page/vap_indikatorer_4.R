@@ -33,10 +33,10 @@ ui <- function(id, data) {
     ns <- sh$NS(id)
 
     inputs <- sh$tagList(
-        aui$inp_daterange(sh$NS(ns("sift"), "inkluderad"), "Välj tidsfönster för inklusiondatum"),
-        aui$inp_radio_sex(sh$NS(ns("sift"), "kon")),
-        aui$inp_slider_age(sh$NS(ns("sift"), "alder")),
-        aui$inp_picker_lan(sh$NS(ns("sift"), "lan"), unique(data$lan))
+        aui$inp_daterange(sh$NS(ns("input"), "inkluderad"), "Välj tidsfönster för inklusiondatum"),
+        aui$inp_radio_sex(sh$NS(ns("input"), "kon")),
+        aui$inp_slider_age(sh$NS(ns("input"), "alder")),
+        aui$inp_picker_lan(sh$NS(ns("input"), "lan"), unique(data$lan))
     )
 
     sh$tagList(
@@ -114,57 +114,58 @@ server <- function(id, access_page, data, geo) {
     sh$moduleServer(id, function(input, output, session) {
         ase$obs_return(input)
 
-        icons <- sh$eventReactive(list(input$go, access_page), {
-            overview$server("sift")
+        out_icons <- sh$eventReactive(list(input$go, access_page), {
+            overview$server("input")
         })
 
-        sifted <- sh$eventReactive(list(input$go, access_page), {
-            sieve <- sift$server("sift", sh$reactive(data))
+        pre_sift <- sh$eventReactive(list(input$go, access_page), {
+            sieve <- sift$server("input", sh$reactive(data))
             data[sieve(), ]
         })
 
-        dat_synopsis <- synopsis$server(
+        sum_synopsis <- synopsis$server(
             "summary",
-            sifted,
+            pre_sift,
             .fn = mean,
             .var = "das28_low",
             .by = c("lan", "visit_group"),
             na.rm = TRUE
         )
 
-        dat_sort <- sort$server(
+        sum_sort <- sort$server(
             "output",
-            dat_synopsis,
+            sum_synopsis,
             group = "visit_group",
             .var = "das28_low"
         )
 
-        table <- table$server(
+        out_table <- table$server(
             "output",
-            dat_sort,
+            sum_sort,
             arrange = c("lan", "visit_group")
         )
 
-        bar <- bar$server(
+        out_bar <- bar$server(
             "output",
-            dat_sort,
+            sum_sort,
             x = "lan",
             y = "das28_low",
             group = "visit_group",
-            text = text
+            text = text,
+            format = "percent"
         )
 
-        output$overview <- sh$renderUI(icons())
+        output$overview <- sh$renderUI(out_icons())
 
-        output$table <- rtbl$renderReactable(table())
+        output$table <- rtbl$renderReactable(out_table())
 
-        output$bar <- e4r$renderEcharts4r(bar())
+        output$bar <- e4r$renderEcharts4r(out_bar())
 
         args_map <- sh$reactive({
             list(input$go, access_page)
             list(
                 id = "output",
-                .data = dat_sort,
+                .data = sum_sort,
                 geo = geo,
                 x = "lan",
                 y = "das28_low",
@@ -173,10 +174,10 @@ server <- function(id, access_page, data, geo) {
             )
         })
 
-        promise_map <- worker$run_job("map3", map$wrap, args_map)
+        out_map <- worker$run_job("map4", map$wrap, args_map)
 
         output$loader <- sh$renderUI({
-            task <- promise_map()
+            task <- out_map()
             if (!task$resolved) {
                 sh$tagList(
                     sh$div(
@@ -209,8 +210,8 @@ server <- function(id, access_page, data, geo) {
         })
 
         output$map <- e4r$renderEcharts4r({
-            if (!is.null(promise_map()$result)) {
-                res <- promise_map()$result
+            if (!is.null(out_map()$result)) {
+                res <- out_map()$result
                 res()
             }
         })
