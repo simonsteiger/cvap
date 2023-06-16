@@ -81,7 +81,7 @@ ui <- function(id, data) {
                     ),
                     aui$card(
                         header = sh$htmlOutput(ns("loader")),
-                        body = e4r$echarts4rOutput(ns("map"))
+                        # body = e4r$echarts4rOutput(ns("map"))
                     ),
                     aui$card(
                         header = sh$div(class = "py-card-header", "Sammanfattning"),
@@ -174,46 +174,46 @@ server <- function(id, access_page, data, geo) {
             )
         })
 
-        out_map <- worker$run_job("map1", map$wrap, args_map)
-
-        output$loader <- sh$renderUI({
-            task <- out_map()
-            if (!task$resolved) {
-                sh$tagList(
-                    sh$div(
-                        class = "d-flex justify-content-between align-items-center",
-                        sh$div(
-                            class = "py-card-header",
-                            sh$tags$strong("Ritar karta, var god vänta...")
-                        ),
-                        sh$div(
-                            class = "spinner-border spinner-border-sm",
-                            role = "status"
-                        )
-                    )
-                )
-            } else {
-                sh$div(
-                    class = "d-flex flex-row align-items-center",
-                    "Karta",
-                    aui$btn_modal(
-                        sh$NS(id, "info-karta"),
-                        label = sh$icon("circle-info"),
-                        modal_title = "Information om karta",
-                        footer_confirm = NULL,
-                        footer_dismiss = NULL,
-                        class_toggle = "btn btn-transparent",
-                        "Infotext om karta"
-                    )
-                )
-            }
-        })
-
-        output$map <- e4r$renderEcharts4r({
-            if (!is.null(out_map()$result)) {
-                res <- out_map()$result
-                res()
-            }
-        })
+        #out_map <- worker$run_job("map1", map$wrap, args_map)
+#
+        #output$loader <- sh$renderUI({
+        #    task <- out_map()
+        #    if (!task$resolved) {
+        #        sh$tagList(
+        #            sh$div(
+        #                class = "d-flex justify-content-between align-items-center",
+        #                sh$div(
+        #                    class = "py-card-header",
+        #                    sh$tags$strong("Ritar karta, var god vänta...")
+        #                ),
+        #                sh$div(
+        #                    class = "spinner-border spinner-border-sm",
+        #                    role = "status"
+        #                )
+        #            )
+        #        )
+        #    } else {
+        #        sh$div(
+        #            class = "d-flex flex-row align-items-center",
+        #            "Karta",
+        #            aui$btn_modal(
+        #                sh$NS(id, "info-karta"),
+        #                label = sh$icon("circle-info"),
+        #                modal_title = "Information om karta",
+        #                footer_confirm = NULL,
+        #                footer_dismiss = NULL,
+        #                class_toggle = "btn btn-transparent",
+        #                "Infotext om karta"
+        #            )
+        #        )
+        #    }
+        #})
+#
+        #output$map <- e4r$renderEcharts4r({
+        #    if (!is.null(out_map()$result)) {
+        #        res <- out_map()$result
+        #        res()
+        #    }
+        #})
     })
 }

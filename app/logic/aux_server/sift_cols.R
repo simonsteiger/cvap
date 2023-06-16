@@ -18,7 +18,7 @@ sift_cols <- function(col, val, var, skip) {
     } else if (is.numeric(col) && length(val) == 2) { # numeric range
         return(!is.na(col) & col >= min(val) & col <= max(val))
     } else if (lub$is.Date(col) && length(val) == 1) {
-        return(!is.na(col) & col >= val)
+        return(!is.na(col) & col <= val) # for ongoing
     } else if (lub$is.Date(col) && length(val) == 2) { # date range
         return(!is.na(col) & col >= min(val) & col <= max(val))
     } else if (is.factor(col)) {

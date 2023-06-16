@@ -18,7 +18,8 @@ out <- list_df$basdata %>%
     srqprep$prep_recode(diagnoskod_1, srqdict$rec_dxcat, .new_name = dxcat) %>%
     dp$mutate(
         lan = ifelse(lan == "Örebro", "Orebro", lan),
-        dxcat = ifelse(!dxcat %in% c("RA", "AS", "SpA", "PsA"), "Annan", dxcat)
+        dxcat = ifelse(!dxcat %in% c("RA", "AS", "SpA", "PsA"), "Annan", dxcat),
+        dxcat = as.factor(dxcat)
     ) %>%
     dp$left_join(list_df$terapi, by = "patientkod", suffix = c("", ".dupl")) %>%
     dp$select(-ts$contains(".dupl")) %>%
