@@ -53,7 +53,8 @@ out <-
             diff >= -30 & diff <= 7 ~ "Behandlingsstart",
             diff >= 120 & diff <= 365 ~ "Uppföljning",
             .default = NA
-        ))
+        )),
+        das28_low = ifelse(das28 < 3.2, TRUE, FALSE)
     ) %>%
     dp$filter(!is.na(visit_group)) %>%
     dp$arrange(patientkod, das28) %>%

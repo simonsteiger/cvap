@@ -13,7 +13,7 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id, .data, x, y, group, text) {
+server <- function(id, .data, x, y, group = NULL, text = "Title", format = NULL) {
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
 
@@ -22,7 +22,8 @@ server <- function(id, .data, x, y, group, text) {
             x = x,
             y = y,
             group = group,
-            text = text
+            text = text,
+            format = format
         )
     })
 }

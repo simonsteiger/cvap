@@ -151,7 +151,8 @@ server <- function(id, access_page, data, geo) {
             x = "lan",
             y = "visit_group",
             group = "inkluderad",
-            text = text
+            text = text,
+            format = "percent"
         )
 
         output$overview <- sh$renderUI(icons())
