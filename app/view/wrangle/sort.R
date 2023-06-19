@@ -19,7 +19,7 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id, .data, group, ...) {
+server <- function(id, .data, group = NULL, ...) {
     sh$moduleServer(id, function(input, output, session) {
         dots <- rl$quos(...)
 
@@ -30,6 +30,8 @@ server <- function(id, .data, group, ...) {
                         dp$mutate(lan = as.factor(lan)) %>%
                         dp$arrange(dp$desc(lan))
                 )
+            } else if (is.null(group)) { # no custom reordering necessary
+                return(.data())
             } else if (is.factor(.data()[[group]])) {
                 fct_var <- sh$reactive(
                     .data() %>%

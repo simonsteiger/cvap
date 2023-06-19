@@ -26,13 +26,13 @@ list_df$basdata <- list_df$basdata %>%
     dp$select(patientkod, fodelsedag, dxcat, lan, tillhor)
 
 list_df$besoksdata <- list_df$besoksdata %>%
-    dp$select(patientkod, datum, das28)
+    dp$select(patientkod, datum, das28, cdai)
 
 list_df$bio <- list_df$bio %>%
     dp$arrange(patientkod, ordinerat) %>%
     dp$distinct(patientkod, .keep_all = TRUE) %>%
     dp$mutate(
-        prep_start = pmax(ordinerat, insatt, na.rm = TRUE),
+        prep_start = pmax(ordinerat, insatt, na.rm = TRUE), # QUESTION use prep_start?
         preparat = ifelse(preparat == "Roactemra", "RoActemra", preparat)
     )
 
@@ -48,7 +48,8 @@ out <-
     dp$left_join(list_df$bas_bio, list_df$besoksdata, by = "patientkod") %>%
     dp$mutate(
         alder = lub$interval(fodelsedag, datum) / lub$dyears(1),
-        das28_low = ifelse(das28 < 3.2, TRUE, FALSE)
+        das28_low = ifelse(das28 < 3.2, TRUE, FALSE),
+        cdai_low = ifelse(cdai <= 10, TRUE, FALSE)
     ) %>%
     dp$arrange(patientkod, das28)
 

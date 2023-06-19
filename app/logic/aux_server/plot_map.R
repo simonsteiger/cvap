@@ -7,6 +7,7 @@ box::use(
     lub = lubridate,
     hw = htmlwidgets,
     fct = forcats,
+    rl = rlang[`%||%`],
 )
 
 box::use(
@@ -39,28 +40,42 @@ plot_map <- function(.data, geo, x, y, group = NULL, text = "Title", register = 
                 ) %>%
                 dp$group_by(.data[[group]])
         )
+
         lvls <- sh$reactive(unique(out()[[group]]))
+
+        title <- sh$reactive(pr$map(lvls(), \(x) {
+            list(
+                text = paste0(text, ", ", x),
+                subtext = paste0("Data uttagen: ", lub$today()),
+                textStyle = list(color = "black", fontWeight = "bolder")
+            )
+        }))
     } else {
         out <- .data
-    }
 
-    title <- sh$reactive(pr$map(lvls(), \(x) {
-        list(
-            text = paste0(text, ", ", x),
+        title <- list(
+            text = text,
             subtext = paste0("Data uttagen: ", lub$today()),
             textStyle = list(color = "black", fontWeight = "bolder")
         )
-    }))
+    }
 
-    sh$reactive(
-        out() %>%
-            e4r$e_charts_(x, timeline = TRUE) %>%
+    sh$reactive({
+        basic <- out() %>%
+            e4r$e_charts_(x, timeline = if (!is.null(group)) TRUE else FALSE) %>%
             e4r$e_map_register(register, geo) %>%
             e4r$e_map_(y, map = "Sweden", nameProperty = "NAME_1") %>%
             e4r$e_visual_map_(y, color = palette) %>%
             e4r$e_theme("infographic") %>%
-            e4r$e_toolbox_feature(feature = c("saveAsImage")) %>%
-            e4r$e_timeline_opts(autoPlay = FALSE) %>%
-            e4r$e_timeline_serie(title = title())
-    )
+            e4r$e_toolbox_feature(feature = c("saveAsImage"))
+
+        if (!is.null(group)) {
+            basic %>%
+                e4r$e_timeline_opts(autoPlay = FALSE) %>%
+                e4r$e_timeline_serie(title = title())
+        } else {
+            basic %>%
+                e4r$e_title(text = text, paste0("Data uttagen: ", lub$today()))
+        }
+    })
 }
