@@ -6,6 +6,7 @@ box::use(
     pr = purrr,
     lub = lubridate,
     hw = htmlwidgets,
+    fct = forcats,
 )
 
 box::use(
@@ -24,7 +25,18 @@ plot_map <- function(.data, geo, x, y, group = NULL, text = "Title", register = 
     stopifnot(sh$is.reactive(.data))
 
     if (!is.null(group)) {
-        out <- sh$reactive(dp$group_by(.data(), .data[[group]]))
+        out <- sh$reactive(
+            .data() %>%
+                dp$mutate(
+                    !!group := {
+                        # Only sort by y if y does not imply chronological order
+                        if (!lub$is.Date(.data[[group]]) && group != "visit_group") {
+                            as.factor(.data[[group]]) %>% fct$fct_reorder(-.data[[y]])
+                        }
+                    }
+                ) %>%
+                dp$group_by(.data[[group]])
+        )
         lvls <- sh$reactive(unique(out()[[group]]))
     } else {
         out <- .data

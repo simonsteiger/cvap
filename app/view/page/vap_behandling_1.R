@@ -88,15 +88,15 @@ ui <- function(id, data) {
                             class = "d-flex justify-content-between align-items-center",
                             sh$div(
                                 class = "d-flex flex-row align-items-center",
-                                "Stapeldiagramm",
+                                "Karta",
                                 aui$btn_modal(
                                     ns("info-stapel"),
                                     label = sh$icon("circle-info"),
-                                    modal_title = "Information om stapeldiagramm",
+                                    modal_title = "Information om karta",
                                     footer_confirm = NULL,
                                     footer_dismiss = NULL,
                                     class_toggle = "btn btn-transparent",
-                                    "Infotext om stapeldiagramm"
+                                    "Infotext om karta"
                                 )
                             ),
                             sh$actionButton(
