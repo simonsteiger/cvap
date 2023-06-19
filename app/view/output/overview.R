@@ -93,6 +93,7 @@ make_icon <- list(
     alder = icon_alder,
     inkluderad = icon_date,
     ordinerat = icon_date,
+    ongoing = icon_date,
     lan = icon_lan_modal
 )
 

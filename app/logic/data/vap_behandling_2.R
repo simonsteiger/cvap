@@ -1,35 +1,37 @@
 box::use(
-    magrittr[`%>%`],
     fst,
+    magrittr[`%>%`],
     dp = dplyr,
-    lub = lubridate,
     ts = tidyselect,
+    lub = lubridate,
 )
 
 box::use(
-    ski = swissknife / skinit,
-    srqlib / srqprep,
-    srqlib / srqdate,
     srqlib / srqdict,
+    srqlib / srqprep,
+    ski = swissknife / skinit,
 )
 
 ski$read_dir("/Users/simonsteiger/Desktop/data/fst/")
 
 bas_ter <- list_df$basdata %>%
     srqprep$prep_recode(diagnoskod_1, srqdict$rec_dxcat, .new_name = dxcat) %>%
-    dp$mutate(lan = ifelse(lan == "Örebro", "Orebro", lan)) %>%
+    dp$mutate(
+        lan = ifelse(lan == "Örebro", "Orebro", lan)
+    ) %>%
     dp$left_join(list_df$terapi, by = "patientkod", suffix = c("", ".dupl")) %>%
     dp$select(-ts$contains(".dupl")) %>%
     dp$mutate(
-        prep_start = pmax(ordinerat, insatt, na.rm = TRUE), # QUESTION prep_start vs ordinerat
+        prep_start = pmax(ordinerat, insatt, na.rm = TRUE), # QUESTION prep_start vs ordinerat?
         alder = lub$interval(fodelsedag, ordinerat) / lub$dyears(1)
-    ) %>%
+        ) %>%
+    # QUESTION should the age filters in the app take care?
     dp$filter(
-        alder >= 18, # QUESTION should the filters in the app take care?
         dxcat == "RA",
+        alder >= 18,
         prep_typ == "bioprep"
     ) %>%
-    dp$select(patientkod, lan, kon, inkluderad, ordinerat, pagaende, utsatt)
+    dp$select(patientkod, lan, kon, ordinerat, pagaende, utsatt)
 
 pop <-
     dp$left_join(
@@ -60,4 +62,4 @@ simplified_pop <-
 
 out <- dp$left_join(bas_ter, simplified_pop, by = "lan")
 
-fst$write_fst(out, "app/logic/data/vap_indikatorer_2.fst")
+fst$write_fst(out, "app/logic/data/vap_behandling_2.fst")

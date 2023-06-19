@@ -81,7 +81,14 @@ ui <- function(id) {
           list_df$vap_indikatorer_4
         )
       ),
-      rt$route("vap_behandling_2", vap_behandling_2$ui(ns("vap_behandling_2"))),
+      # How do behandling 2 and indikatorer 2 differ (meaningfully)?
+      rt$route(
+        "vap_behandling_2",
+        vap_behandling_2$ui(
+          ns("vap_behandling_2"),
+          list_df$vap_behandling_2
+        )
+      ),
       rt$route("vap_behandling_3", vap_behandling_3$ui(ns("vap_behandling_3"))),
       rt$route("vap_behandling_4", vap_behandling_4$ui(ns("vap_behandling_4"))),
       rt$route("vap_inklusionsmatt_1", vap_inklusionsmatt_1$ui(ns("vap_inklusionsmatt_1"))),
@@ -133,7 +140,13 @@ server <- function(id) {
       geo = geo
     )
 
-    vap_behandling_2$server("vap_behandling_2")
+    vap_behandling_2$server(
+      "vap_behandling_2",
+      access_page = input$vap_behandling_2,
+      data = list_df$vap_behandling_2,
+      geo = geo
+    )
+
     vap_behandling_3$server("vap_behandling_3")
     vap_behandling_4$server("vap_behandling_4")
     vap_inklusionsmatt_1$server("vap_inklusionsmatt_1")

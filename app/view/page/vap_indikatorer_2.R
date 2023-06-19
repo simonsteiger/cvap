@@ -21,6 +21,7 @@ box::use(
     app / view / wrangle / squash,
     app / view / wrangle / synopsis,
     app / view / wrangle / sort,
+    app / view / wrangle / ongoing,
     app / view / output / table,
     app / view / output / bar,
     app / view / output / map,
@@ -36,7 +37,7 @@ ui <- function(id, data) {
     ns <- sh$NS(id)
 
     inputs <- sh$tagList(
-        aui$inp_daterange(sh$NS(ns("input"), "ordinerat"), "Välj tidsfönster för ordinerationsdatum"),
+        aui$inp_daterange(sh$NS(ns("input"), "ongoing"), "Välj tidsfönster för behandlingar"),
         aui$inp_radio_sex(sh$NS(ns("input"), "kon")),
         # aui$inp_slider_age(sh$NS(ns("input"), "alder")),
         aui$inp_picker_lan(sh$NS(ns("input"), "lan"), unique(data$lan))
@@ -126,12 +127,17 @@ server <- function(id, access_page, data, geo) {
             data[sieve(), ]
         })
 
+        pre_ongoing <- sh$eventReactive(list(input$go, access_page), {
+            res <- ongoing$server("input", pre_sift)
+            res()
+        })
+
         sum_squash <- squash$server(
             "summary",
-            pre_sift,
+            pre_ongoing,
             .name = "n",
             .fn = dp$n,
-            .by = c("lan", "population", "ordinerat")
+            .by = c("lan", "population", "ongoing_timestamp")
         )
 
         sum_synopsis <- synopsis$server(
@@ -139,7 +145,7 @@ server <- function(id, access_page, data, geo) {
             sum_squash,
             .fn = `%per100k%`,
             .var = "n",
-            .by = c("lan", "ordinerat", "population"),
+            .by = c("lan", "ongoing_timestamp", "population"),
             riket = FALSE,
             .data[["population"]]
         )
@@ -147,14 +153,14 @@ server <- function(id, access_page, data, geo) {
         sum_sort <- sort$server(
             "output",
             sum_synopsis,
-            group = "ordinerat",
+            group = "ongoing_timestamp",
             .var = "n"
         )
 
         out_table <- table$server(
             "output",
             sum_sort,
-            arrange = c("lan", "ordinerat")
+            arrange = c("lan", "ongoing_timestamp")
         )
 
         out_bar <- bar$server(
@@ -162,7 +168,7 @@ server <- function(id, access_page, data, geo) {
             sum_sort,
             x = "lan",
             y = "n",
-            group = "ordinerat",
+            group = "ongoing_timestamp",
             text = text
         )
 
@@ -180,7 +186,7 @@ server <- function(id, access_page, data, geo) {
         #         geo = geo,
         #         x = "lan",
         #         y = "n",
-        #         group = "ordinerat",
+        #         group = "ongoing_timestamp",
         #         text = text
         #     )
         # })

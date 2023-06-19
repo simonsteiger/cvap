@@ -29,9 +29,11 @@ plot_map <- function(.data, geo, x, y, group = NULL, text = "Title", register = 
             .data() %>%
                 dp$mutate(
                     !!group := {
-                        # Only sort by y if y does not imply chronological order
+                        # Only sort by y if group does not imply chronological order
                         if (!lub$is.Date(.data[[group]]) && group != "visit_group") {
                             as.factor(.data[[group]]) %>% fct$fct_reorder(-.data[[y]])
+                        } else {
+                            .data[[group]]
                         }
                     }
                 ) %>%
