@@ -135,8 +135,7 @@ server <- function(id, access_page, data, geo) {
         sum_sort <- sort$server(
             "output",
             sum_synopsis,
-            group = "inkluderad",
-            .var = "visit_group"
+            group = "inkluderad"
         )
 
         out_table <- table$server(
@@ -148,8 +147,6 @@ server <- function(id, access_page, data, geo) {
         out_bar <- bar$server(
             "output",
             sum_sort,
-            x = "lan",
-            y = "visit_group",
             group = "inkluderad",
             text = text,
             format = "percent"
@@ -167,8 +164,6 @@ server <- function(id, access_page, data, geo) {
                 id = "output",
                 .data = sum_sort,
                 geo = geo,
-                x = "lan",
-                y = "visit_group",
                 group = "inkluderad",
                 text = text
             )

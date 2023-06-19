@@ -22,7 +22,7 @@ palette <- c(
 )
 
 #' @export
-plot_map <- function(.data, geo, x, y, group = NULL, text = "Title", register = "Sweden") {
+plot_map <- function(.data, geo, x = "lan", y = "outcome", group = NULL, text = "Title") {
     stopifnot(sh$is.reactive(.data))
 
     if (!is.null(group)) {
@@ -63,7 +63,7 @@ plot_map <- function(.data, geo, x, y, group = NULL, text = "Title", register = 
     sh$reactive({
         basic <- out() %>%
             e4r$e_charts_(x, timeline = if (!is.null(group)) TRUE else FALSE) %>%
-            e4r$e_map_register(register, geo) %>%
+            e4r$e_map_register("Sweden", geo) %>%
             e4r$e_map_(y, map = "Sweden", nameProperty = "NAME_1") %>%
             e4r$e_visual_map_(y, color = palette) %>%
             e4r$e_theme("infographic") %>%

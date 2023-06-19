@@ -156,7 +156,6 @@ server <- function(id, access_page, data, geo) {
         sum_squash <- squash$server(
             "summary",
             pre_ongoing,
-            .name = "n",
             .fn = dp$n,
             .by = c("lan", "ongoing_timestamp", "population")
         )
@@ -165,7 +164,7 @@ server <- function(id, access_page, data, geo) {
             "summary",
             sum_squash,
             .fn = `%per100k%`,
-            .var = "n",
+            .var = "outcome",
             .by = c("lan", "ongoing_timestamp", "population"),
             riket = FALSE,
             .data[["population"]]
@@ -174,8 +173,7 @@ server <- function(id, access_page, data, geo) {
         sum_sort <- sort$server(
             "output",
             sum_synopsis,
-            group = "ongoing_timestamp",
-            .var = "n"
+            group = "ongoing_timestamp"
         )
 
         out_table <- table$server(
@@ -187,8 +185,6 @@ server <- function(id, access_page, data, geo) {
         out_bar <- bar$server(
             "output",
             sum_sort,
-            x = "lan",
-            y = "n",
             group = "ongoing_timestamp",
             text = text
         )
@@ -198,8 +194,6 @@ server <- function(id, access_page, data, geo) {
                 id = "output",
                 .data = sum_sort,
                 geo = geo,
-                x = "lan",
-                y = "n",
                 group = "ongoing_timestamp",
                 text = text
             )

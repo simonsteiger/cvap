@@ -13,7 +13,7 @@ box::use(
 )
 
 #' @export
-synopsise <- function(.data, .fn, .var, .by, riket = TRUE, ...) {
+synopsise <- function(.data, .fn, .var = "outcome", .by, riket = TRUE, ...) {
     dots <- rl$quos(...)
 
     if (riket) {
@@ -22,19 +22,19 @@ synopsise <- function(.data, .fn, .var, .by, riket = TRUE, ...) {
 
     out <- .data %>%
         dp$summarise(
-            !!.var := .fn(.data[[.var]], !!!dots),
+            outcome = .fn(.data[[.var]], !!!dots),
             nna = sum(is.na(.data[[.var]])),
             .by = ts$all_of(.by)
         )
 
     digits <- dp$case_when(
-        max(out[[.var]]) <= 10 ~ 2,
-        max(out[[.var]]) %>% dp$between(10.01, 99.99) ~ 1,
-        max(out[[.var]]) >= 100 ~ 0,
+        max(out[["outcome"]]) <= 10 ~ 2,
+        max(out[["outcome"]]) %>% dp$between(10.01, 99.99) ~ 1,
+        max(out[["outcome"]]) >= 100 ~ 0,
     )
 
     out %>%
         dp$mutate(
-            !!.var := round(.data[[.var]], digits)
+            outcome = round(.data[["outcome"]], digits)
         )
 }

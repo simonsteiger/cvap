@@ -135,8 +135,7 @@ server <- function(id, access_page, data, geo) {
         sum_sort <- sort$server(
             "output",
             sum_synopsis,
-            group = "visit_group",
-            .var = "patientens_globala"
+            group = "visit_group"
         )
 
         out_table <- table$server(
@@ -148,8 +147,6 @@ server <- function(id, access_page, data, geo) {
         out_bar <- bar$server(
             "output",
             sum_sort,
-            x = "lan",
-            y = "patientens_globala",
             group = "visit_group",
             text = text
         )
@@ -166,8 +163,6 @@ server <- function(id, access_page, data, geo) {
                 id = "output",
                 .data = sum_sort,
                 geo = geo,
-                x = "lan",
-                y = "patientens_globala",
                 group = "visit_group",
                 text = text
             )

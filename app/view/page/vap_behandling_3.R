@@ -136,6 +136,8 @@ ui <- function(id, data) {
     )
 }
 
+# TODO give outcome generic name after synopsis, then rename for user in out_X
+
 #' @export
 server <- function(id, access_page, data, geo) {
     sh$moduleServer(id, function(input, output, session) {
@@ -151,18 +153,21 @@ server <- function(id, access_page, data, geo) {
         })
 
         pre_lookback <- sh$eventReactive(list(input$go, access_page), {
-            res <- lookback$server("input", pre_sift, outcome = input$outcome)
+            res <- lookback$server("input", pre_sift, input$outcome)
             res()
         })
 
-        sum_synopsis <- synopsis$server(
-            "summary",
-            pre_lookback,
-            .fn = mean,
-            .var = input$outcome,
-            .by = "lan",
-            na.rm = TRUE
-        )
+        sum_synopsis <- sh$eventReactive(list(input$go, access_page), {
+            res <- synopsis$server(
+                "summary",
+                pre_lookback,
+                .fn = mean,
+                .var = "outcome",
+                .by = "lan",
+                na.rm = TRUE
+            )
+            res()
+        })
 
         sum_sort <- sort$server(
             "output",
@@ -178,8 +183,6 @@ server <- function(id, access_page, data, geo) {
         out_bar <- bar$server(
             "output",
             sum_sort,
-            x = "lan",
-            y = input$outcome,
             text = text
         )
 
@@ -188,8 +191,6 @@ server <- function(id, access_page, data, geo) {
                 id = "output",
                 .data = sum_sort,
                 geo = geo,
-                x = "lan",
-                y = input$outcome,
                 group = NULL,
                 text = text
             )

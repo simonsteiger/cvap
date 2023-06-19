@@ -31,7 +31,11 @@ server <- function(id, .data, group = NULL, ...) {
                         dp$arrange(dp$desc(lan))
                 )
             } else if (is.null(group)) { # no custom reordering necessary
-                return(.data())
+                return(
+                    .data() %>%
+                        dp$mutate(lan = fct$fct_reorder(as.factor(lan), .data[["outcome"]])) %>%
+                        dp$arrange(lan)
+                )
             } else if (is.factor(.data()[[group]])) {
                 fct_var <- sh$reactive(
                     .data() %>%
@@ -43,7 +47,7 @@ server <- function(id, .data, group = NULL, ...) {
                     srqprep$prep_custom_order(
                         .data(),
                         .reorder = "lan",
-                        .by = rl$quo_get_expr(dots$.var),
+                        .by = "outcome",
                         .data[[fct_var()]] == levels(.data[[fct_var()]])[2]
                     )
                 )
@@ -58,7 +62,7 @@ server <- function(id, .data, group = NULL, ...) {
                     srqprep$prep_custom_order(
                         .data(),
                         .reorder = "lan",
-                        .by = rl$quo_get_expr(dots$.var),
+                        .by = "outcome",
                         .data[[date_var()]] == max(.data[[date_var()]])
                     )
                 )

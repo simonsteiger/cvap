@@ -8,7 +8,7 @@ box::use(
 )
 
 #' @export
-plot_bar <- function(.data, x, y, group = NULL, text = "Title", format = NULL) {
+plot_bar <- function(.data, x = "lan", y = "outcome", group = NULL, text = "Title", format = NULL) {
     stopifnot(sh$is.reactive(.data))
 
     if (!is.null(group)) {

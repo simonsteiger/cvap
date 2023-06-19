@@ -6,12 +6,12 @@ box::use(
 )
 
 #' @export
-squash <- function(.data, .fn, .by, .name, ...) {
+squash <- function(.data, .fn, .by, ...) {
     dots <- rl$list2(...)
 
     .data %>%
         dp$summarise(
-            !!.name := .fn(!!!dots),
+            outcome = .fn(!!!dots),
             .by = ts$all_of(.by)
         )
 }

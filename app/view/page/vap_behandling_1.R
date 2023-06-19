@@ -156,7 +156,6 @@ server <- function(id, access_page, data, geo) {
         sum_squash <- squash$server(
             "summary",
             pre_ongoing,
-            .name = "n",
             .fn = dp$n,
             .by = c("lan", "dxcat")
         )
@@ -164,8 +163,7 @@ server <- function(id, access_page, data, geo) {
         sum_sort <- sort$server(
             "output",
             sum_squash,
-            group = "dxcat",
-            .var = "n"
+            group = "dxcat"
         )
 
         out_table <- table$server(
@@ -177,8 +175,6 @@ server <- function(id, access_page, data, geo) {
         out_bar <- bar$server(
             "output",
             sum_sort,
-            x = "lan",
-            y = "n",
             group = "dxcat",
             text = text
         )
@@ -188,8 +184,6 @@ server <- function(id, access_page, data, geo) {
                 id = "output",
                 .data = sum_sort,
                 geo = geo,
-                x = "lan",
-                y = "n",
                 group = "dxcat",
                 text = text
             )
