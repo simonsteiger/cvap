@@ -81,7 +81,18 @@ ui <- function(id, data) {
                                     "Infotext om stapeldiagramm"
                                 )
                             ),
-                            aui$inp_toggle_sort(sh$NS(ns("output"), "sort"))
+                            sh$div(
+                                class = "d-flex justify-content-between align-items-center gap-3",
+                                aui$inp_toggle_sort(sh$NS(ns("output"), "sort")),
+                                aui$btn_modal(
+                                    ns("download"),
+                                    label = sh$tagList(sh$icon("download"), "Download"),
+                                    modal_title = "Anpassa download",
+                                    footer_confirm = NULL,
+                                    footer_dismiss = NULL,
+                                    "Download controls"
+                                )
+                            )
                         ),
                         body = e4r$echarts4rOutput(ns("bar"))
                     ),
@@ -101,12 +112,23 @@ ui <- function(id, data) {
                                     "Infotext om karta"
                                 )
                             ),
-                            sh$actionButton(
-                                ns("load"),
-                                class = "hover",
-                                "Ladda karta",
-                                icon = sh$icon("hourglass-half")
-                            ) # put this into map UI
+                            sh$div(
+                                class = "d-flex justify-content-between align-items-center gap-3",
+                                sh$actionButton(
+                                    ns("load"),
+                                    class = "hover",
+                                    "Ladda karta",
+                                    icon = sh$icon("hourglass-half")
+                                ), # put this into map UI
+                                aui$btn_modal(
+                                    ns("download"),
+                                    label = sh$tagList(sh$icon("download"), "Download"),
+                                    modal_title = "Anpassa download",
+                                    footer_confirm = NULL,
+                                    footer_dismiss = NULL,
+                                    "Download controls"
+                                )
+                            )
                         ),
                         body = e4r$echarts4rOutput(ns("map"))
                     ),
