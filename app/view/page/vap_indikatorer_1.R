@@ -75,13 +75,56 @@ ui <- function(id, data) {
                                     "Infotext om stapeldiagramm"
                                 )
                             ),
-                            aui$inp_toggle_sort(sh$NS(ns("output"), "sort"))
+                            sh$div(
+                                class = "d-flex justify-content-between align-items-center gap-3",
+                                aui$inp_toggle_sort(sh$NS(ns("output"), "sort")),
+                                aui$btn_modal(
+                                    ns("download"),
+                                    label = sh$tagList(sh$icon("download"), "Download"),
+                                    modal_title = "Anpassa download",
+                                    footer_confirm = NULL,
+                                    footer_dismiss = NULL,
+                                    "Download controls"
+                                )
+                            )
                         ),
                         body = e4r$echarts4rOutput(ns("bar"))
                     ),
                     aui$card(
-                        header = sh$htmlOutput(ns("loader")),
-                        # body = e4r$echarts4rOutput(ns("map"))
+                        header = sh$div(
+                            class = "d-flex justify-content-between align-items-center",
+                            sh$div(
+                                class = "d-flex flex-row align-items-center",
+                                "Karta",
+                                aui$btn_modal(
+                                    ns("info-stapel"),
+                                    label = sh$icon("circle-info"),
+                                    modal_title = "Information om karta",
+                                    footer_confirm = NULL,
+                                    footer_dismiss = NULL,
+                                    class_toggle = "btn btn-transparent",
+                                    "Infotext om karta"
+                                )
+                            ),
+                            sh$div(
+                                class = "d-flex justify-content-between align-items-center gap-3",
+                                sh$actionButton(
+                                    ns("load"),
+                                    class = "hover",
+                                    "Ladda karta",
+                                    icon = sh$icon("hourglass-half")
+                                ), # put this into map UI
+                                aui$btn_modal(
+                                    ns("download"),
+                                    label = sh$tagList(sh$icon("download"), "Download"),
+                                    modal_title = "Anpassa download",
+                                    footer_confirm = NULL,
+                                    footer_dismiss = NULL,
+                                    "Download controls"
+                                )
+                            )
+                        ),
+                        body = e4r$echarts4rOutput(ns("map"))
                     ),
                     aui$card(
                         header = sh$div(class = "py-card-header", "Sammanfattning"),
@@ -152,63 +195,23 @@ server <- function(id, access_page, data, geo) {
             format = "percent"
         )
 
-        output$overview <- sh$renderUI(out_icons())
-
-        output$table <- rtbl$renderReactable(out_table())
-
-        output$bar <- e4r$renderEcharts4r(out_bar())
-
-        args_map <- sh$reactive({
-            list(input$go, access_page)
-            list(
+        out_map <- sh$eventReactive(input$load, {
+            res <- map$server(
                 id = "output",
                 .data = sum_sort,
                 geo = geo,
                 group = "inkluderad",
                 text = text
             )
+            res()
         })
 
-        #out_map <- worker$run_job("map1", map$wrap, args_map)
-#
-        #output$loader <- sh$renderUI({
-        #    task <- out_map()
-        #    if (!task$resolved) {
-        #        sh$tagList(
-        #            sh$div(
-        #                class = "d-flex justify-content-between align-items-center",
-        #                sh$div(
-        #                    class = "py-card-header",
-        #                    sh$tags$strong("Ritar karta, var god vänta...")
-        #                ),
-        #                sh$div(
-        #                    class = "spinner-border spinner-border-sm",
-        #                    role = "status"
-        #                )
-        #            )
-        #        )
-        #    } else {
-        #        sh$div(
-        #            class = "d-flex flex-row align-items-center",
-        #            "Karta",
-        #            aui$btn_modal(
-        #                sh$NS(id, "info-karta"),
-        #                label = sh$icon("circle-info"),
-        #                modal_title = "Information om karta",
-        #                footer_confirm = NULL,
-        #                footer_dismiss = NULL,
-        #                class_toggle = "btn btn-transparent",
-        #                "Infotext om karta"
-        #            )
-        #        )
-        #    }
-        #})
-#
-        #output$map <- e4r$renderEcharts4r({
-        #    if (!is.null(out_map()$result)) {
-        #        res <- out_map()$result
-        #        res()
-        #    }
-        #})
+        output$overview <- sh$renderUI(out_icons())
+
+        output$table <- rtbl$renderReactable(out_table())
+
+        output$bar <- e4r$renderEcharts4r(out_bar())
+
+        output$map <- e4r$renderEcharts4r(out_map())
     })
 }
