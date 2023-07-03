@@ -103,7 +103,13 @@ ui <- function(id) {
           list_df$vap_behandling_4
         )
       ),
-      rt$route("vap_inklusionsmatt_1", vap_inklusionsmatt_1$ui(ns("vap_inklusionsmatt_1"))),
+      rt$route(
+        "vap_inklusionsmatt_1",
+        vap_inklusionsmatt_1$ui(
+          ns("vap_inklusionsmatt_1"),
+          list_df$vap_inklusionsmatt_1
+        )
+      ),
       rt$route("vap_kvalitetssakring_1", vap_kvalitetssakring_1$ui(ns("vap_kvalitetssakring_1"))),
       rt$route("vap_kvalitetssakring_2", vap_kvalitetssakring_2$ui(ns("vap_kvalitetssakring_2"))),
     )
@@ -173,7 +179,13 @@ server <- function(id) {
       geo = geo
     )
 
-    vap_inklusionsmatt_1$server("vap_inklusionsmatt_1")
+    vap_inklusionsmatt_1$server(
+      "vap_inklusionsmatt_1",
+      access_page = input$vap_inklusionsmatt_1,
+      data = list_df$vap_inklusionsmatt_1,
+      geo = geo
+    )
+
     vap_kvalitetssakring_1$server("vap_kvalitetssakring_1")
     vap_kvalitetssakring_2$server("vap_kvalitetssakring_2")
   })
