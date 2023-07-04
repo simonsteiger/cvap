@@ -28,8 +28,6 @@ box::use(
     app / view / output / overview,
 )
 
-worker <- ase$initialize_worker()
-
 text <- aui$navbox_data$tag[[1]][[2]]
 
 #' @export

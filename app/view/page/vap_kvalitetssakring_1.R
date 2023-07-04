@@ -25,7 +25,7 @@ box::use(
     app / view / output / overview,
 )
 
-text <- aui$navbox_data$tag[[3]][[1]]
+text <- aui$navbox_data$tag[[4]][[1]]
 
 #' @export
 ui <- function(id, data) {

@@ -10,7 +10,7 @@ box::use(
     app / logic / aux_ui / static / logo,
     app / logic / aux_ui / static / rows,
     app / logic / aux_ui / static / sidebar,
-    app / logic / aux_ui / static / navbox,
+    app / logic / aux_ui / static / navboxes,
     app / logic / aux_ui / input / inp_daterange,
     app / logic / aux_ui / input / inp_date,
     app / logic / aux_ui / input / inp_radio_sex,
@@ -58,13 +58,13 @@ row_sidebar <- rows$row_sidebar
 row <- rows$row
 
 #' @export
-navbox <- navbox$navbox
+navbox <- navboxes$navbox
 
 #' @export
-navbox_data <- navbox$navbox_data
+navbox_data <- navboxes$navbox_data
 
 #' @export
-navbox_map <- navbox$navbox_map
+navbox_map <- navboxes$navbox_map
 
 #' @export
 inp_daterange <- inp_daterange$inp_daterange

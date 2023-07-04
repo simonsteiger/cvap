@@ -52,7 +52,7 @@ server <- function(id, .data, geo, x = "lan", y = "outcome", group = NULL, text 
                 if (is.factor(out()[[group]])) {
                     levels(out()[[group]])
                 } else {
-                    unique(out()[[group]])
+                    sort(unique(out()[[group]]))
                 }
             })
 
@@ -92,17 +92,4 @@ server <- function(id, .data, geo, x = "lan", y = "outcome", group = NULL, text 
             }
         })
     })
-}
-
-#' @export
-wrap <- function(args) {
-    server(
-        id = args$id,
-        .data = args$.data,
-        geo = args$geo,
-        x = args$x,
-        y = args$y,
-        group = args$group,
-        text = args$text
-    )
 }
