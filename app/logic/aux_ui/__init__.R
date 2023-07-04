@@ -3,7 +3,6 @@ box::use(
     app / logic / aux_ui / static / btn_dropdown,
     app / logic / aux_ui / static / btn_modal,
     app / logic / aux_ui / static / btn_popover,
-    app / logic / aux_ui / static / navset_card_tab,
     app / logic / aux_ui / static / card,
     app / logic / aux_ui / static / layout_column_wrap,
     app / logic / aux_ui / static / container_fluid,
@@ -12,8 +11,6 @@ box::use(
     app / logic / aux_ui / static / rows,
     app / logic / aux_ui / static / sidebar,
     app / logic / aux_ui / static / navbox,
-    app / logic / aux_ui / static / navbox_data,
-    app / logic / aux_ui / static / navbox_map,
     app / logic / aux_ui / input / inp_daterange,
     app / logic / aux_ui / input / inp_date,
     app / logic / aux_ui / input / inp_radio_sex,
@@ -40,9 +37,6 @@ btn_popover <- btn_popover$btn_popover
 card <- card$card
 
 #' @export
-navset_card_tab <- navset_card_tab$navset_card_tab
-
-#' @export
 layout_column_wrap <- layout_column_wrap$layout_column_wrap
 
 #' @export
@@ -67,10 +61,10 @@ row <- rows$row
 navbox <- navbox$navbox
 
 #' @export
-navbox_data <- navbox_data$navbox_data
+navbox_data <- navbox$navbox_data
 
 #' @export
-navbox_map <- navbox_map$navbox_map
+navbox_map <- navbox$navbox_map
 
 #' @export
 inp_daterange <- inp_daterange$inp_daterange

@@ -6,7 +6,6 @@ box::use(
 #' @export
 sidebar <- function(title = "Översikt", header = NULL, body = NULL, footer = NULL) {
     bsl$card(
-        # class = "my-3",
         height = "650px",
         bsl$card_header(
             sh$div(
