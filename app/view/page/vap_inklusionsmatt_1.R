@@ -18,6 +18,7 @@ box::use(
     app / view / wrangle / sift,
     app / view / wrangle / synopsis,
     app / view / wrangle / sort,
+    app / view / wrangle / multigroup,
     app / view / output / table,
     app / view / output / bar,
     app / view / output / map,
@@ -164,33 +165,41 @@ server <- function(id, access_page, data, geo) {
             data[sieve(), ]
         })
 
+        pre_multigroup <- multigroup$server(
+            "multigroup",
+            pre_sift,
+            unit = "weeks",
+            start = "min_inkl_diag"
+        )
+
         sum_synopsis <- synopsis$server(
             "summary",
-            pre_sift,
+            pre_multigroup,
             .fn = mean,
             .var = "visit_group",
-            .by = c("lan", "inkluderad"),
+            .by = c("lan", "timestamp_group"),
             na.rm = TRUE
         )
 
         sum_sort <- sort$server(
             "output",
             sum_synopsis,
-            group = "inkluderad"
+            group = "timestamp_group"
         )
 
         out_table <- table$server(
             "output",
             sum_sort,
-            arrange = c("lan", "inkluderad")
+            arrange = c("lan", "timestamp_group")
         )
 
         out_bar <- bar$server(
             "output",
             sum_sort,
-            group = "inkluderad",
+            group = "timestamp_group",
             text = text,
-            format = "percent"
+            format = "percent",
+            timeline = TRUE
         )
 
         out_map <- sh$eventReactive(input$load, {
@@ -198,7 +207,7 @@ server <- function(id, access_page, data, geo) {
                 id = "output",
                 .data = sum_sort,
                 geo = geo,
-                group = "inkluderad",
+                group = "timestamp_group",
                 text = text
             )
             res()

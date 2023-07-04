@@ -17,7 +17,7 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id, .data, unit) {
+server <- function(id, .data, unit, start) {
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
 
@@ -25,15 +25,6 @@ server <- function(id, .data, unit) {
             "months" = lub$dmonths,
             "weeks" = lub$dweeks,
         )
-
-        out <- .data %>%
-            srqprep$prep_dynamic_groups(
-                .start = srqdate$no_limit,
-                .end = lub$today() - unit_fn(input$regroup),
-                .start_var = "min_ins_ord",
-                .end_var = "datum",
-                TRUE ~ TRUE
-            )
 
         unit_seq <- switch(unit,
             "months" = seq(from = 4, to = 12, by = 2),
@@ -45,14 +36,22 @@ server <- function(id, .data, unit) {
             "weeks" = lub$dweeks(10) / lub$ddays(1),
         )
 
-        pr$map(unit_seq, \(t) {
-            t_days <- unit_fn(t) / lub$ddays(1)
-            out %>%
-                dp$mutate(
-                    visit_group = ifelse(diff <= t_days & diff >= unit_min, TRUE, FALSE),
-                    timestamp_group = t
-                )
-        }) %>%
-            pr$list_rbind()
+        sh$reactive({
+            out <- .data() %>%
+                dp$mutate(diff = as.numeric(datum - .data[[start]]))
+
+            pr$map(unit_seq, \(t) {
+                t_days <- unit_fn(t) / lub$ddays(1)
+                out %>%
+                    dp$filter(.data[[start]] <= lub$today() - t_days) %>%
+                    dp$mutate(
+                        visit_group = ifelse(diff <= t_days & diff >= unit_min, TRUE, FALSE),
+                        timestamp_group = factor(t)
+                    ) %>%
+                    dp$arrange(patientkod, dp$desc(visit_group)) %>%
+                    dp$distinct(patientkod, .keep_all = TRUE)
+            }) %>%
+                pr$list_rbind()
+        })
     })
 }

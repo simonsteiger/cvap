@@ -51,16 +51,6 @@ out <-
     dp$mutate(
         min_ins_ord = pmin(insatt, ordinerat, na.rm = TRUE),
         alder = lub$interval(fodelsedag, datum) / lub$dyears(1)
-    ) %>%
-    srqprep$prep_dynamic_groups(
-        .start = srqdate$no_limit,
-        .end = lub$today() - lub$dmonths(6), # ordination must be at least 6 months ago
-        .start_var = "min_ins_ord",
-        .end_var = "datum",
-        diff >= -180 & diff <= -60 ~ TRUE,
-        .default = FALSE
-    ) %>%
-    dp$arrange(patientkod, dp$desc(visit_group)) %>%
-    dp$distinct(patientkod, .keep_all = TRUE)
+    )
 
 fst$write_fst(out, "app/logic/data/vap_kvalitetssakring_1.fst")

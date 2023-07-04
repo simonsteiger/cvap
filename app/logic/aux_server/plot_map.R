@@ -41,7 +41,13 @@ plot_map <- function(.data, geo, x = "lan", y = "outcome", group = NULL, text = 
                 dp$group_by(.data[[group]])
         )
 
-        lvls <- sh$reactive(unique(out()[[group]]))
+        lvls <- sh$reactive({
+            if (is.factor(out()[[group]])) {
+                levels(out()[[group]])
+            } else {
+                unique(out()[[group]])
+            }
+        })
 
         title <- sh$reactive(pr$map(lvls(), \(x) {
             list(
