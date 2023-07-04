@@ -1,6 +1,8 @@
 box::use(
     magrittr[`%>%`],
     sh = shiny,
+    lub = lubridate,
+    dp = dplyr,
 )
 
 box::use(
@@ -26,14 +28,14 @@ server <- function(id, .data, unit) {
 
         start <- switch(
             unit,
-            "months" = lub$dmonths(2) / lub$ddays(1),
-            "weeks" = lub$dweeks(10) / lub$ddays(1),
+            "months" = lub$dmonths(min(input$regroup)) / lub$ddays(1),
+            "weeks" = lub$dweeks(min(input$regroup)) / lub$ddays(1),
         )
 
         end <- switch(
             unit,
-            "months" = lub$dmonths(12) / lub$ddays(1),
-            "weeks" = lub$dweeks(52) / lub$ddays(1),
+            "months" = lub$dmonths(max(input$regroup)) / lub$ddays(1),
+            "weeks" = lub$dweeks(max(input$regroup)) / lub$ddays(1),
         )
 
         .data %>%
