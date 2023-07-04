@@ -37,33 +37,41 @@ server <- function(id, .data, group = NULL, ...) {
                         dp$arrange(lan)
                 )
             } else if (is.factor(.data()[[group]])) {
-                fct_var <- sh$reactive(
+                fct_var <-
                     .data() %>%
-                        dp$select(ts$where(is.factor)) %>%
-                        colnames()
-                )
+                    dp$select(ts$where(is.factor)) %>%
+                    colnames()
+
+                # Order fct_var by outcome, descending
+                # Pick first level = level with highest outcome values
+                target_level <-
+                    .data()[[fct_var]] %>%
+                    droplevels(.) %>%
+                    fct$fct_reorder(-.data()[["outcome"]]) %>%
+                    levels(.) %>%
+                    `[`(., 1)
 
                 return(
                     srqprep$prep_custom_order(
                         .data(),
                         .reorder = "lan",
                         .by = "outcome",
-                        .data[[fct_var()]] == levels(.data[[fct_var()]])[2]
+                        .data[[fct_var]] == target_level
                     )
                 )
             } else if (lub$is.Date(.data()[[group]])) {
-                date_var <- sh$reactive(
+                date_var <-
                     .data() %>%
-                        dp$select(ts$where(lub$is.Date)) %>%
-                        colnames()
-                )
+                    dp$select(ts$where(lub$is.Date)) %>%
+                    colnames()
+
 
                 return(
                     srqprep$prep_custom_order(
                         .data(),
                         .reorder = "lan",
                         .by = "outcome",
-                        .data[[date_var()]] == max(.data[[date_var()]])
+                        .data[[date_var]] == max(.data[[date_var]])
                     )
                 )
             }

@@ -38,6 +38,7 @@ ui <- function(id, data) {
         aui$inp_date(sh$NS(ns("input"), "ongoing"), "Välj tidpunkt för pågående behandlingar"),
         aui$inp_radio_sex(sh$NS(ns("input"), "kon")),
         # aui$inp_slider_age(sh$NS(ns("input"), "alder")),
+        aui$inp_picker_dxcat(sh$NS(ns("input"), "dxcat"), levels(data$dxcat), multiple = TRUE),
         aui$inp_picker_lan(sh$NS(ns("input"), "lan"), unique(data$lan))
     )
 

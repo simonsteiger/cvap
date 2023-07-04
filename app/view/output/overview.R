@@ -44,6 +44,12 @@ icon_lan <- function(input, ...) {
     )
 }
 
+icon_dxcat <- function(input, ...) {
+    sh$tagList(
+        sh$icon("clipboard-list"), paste0(input, collapse = ", ")
+    )
+}
+
 icon_lan_modal <- function(input, ...) {
     dots <- rl$list2(...)
     cond_one <- length(unlist(input)) > 1
@@ -94,7 +100,8 @@ make_icon <- list(
     inkluderad = icon_date,
     ordinerat = icon_date,
     ongoing = icon_date,
-    lan = icon_lan_modal
+    lan = icon_lan_modal,
+    dxcat = icon_dxcat
 )
 
 #' @export

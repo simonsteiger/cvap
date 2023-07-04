@@ -78,7 +78,7 @@ ui <- function(id) {
         "vap_behandling_1",
         vap_behandling_1$ui(
           ns("vap_behandling_1"),
-          list_df$vap_indikatorer_4
+          list_df$vap_behandling_1
         )
       ),
       # How do behandling 2 and indikatorer 2 differ (meaningfully)?

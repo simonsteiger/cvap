@@ -23,10 +23,9 @@ coverage <- list_df$coverage %>%
     dp$rename(lan = "Lan") %>%
     dp$mutate(
         lan = ifelse(lan == "Örebro", "Orebro", lan),
-        year = as.numeric(str$str_remove(year, "Y_")),
+        year = lub$ymd(paste(str$str_remove(year, "Y_"), "12", "31", sep = "-")),
         outcome = ifelse(is.na(outcome), 0, outcome)
     ) %>%
     dp$select(-Kod)
-
 
 fst$write_fst(coverage, "app/logic/data/vap_kvalitetssakring_2.fst")

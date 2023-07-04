@@ -16,6 +16,7 @@ box::use(
     app / logic / aux_ui / input / inp_radio_sex,
     app / logic / aux_ui / input / inp_slider_age,
     app / logic / aux_ui / input / inp_picker_lan,
+    app / logic / aux_ui / input / inp_picker_dxcat,
     app / logic / aux_ui / input / inp_picker_outcome,
     app / logic / aux_ui / input / inp_radio_lookback,
     app / logic / aux_ui / input / inp_toggle_sort,
@@ -80,6 +81,9 @@ inp_slider_age <- inp_slider_age$inp_slider_age
 
 #' @export
 inp_picker_lan <- inp_picker_lan$inp_picker_lan
+
+#' @export
+inp_picker_dxcat <- inp_picker_dxcat$inp_picker_dxcat
 
 #' @export
 inp_picker_outcome <- inp_picker_outcome$inp_picker_outcome
