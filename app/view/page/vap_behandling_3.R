@@ -63,100 +63,18 @@ ui <- function(id, data) {
                     body = sh$htmlOutput(ns("overview"))
                 ),
                 main = sh$tagList(
-                    aui$card(
-                        header = sh$div(
-                            class = "d-flex justify-content-between align-items-center",
-                            sh$div(
-                                class = "d-flex flex-row align-items-center",
-                                "Stapeldiagramm",
-                                aui$btn_modal(
-                                    ns("info-stapel"),
-                                    label = sh$icon("circle-info"),
-                                    modal_title = "Information om stapeldiagramm",
-                                    footer_confirm = NULL,
-                                    footer_dismiss = NULL,
-                                    class_toggle = "btn btn-transparent",
-                                    "Infotext om stapeldiagramm"
-                                )
-                            ),
-                            sh$div(
-                                class = "d-flex justify-content-between align-items-center gap-3",
-                                aui$inp_toggle_sort(sh$NS(ns("output"), "sort")),
-                                aui$btn_modal(
-                                    ns("download"),
-                                    label = sh$tagList(sh$icon("download"), "Download"),
-                                    modal_title = "Anpassa download",
-                                    footer_confirm = NULL,
-                                    footer_dismiss = NULL,
-                                    "Download controls"
-                                )
-                            )
-                        ),
-                        body = e4r$echarts4rOutput(ns("bar"))
-                    ),
-                    aui$card(
-                        header = sh$div(
-                            class = "d-flex justify-content-between align-items-center",
-                            sh$div(
-                                class = "d-flex flex-row align-items-center",
-                                "Karta",
-                                aui$btn_modal(
-                                    ns("info-stapel"),
-                                    label = sh$icon("circle-info"),
-                                    modal_title = "Information om karta",
-                                    footer_confirm = NULL,
-                                    footer_dismiss = NULL,
-                                    class_toggle = "btn btn-transparent",
-                                    "Infotext om karta"
-                                )
-                            ),
-                            sh$div(
-                                class = "d-flex justify-content-between align-items-center gap-3",
-                                sh$actionButton(
-                                    ns("load"),
-                                    class = "hover",
-                                    "Ladda karta",
-                                    icon = sh$icon("hourglass-half")
-                                ), # put this into map UI
-                                aui$btn_modal(
-                                    ns("download"),
-                                    label = sh$tagList(sh$icon("download"), "Download"),
-                                    modal_title = "Anpassa download",
-                                    footer_confirm = NULL,
-                                    footer_dismiss = NULL,
-                                    "Download controls"
-                                )
-                            )
-                        ),
-                        body = e4r$echarts4rOutput(ns("map"))
-                    ),
+                    bar$ui(ns("output")),
+                    map$ui(ns("output")),
                     aui$card(
                         header = sh$div(class = "py-card-header", "Sammanfattning"),
                         body = "Sample text."
                     ),
-                    aui$card(
-                        header = sh$div(
-                            class = "d-flex flex-row align-items-center",
-                            "Tabell",
-                            aui$btn_modal(
-                                ns("info-tabell"),
-                                label = sh$icon("circle-info"),
-                                modal_title = "Information om tabell",
-                                footer_confirm = NULL,
-                                footer_dismiss = NULL,
-                                class_toggle = "btn btn-transparent",
-                                "Infotext om tabell"
-                            )
-                        ),
-                        body = rtbl$reactableOutput(ns("table"))
-                    )
+                    table$ui(ns("output"))
                 )
             )
         )
     )
 }
-
-# TODO give outcome generic name after synopsis, then rename for user in out_X
 
 #' @export
 server <- function(id, access_page, data, geo) {
@@ -194,35 +112,26 @@ server <- function(id, access_page, data, geo) {
             sum_synopsis
         )
 
-        out_table <- table$server(
+        table$server(
             "output",
             sum_sort,
             arrange = "lan"
         )
 
-        out_bar <- bar$server(
+        bar$server(
             "output",
             sum_sort,
             text = text
         )
 
-        out_map <- sh$eventReactive(input$load, {
-            res <- map$server(
-                id = "output",
-                .data = sum_sort,
-                geo = geo,
-                group = NULL,
-                text = text
-            )
-            res()
-        })
+        map$server(
+            id = "output",
+            .data = sum_sort,
+            geo = geo,
+            group = NULL,
+            text = text
+        )
 
         output$overview <- sh$renderUI(out_icons())
-
-        output$table <- rtbl$renderReactable(out_table())
-
-        output$bar <- e4r$renderEcharts4r(out_bar())
-
-        output$map <- e4r$renderEcharts4r(out_map())
     })
 }
