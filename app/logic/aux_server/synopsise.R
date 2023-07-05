@@ -23,7 +23,8 @@ synopsise <- function(.data, .fn, .var = "outcome", .by, riket = TRUE, ...) {
     out <- .data %>%
         dp$summarise(
             outcome = .fn(.data[[.var]], !!!dots),
-            nna = sum(is.na(.data[[.var]])),
+            missing = sum(is.na(.data[[.var]])),
+            nonmissing = sum(!is.na(.data[[.var]])),
             .by = ts$all_of(.by)
         )
 

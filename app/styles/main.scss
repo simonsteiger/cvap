@@ -1,6 +1,6 @@
 @import "hover";
 $tertiary: #f8f9fb;
-$danger: #fd5448;
+$danger: #c9281d;
 $success: #86d130;
 
 .hover {
@@ -8,11 +8,11 @@ $success: #86d130;
 }
 
 .hover-success {
-    @include standard-hover($color: $success)
+    @include standard-hover($color: mix(white, $success, 60%))
 }
 
 .hover-danger {
-    @include standard-hover($color: $danger)
+    @include standard-hover($color: mix(white, $danger, 60%))
 }
 
 .bg-tertiary {
@@ -21,4 +21,9 @@ $success: #86d130;
 
 .py-card-header {
     padding: 0.45rem 0.45rem;
+}
+
+.icon-warning {
+    color: $danger;
+    font-size: 18pt;
 }

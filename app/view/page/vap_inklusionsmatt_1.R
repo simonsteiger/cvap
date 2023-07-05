@@ -168,7 +168,7 @@ server <- function(id, access_page, data, geo) {
         pre_multigroup <- multigroup$server(
             "multigroup",
             pre_sift,
-            unit = "weeks",
+            unit = "months",
             start = "min_inkl_diag"
         )
 

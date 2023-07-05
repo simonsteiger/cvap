@@ -22,6 +22,7 @@ box::use(
     app / view / output / bar,
     app / view / output / map,
     app / view / output / overview,
+    app / view / output / warning,
 )
 
 text <- aui$navbox_data$tag[[1]][[1]]
@@ -54,7 +55,11 @@ ui <- function(id, data) {
                         footer_dismiss = "Avbryt",
                         inputs
                     ),
-                    body = sh$htmlOutput(ns("overview"))
+                    body = sh$htmlOutput(ns("overview")),
+                    footer = sh$div(
+                        class = "d-flex flex-row justify-content-center",
+                        sh$htmlOutput(ns("warning"))
+                    )
                 ),
                 main = sh$tagList(
                     aui$card(
@@ -111,7 +116,7 @@ ui <- function(id, data) {
                                     class = "hover",
                                     "Ladda karta",
                                     icon = sh$icon("hourglass-half")
-                                ), # put this into map UI
+                                ),
                                 aui$btn_modal(
                                     ns("download"),
                                     label = sh$tagList(sh$icon("download"), "Download"),
@@ -204,6 +209,8 @@ server <- function(id, access_page, data, geo) {
             res()
         })
 
+        out_warning <- warning$server("warning", sum_sort)
+
         output$overview <- sh$renderUI(out_icons())
 
         output$table <- rtbl$renderReactable(out_table())
@@ -211,5 +218,7 @@ server <- function(id, access_page, data, geo) {
         output$bar <- e4r$renderEcharts4r(out_bar())
 
         output$map <- e4r$renderEcharts4r(out_map())
+
+        output$warning <- sh$renderUI(out_warning())
     })
 }
