@@ -9,12 +9,46 @@ box::use(
 
 box::use(
     ase = app / logic / aux_server,
+    aui = app / logic / aux_ui,
 )
 
 #' @export
 ui <- function(id) {
     ns <- sh$NS(id)
-    sh$tagList()
+    aui$card(
+        header = sh$div(
+            class = "d-flex justify-content-between align-items-center",
+            sh$div(
+                class = "d-flex flex-row align-items-center",
+                "Stapeldiagramm",
+                aui$btn_modal(
+                    ns("info-stapel"),
+                    label = sh$icon("circle-info"),
+                    modal_title = "Information om stapeldiagramm",
+                    footer_confirm = NULL,
+                    footer_dismiss = NULL,
+                    class_toggle = "btn btn-transparent",
+                    "Infotext om stapeldiagramm"
+                )
+            ),
+            sh$div(
+                class = "d-flex justify-content-between align-items-center gap-3",
+                aui$inp_toggle(ns("sort"), "Alfabetisk ordning")
+            )
+        ),
+        body = e4r$echarts4rOutput(ns("bar")),
+        footer = sh$div(
+            class = "d-flex justify-content-start",
+            aui$btn_modal(
+                ns("download"),
+                label = sh$tagList(sh$icon("download"), "Download"),
+                modal_title = "Anpassa download",
+                footer_confirm = NULL,
+                footer_dismiss = NULL,
+                "Download controls"
+            )
+        )
+    )
 }
 
 #' @export
@@ -41,7 +75,7 @@ server <- function(id, .data, x = "lan", y = "outcome", group = NULL, text = "Ti
             out <- .data
         }
 
-        sh$reactive({
+        res <- sh$reactive({
             out <- out() %>%
                 e4r$e_charts_(x, timeline = timeline) %>%
                 e4r$e_bar_(y) %>%
@@ -60,5 +94,7 @@ server <- function(id, .data, x = "lan", y = "outcome", group = NULL, text = "Ti
             }
             # Flip coords only at end to avoid confusion with axis flip and target axis for formatter
         })
+
+        output$bar <- e4r$renderEcharts4r(res())
     })
 }

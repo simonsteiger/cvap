@@ -62,61 +62,13 @@ ui <- function(id, data) {
                     warning$ui(ns("warning")),
                 ),
                 main = sh$tagList(
-                    aui$card(
-                        header = sh$div(
-                            class = "d-flex justify-content-between align-items-center",
-                            sh$div(
-                                class = "d-flex flex-row align-items-center",
-                                "Stapeldiagramm",
-                                aui$btn_modal(
-                                    ns("info-stapel"),
-                                    label = sh$icon("circle-info"),
-                                    modal_title = "Information om stapeldiagramm",
-                                    footer_confirm = NULL,
-                                    footer_dismiss = NULL,
-                                    class_toggle = "btn btn-transparent",
-                                    "Infotext om stapeldiagramm"
-                                )
-                            ),
-                            sh$div(
-                                class = "d-flex justify-content-between align-items-center gap-3",
-                                aui$inp_toggle_sort(sh$NS(ns("output"), "sort"))
-                            )
-                        ),
-                        body = e4r$echarts4rOutput(ns("bar")),
-                        footer = sh$div(
-                            class = "d-flex justify-content-start",
-                            aui$btn_modal(
-                                ns("download"),
-                                label = sh$tagList(sh$icon("download"), "Download"),
-                                modal_title = "Anpassa download",
-                                footer_confirm = NULL,
-                                footer_dismiss = NULL,
-                                "Download controls"
-                            )
-                        )
-                    ),
+                    bar$ui(ns("output")),
                     map$ui(ns("output")),
                     aui$card(
                         header = sh$div(class = "py-card-header", "Sammanfattning"),
                         body = "Sample text."
                     ),
-                    aui$card(
-                        header = sh$div(
-                            class = "d-flex flex-row align-items-center",
-                            "Tabell",
-                            aui$btn_modal(
-                                ns("info-tabell"),
-                                label = sh$icon("circle-info"),
-                                modal_title = "Information om tabell",
-                                footer_confirm = NULL,
-                                footer_dismiss = NULL,
-                                class_toggle = "btn btn-transparent",
-                                "Infotext om tabell"
-                            )
-                        ),
-                        body = rtbl$reactableOutput(ns("table"))
-                    )
+                    table$ui(ns("output"))
                 )
             )
         )
@@ -154,13 +106,13 @@ server <- function(id, access_page, data, geo) {
             group = "inkluderad"
         )
 
-        out_table <- table$server(
+        table$server(
             "output",
             sum_sort,
             arrange = c("lan", "inkluderad")
         )
 
-        out_bar <- bar$server(
+        bar$server(
             "output",
             sum_sort,
             group = "inkluderad",
@@ -178,10 +130,6 @@ server <- function(id, access_page, data, geo) {
 
         output$overview <- sh$renderUI(out_icons())
 
-        output$table <- rtbl$renderReactable(out_table())
-
         output$bar <- e4r$renderEcharts4r(out_bar())
-
-        
     })
 }
