@@ -215,16 +215,13 @@ server <- function(id, access_page, data, geo) {
 
         output$bar <- e4r$renderEcharts4r(out_bar())
 
-        out_map <- sh$eventReactive(input$load, {
-            res <- map$server(
-                id = "output",
-                .data = sum_sort,
-                geo = geo,
-                group = "ongoing_timestamp",
-                text = text
-            )
-            res()
-        })
+        out_map <- map$server(
+            id = "output",
+            .data = sum_sort,
+            geo = geo,
+            group = "ongoing_timestamp",
+            text = text
+        )
 
         output$overview <- sh$renderUI(out_icons())
 

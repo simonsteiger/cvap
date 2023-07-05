@@ -12,6 +12,7 @@ box::use(
 
 box::use(
     srqlib / srqcolor,
+    aui = app / logic / aux_ui,
 )
 
 palette <- c(
@@ -24,7 +25,37 @@ palette <- c(
 #' @export
 ui <- function(id) {
     ns <- sh$NS(id)
-    sh$tagList()
+    aui$card(
+        header = sh$div(
+            class = "d-flex flex-row justify-content-between align-items-center",
+            sh$div(
+                class = "d-flex flex-row align-items-center",
+                "Karta",
+                aui$btn_modal(
+                    ns("info-stapel"),
+                    label = sh$icon("circle-info"),
+                    modal_title = "Information om karta",
+                    footer_confirm = NULL,
+                    footer_dismiss = NULL,
+                    class_toggle = "btn btn-transparent",
+                    "Infotext om karta"
+                )
+            ),
+            aui$inp_toggle(ns("load"), "Visa karta"),
+        ),
+        body = e4r$echarts4rOutput(ns("map")),
+        footer = sh$div(
+            class = "d-flex justify-content-start align-items-center gap-3",
+            aui$btn_modal(
+                ns("download"),
+                label = sh$tagList(sh$icon("download"), "Download"),
+                modal_title = "Anpassa download",
+                footer_confirm = NULL,
+                footer_dismiss = NULL,
+                "Download controls"
+            )
+        )
+    )
 }
 
 #' @export
@@ -32,64 +63,70 @@ server <- function(id, .data, geo, x = "lan", y = "outcome", group = NULL, text 
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
 
-        if (!is.null(group)) {
-            out <- sh$reactive(
-                .data() %>%
-                    dp$mutate(
-                        !!group := {
-                            # Only sort by y if group does not imply chronological order
-                            if (!lub$is.Date(.data[[group]]) && group != "visit_group") {
-                                as.factor(.data[[group]]) %>% fct$fct_reorder(-.data[[y]])
-                            } else {
-                                .data[[group]]
+        res <- sh$reactive({
+            if (isFALSE(input$load)) { # abort if load is FALSE
+                NULL
+            } else { # otherwise draw map
+                if (!is.null(group)) {
+                    out <-
+                        .data() %>%
+                        dp$mutate(
+                            !!group := {
+                                # Only sort by y if group does not imply chronological order
+                                if (!lub$is.Date(.data[[group]]) && group != "visit_group") {
+                                    as.factor(.data[[group]]) %>% fct$fct_reorder(-.data[[y]])
+                                } else {
+                                    .data[[group]]
+                                }
                             }
+                        ) %>%
+                        dp$group_by(.data[[group]])
+
+
+                    lvls <-
+                        if (is.factor(out[[group]])) {
+                            levels(out[[group]])
+                        } else {
+                            sort(unique(out[[group]]))
                         }
-                    ) %>%
-                    dp$group_by(.data[[group]])
-            )
 
-            lvls <- sh$reactive({
-                if (is.factor(out()[[group]])) {
-                    levels(out()[[group]])
+
+                    title <- pr$map(lvls, \(x) {
+                        list(
+                            text = paste0(text, ", ", x),
+                            subtext = paste0("Data uttagen: ", lub$today()),
+                            textStyle = list(color = "black", fontWeight = "bolder")
+                        )
+                    })
                 } else {
-                    sort(unique(out()[[group]]))
+                    out <- .data
+
+                    title <- list(
+                        text = text,
+                        subtext = paste0("Data uttagen: ", lub$today()),
+                        textStyle = list(color = "black", fontWeight = "bolder")
+                    )
                 }
-            })
 
-            title <- sh$reactive(pr$map(lvls(), \(x) {
-                list(
-                    text = paste0(text, ", ", x),
-                    subtext = paste0("Data uttagen: ", lub$today()),
-                    textStyle = list(color = "black", fontWeight = "bolder")
-                )
-            }))
-        } else {
-            out <- .data
+                basic <- out %>%
+                    e4r$e_charts_(x, timeline = if (!is.null(group)) TRUE else FALSE) %>%
+                    e4r$e_map_register("Sweden", geo) %>%
+                    e4r$e_map_(y, map = "Sweden", nameProperty = "NAME_1") %>%
+                    e4r$e_visual_map_(y, color = palette) %>%
+                    e4r$e_theme("infographic") %>%
+                    e4r$e_toolbox_feature(feature = c("saveAsImage"))
 
-            title <- list(
-                text = text,
-                subtext = paste0("Data uttagen: ", lub$today()),
-                textStyle = list(color = "black", fontWeight = "bolder")
-            )
-        }
-
-        sh$reactive({
-            basic <- out() %>%
-                e4r$e_charts_(x, timeline = if (!is.null(group)) TRUE else FALSE) %>%
-                e4r$e_map_register("Sweden", geo) %>%
-                e4r$e_map_(y, map = "Sweden", nameProperty = "NAME_1") %>%
-                e4r$e_visual_map_(y, color = palette) %>%
-                e4r$e_theme("infographic") %>%
-                e4r$e_toolbox_feature(feature = c("saveAsImage"))
-
-            if (!is.null(group)) {
-                basic %>%
-                    e4r$e_timeline_opts(autoPlay = FALSE) %>%
-                    e4r$e_timeline_serie(title = title())
-            } else {
-                basic %>%
-                    e4r$e_title(text = text, paste0("Data uttagen: ", lub$today()))
+                if (!is.null(group)) {
+                    basic %>%
+                        e4r$e_timeline_opts(autoPlay = FALSE) %>%
+                        e4r$e_timeline_serie(title = title)
+                } else {
+                    basic %>%
+                        e4r$e_title(text = text, paste0("Data uttagen: ", lub$today()))
+                }
             }
         })
+
+        output$map <- e4r$renderEcharts4r(res())
     })
 }

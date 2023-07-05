@@ -209,16 +209,13 @@ server <- function(id, access_page, data, geo) {
             )
         })
 
-        out_map <- sh$eventReactive(input$load, {
-            res <- map$server(
+        out_map <- map$server(
                 id = "output",
                 .data = sum_sort,
                 geo = geo,
                 group = "visit_group",
                 text = text
             )
-            res()
-        })
 
         output$overview <- sh$renderUI(out_icons())
 

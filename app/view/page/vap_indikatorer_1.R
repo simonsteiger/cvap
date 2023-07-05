@@ -59,18 +59,7 @@ ui <- function(id, data) {
                         ),
                         body = sh$htmlOutput(ns("overview"))
                     ),
-                    aui$sidebar(
-                        title = "Varningar",
-                        header = aui$btn_modal(
-                            ns("output"),
-                            label = sh$tagList(sh$icon("wrench"), "Hantera"),
-                            modal_title = "Filtermeny",
-                            footer_confirm = "Bekräfta",
-                            footer_dismiss = "Avbryt",
-                            inputs
-                        ),
-                        body = sh$htmlOutput(ns("warning"))
-                    )
+                    warning$ui(ns("warning")),
                 ),
                 main = sh$tagList(
                     aui$card(
@@ -107,39 +96,7 @@ ui <- function(id, data) {
                             )
                         )
                     ),
-                    aui$card(
-                        header = sh$div(
-                            class = "d-flex flex-row align-items-center",
-                            "Karta",
-                            aui$btn_modal(
-                                ns("info-stapel"),
-                                label = sh$icon("circle-info"),
-                                modal_title = "Information om karta",
-                                footer_confirm = NULL,
-                                footer_dismiss = NULL,
-                                class_toggle = "btn btn-transparent",
-                                "Infotext om karta"
-                            )
-                        ),
-                        body = e4r$echarts4rOutput(ns("map")),
-                        footer = sh$div(
-                            class = "d-flex justify-content-start align-items-center gap-3",
-                            sh$actionButton(
-                                ns("load"),
-                                class = "hover",
-                                "Ladda karta",
-                                icon = sh$icon("hourglass-half")
-                            ),
-                            aui$btn_modal(
-                                ns("download"),
-                                label = sh$tagList(sh$icon("download"), "Download"),
-                                modal_title = "Anpassa download",
-                                footer_confirm = NULL,
-                                footer_dismiss = NULL,
-                                "Download controls"
-                            )
-                        )
-                    ),
+                    map$ui(ns("output")),
                     aui$card(
                         header = sh$div(class = "py-card-header", "Sammanfattning"),
                         body = "Sample text."
@@ -189,9 +146,11 @@ server <- function(id, access_page, data, geo) {
             na.rm = TRUE
         )
 
+        sum_warn <- warning$server("warning", sum_synopsis, "app-vap_indikatorer_1")
+
         sum_sort <- sort$server(
             "output",
-            sum_synopsis,
+            sum_warn,
             group = "inkluderad"
         )
 
@@ -209,18 +168,13 @@ server <- function(id, access_page, data, geo) {
             format = "percent"
         )
 
-        out_map <- sh$eventReactive(input$load, {
-            res <- map$server(
+        map$server(
                 id = "output",
-                .data = sum_sort,
+                .data = sum_warn,
                 geo = geo,
                 group = "inkluderad",
                 text = text
             )
-            res()
-        })
-
-        out_warning <- warning$server("warning", sum_sort)
 
         output$overview <- sh$renderUI(out_icons())
 
@@ -228,8 +182,6 @@ server <- function(id, access_page, data, geo) {
 
         output$bar <- e4r$renderEcharts4r(out_bar())
 
-        output$map <- e4r$renderEcharts4r(out_map())
-
-        output$warning <- sh$renderUI(out_warning())
+        
     })
 }

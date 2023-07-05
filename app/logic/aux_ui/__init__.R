@@ -20,6 +20,7 @@ box::use(
     app / logic / aux_ui / input / inp_picker_outcome,
     app / logic / aux_ui / input / inp_radio_lookback,
     app / logic / aux_ui / input / inp_toggle_sort,
+    app / logic / aux_ui / input / inp_toggle,
 )
 
 #' @export
@@ -93,3 +94,6 @@ inp_radio_lookback <- inp_radio_lookback$inp_radio_lookback
 
 #' @export
 inp_toggle_sort <- inp_toggle_sort$inp_toggle_sort
+
+#' @export
+inp_toggle <- inp_toggle$inp_toggle

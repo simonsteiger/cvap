@@ -2,7 +2,7 @@ box::use(
     magrittr[`%>%`],
     dp = dplyr,
     sh = shiny,
-    rl = rlang,
+    rl = rlang[`%||%`],
 )
 
 box::use(
@@ -17,14 +17,12 @@ icon_samplesize <- function(input, ...) {
     )
 }
 
-icon_samplesize_modal <- function(input, ...) {
-    dots <- rl$list2(...)
-
+icon_samplesize_modal <- function(id, input) {
     if (length(input) == 0) {
         return("Inga varningar")
     } else {
         aui$btn_modal(
-            id = dots$id,
+            id = id,
             class_toggle = "btn btn-secondary hover",
             label = sh$div(
                 class = "d-flex flex-row align-items-center gap-2",
@@ -42,16 +40,54 @@ icon_samplesize_modal <- function(input, ...) {
 }
 
 #' @export
-server <- function(id, .data) {
+ui <- function(id) {
+    ns <- sh$NS(id)
+    sh$tagList(sh$htmlOutput(ns("sidebar")))
+}
+
+#' @export
+server <- function(id, .data, top_ns) {
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
 
-        sh$reactive({
+        low_n_lans <- sh$reactive({
             .data() %>%
                 dp$filter(nonmissing < 10) %>%
                 dp$pull(lan) %>%
-                unique() %>%
-                icon_samplesize_modal(id = id)
+                unique()
+        })
+
+        icons <- sh$reactive(icon_samplesize_modal(sh$NS(id, "lan"), low_n_lans()))
+
+        output$sidebar <- sh$renderUI({
+            if (length(low_n_lans()) >= 1) {
+                aui$sidebar(
+                    title = "Varningar",
+                    header = aui$btn_modal(
+                        id,
+                        label = sh$tagList(sh$icon("wrench"), "Hantera"),
+                        modal_title = "Filtermeny",
+                        footer_confirm = "Bekräfta",
+                        footer_dismiss = "Avbryt",
+                        aui$inp_toggle(
+                            id = sh$NS(paste(top_ns, id, sep = "-"), "exclude_low_n"),
+                            label = "Exkludera län med få obs"
+                        )
+                    ),
+                    body = icons()
+                )
+            } else {
+                NULL
+            }
+        })
+
+        sh$reactive({
+            if (input$exclude_low_n %||% FALSE) {
+                .data() %>%
+                    dp$filter(!lan %in% low_n_lans())
+            } else {
+                .data()
+            }
         })
     })
 }
