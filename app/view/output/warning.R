@@ -11,8 +11,8 @@ box::use(
 
 icon_samplesize <- function(input, ...) {
     sh$div(
-        class = "d-flex flex-row align-items-center py-1 gap-2",
-        sh$tags$i(class = "fa fa-triangle-exclamation icon-warning"),
+        class = "d-flex flex-row align-items-center gap-2",
+        sh$tags$i(class = "fa fa-triangle-exclamation icon-danger"),
         paste0("Mindre än 10 observationer: ", paste0(input, collapse = ", "))
     )
 }
@@ -27,8 +27,8 @@ icon_samplesize_modal <- function(input, ...) {
             id = dots$id,
             class_toggle = "btn btn-secondary hover",
             label = sh$div(
-                class = "d-flex flex-row align-items-center py-1 gap-2",
-                sh$tags$i(class = "fa fa-triangle-exclamation icon-warning"),
+                class = "d-flex flex-row align-items-center gap-2",
+                sh$tags$i(class = "fa fa-triangle-exclamation icon-danger"),
                 "Se län med få obs"
             ),
             modal_title = "Varningar",

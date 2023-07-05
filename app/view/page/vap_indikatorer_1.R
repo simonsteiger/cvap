@@ -46,19 +46,30 @@ ui <- function(id, data) {
                 center = aui$head(text = text)
             ),
             aui$row_sidebar(
-                sidebar = aui$sidebar(
-                    header = aui$btn_modal(
-                        ns("go"),
-                        label = sh$tagList(sh$icon("filter"), "Anpassa"),
-                        modal_title = "Filtermeny",
-                        footer_confirm = "Bekräfta",
-                        footer_dismiss = "Avbryt",
-                        inputs
+                sidebar = sh$div(
+                    aui$sidebar(
+                        title = "Översikt",
+                        header = aui$btn_modal(
+                            ns("go"),
+                            label = sh$tagList(sh$icon("filter"), "Anpassa"),
+                            modal_title = "Filtermeny",
+                            footer_confirm = "Bekräfta",
+                            footer_dismiss = "Avbryt",
+                            inputs
+                        ),
+                        body = sh$htmlOutput(ns("overview"))
                     ),
-                    body = sh$htmlOutput(ns("overview")),
-                    footer = sh$div(
-                        class = "d-flex flex-row justify-content-center",
-                        sh$htmlOutput(ns("warning"))
+                    aui$sidebar(
+                        title = "Varningar",
+                        header = aui$btn_modal(
+                            ns("output"),
+                            label = sh$tagList(sh$icon("wrench"), "Hantera"),
+                            modal_title = "Filtermeny",
+                            footer_confirm = "Bekräfta",
+                            footer_dismiss = "Avbryt",
+                            inputs
+                        ),
+                        body = sh$htmlOutput(ns("warning"))
                     )
                 ),
                 main = sh$tagList(
@@ -80,54 +91,54 @@ ui <- function(id, data) {
                             ),
                             sh$div(
                                 class = "d-flex justify-content-between align-items-center gap-3",
-                                aui$inp_toggle_sort(sh$NS(ns("output"), "sort")),
-                                aui$btn_modal(
-                                    ns("download"),
-                                    label = sh$tagList(sh$icon("download"), "Download"),
-                                    modal_title = "Anpassa download",
-                                    footer_confirm = NULL,
-                                    footer_dismiss = NULL,
-                                    "Download controls"
-                                )
+                                aui$inp_toggle_sort(sh$NS(ns("output"), "sort"))
                             )
                         ),
-                        body = e4r$echarts4rOutput(ns("bar"))
+                        body = e4r$echarts4rOutput(ns("bar")),
+                        footer = sh$div(
+                            class = "d-flex justify-content-start",
+                            aui$btn_modal(
+                                ns("download"),
+                                label = sh$tagList(sh$icon("download"), "Download"),
+                                modal_title = "Anpassa download",
+                                footer_confirm = NULL,
+                                footer_dismiss = NULL,
+                                "Download controls"
+                            )
+                        )
                     ),
                     aui$card(
                         header = sh$div(
-                            class = "d-flex justify-content-between align-items-center",
-                            sh$div(
-                                class = "d-flex flex-row align-items-center",
-                                "Karta",
-                                aui$btn_modal(
-                                    ns("info-stapel"),
-                                    label = sh$icon("circle-info"),
-                                    modal_title = "Information om karta",
-                                    footer_confirm = NULL,
-                                    footer_dismiss = NULL,
-                                    class_toggle = "btn btn-transparent",
-                                    "Infotext om karta"
-                                )
-                            ),
-                            sh$div(
-                                class = "d-flex justify-content-between align-items-center gap-3",
-                                sh$actionButton(
-                                    ns("load"),
-                                    class = "hover",
-                                    "Ladda karta",
-                                    icon = sh$icon("hourglass-half")
-                                ),
-                                aui$btn_modal(
-                                    ns("download"),
-                                    label = sh$tagList(sh$icon("download"), "Download"),
-                                    modal_title = "Anpassa download",
-                                    footer_confirm = NULL,
-                                    footer_dismiss = NULL,
-                                    "Download controls"
-                                )
+                            class = "d-flex flex-row align-items-center",
+                            "Karta",
+                            aui$btn_modal(
+                                ns("info-stapel"),
+                                label = sh$icon("circle-info"),
+                                modal_title = "Information om karta",
+                                footer_confirm = NULL,
+                                footer_dismiss = NULL,
+                                class_toggle = "btn btn-transparent",
+                                "Infotext om karta"
                             )
                         ),
-                        body = e4r$echarts4rOutput(ns("map"))
+                        body = e4r$echarts4rOutput(ns("map")),
+                        footer = sh$div(
+                            class = "d-flex justify-content-start align-items-center gap-3",
+                            sh$actionButton(
+                                ns("load"),
+                                class = "hover",
+                                "Ladda karta",
+                                icon = sh$icon("hourglass-half")
+                            ),
+                            aui$btn_modal(
+                                ns("download"),
+                                label = sh$tagList(sh$icon("download"), "Download"),
+                                modal_title = "Anpassa download",
+                                footer_confirm = NULL,
+                                footer_dismiss = NULL,
+                                "Download controls"
+                            )
+                        )
                     ),
                     aui$card(
                         header = sh$div(class = "py-card-header", "Sammanfattning"),
