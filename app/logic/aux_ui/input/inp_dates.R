@@ -3,6 +3,23 @@ box::use(
     lub = lubridate,
 )
 
+#' @export
+inp_date <- function(id, label, value = lub$today()) {
+    sh$div(
+        class = "mb-3 mx-1",
+        sh$dateInput(
+            inputId = id,
+            label = label,
+            value = value,
+            min = lub$ymd("1999-01-01"),
+            max = lub$today(),
+            format = "yyyy-mm-dd",
+            startview = "year"
+        )
+    )
+}
+
+#' @export
 inp_daterange <- function(id, label, start = lub$ymd("2020-01-01"), end = lub$ymd("2021-12-31")) {
     sh$div(
         class = "mb-3 mx-1",

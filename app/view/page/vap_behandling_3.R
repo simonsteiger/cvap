@@ -37,9 +37,8 @@ ui <- function(id, data) {
     inputs <- sh$tagList(
         aui$inp_date(sh$NS(ns("input"), "ongoing"), "Välj tidpunkt för pågående behandlingar"),
         aui$inp_radio_lookback(sh$NS(ns("input"), "lookback")),
-        aui$inp_picker_outcome(ns("outcome")), # visible across entire module
+        aui$inp_radio_outcome(ns("outcome"), aui$choices$das28_cdai),
         aui$inp_radio_sex(sh$NS(ns("input"), "kon")),
-        # aui$inp_slider_age(sh$NS(ns("input"), "alder")),
         aui$inp_picker_lan(sh$NS(ns("input"), "lan"), unique(data$lan))
     )
 

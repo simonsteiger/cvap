@@ -11,16 +11,11 @@ box::use(
     app / logic / aux_ui / static / rows,
     app / logic / aux_ui / static / sidebars,
     app / logic / aux_ui / static / navboxes,
-    app / logic / aux_ui / input / inp_daterange,
-    app / logic / aux_ui / input / inp_date,
-    app / logic / aux_ui / input / inp_radio_sex,
-    app / logic / aux_ui / input / inp_slider_age,
-    app / logic / aux_ui / input / inp_picker_lan,
-    app / logic / aux_ui / input / inp_picker_dxcat,
-    app / logic / aux_ui / input / inp_picker_outcome,
-    app / logic / aux_ui / input / inp_radio_lookback,
-    app / logic / aux_ui / input / inp_toggle_sort,
-    app / logic / aux_ui / input / inp_toggle,
+    app / logic / aux_ui / input / inp_dates,
+    app / logic / aux_ui / input / inp_sliders,
+    app / logic / aux_ui / input / inp_toggles,
+    app / logic / aux_ui / input / inp_pickers,
+    app / logic / aux_ui / input / inp_radios,
 )
 
 #' @export
@@ -72,31 +67,31 @@ navbox_data <- navboxes$navbox_data
 navbox_map <- navboxes$navbox_map
 
 #' @export
-inp_daterange <- inp_daterange$inp_daterange
+inp_daterange <- inp_dates$inp_daterange
 
 #' @export
-inp_date <- inp_date$inp_date
+inp_date <- inp_dates$inp_date
 
 #' @export
-inp_radio_sex <- inp_radio_sex$inp_radio_sex
+inp_radio_sex <- inp_radios$inp_radio_sex
 
 #' @export
-inp_slider_age <- inp_slider_age$inp_slider_age
+inp_slider_age <- inp_sliders$inp_slider_age
 
 #' @export
-inp_picker_lan <- inp_picker_lan$inp_picker_lan
+inp_picker_lan <- inp_pickers$inp_picker_lan
 
 #' @export
-inp_picker_dxcat <- inp_picker_dxcat$inp_picker_dxcat
+inp_picker_dxcat <- inp_pickers$inp_picker_dxcat
 
 #' @export
-inp_picker_outcome <- inp_picker_outcome$inp_picker_outcome
+inp_radio_outcome <- inp_radios$inp_radio_outcome
 
 #' @export
-inp_radio_lookback <- inp_radio_lookback$inp_radio_lookback
+inp_radio_lookback <- inp_radios$inp_radio_lookback
 
 #' @export
-inp_toggle_sort <- inp_toggle_sort$inp_toggle_sort
+inp_toggle <- inp_toggles$inp_toggle
 
 #' @export
-inp_toggle <- inp_toggle$inp_toggle
+choices <- inp_radios$choices
