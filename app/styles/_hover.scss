@@ -1,6 +1,6 @@
 $bd-color: #f8b859; /*f1e2cb*/
 
-@mixin standard-hover($bg-color: white, $bd-color: orange) {
+@mixin standard-hover($bg-color: white, $bd-color: #4161ab) {
     &:hover {
         background-color: $bg-color;
         border-color: $bd-color;

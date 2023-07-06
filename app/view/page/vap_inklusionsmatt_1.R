@@ -23,6 +23,7 @@ box::use(
     app / view / output / bar,
     app / view / output / map,
     app / view / output / overview,
+    app / view / output / warning,
 )
 
 text <- aui$navbox_data$tag[[3]][[1]]
@@ -46,7 +47,10 @@ ui <- function(id, data) {
                 center = aui$head(text = text)
             ),
             aui$row_sidebar(
-                sidebar = aui$sidebar_filter(ns("go_input"), ns("overview"), inputs),
+                sidebar = sh$div(
+                    aui$sidebar_filter(ns("go_input"), ns("overview"), inputs),
+                    warning$ui(ns("warning"))
+                ),
                 main = sh$tagList(
                     bar$ui(ns("output")),
                     map$ui(ns("output")),
@@ -91,9 +95,15 @@ server <- function(id, access_page, data, geo) {
             na.rm = TRUE
         )
 
+        sum_warn <- warning$server(
+            "warning",
+            sum_synopsis,
+            "app-vap_inklusionsmatt_1"
+        )
+
         sum_sort <- sort$server(
             "output",
-            sum_synopsis,
+            sum_warn,
             group = "timestamp_group"
         )
 

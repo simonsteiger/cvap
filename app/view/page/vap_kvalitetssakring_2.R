@@ -23,6 +23,7 @@ box::use(
     app / view / output / bar,
     app / view / output / map,
     app / view / output / overview,
+    app / view / output / warning,
 )
 
 text <- aui$navbox_data$tag[[4]][[2]]
@@ -46,7 +47,10 @@ ui <- function(id, data) {
                 center = aui$head(text = text)
             ),
             aui$row_sidebar(
-                sidebar = aui$sidebar_filter(ns("go_input"), ns("overview"), inputs),
+                sidebar = sh$div(
+                    aui$sidebar_filter(ns("go_input"), ns("overview"), inputs),
+                    warning$ui(ns("warning"))
+                ),
                 main = sh$tagList(
                     bar$ui(ns("output")),
                     map$ui(ns("output")),
