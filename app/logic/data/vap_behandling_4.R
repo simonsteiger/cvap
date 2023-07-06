@@ -60,16 +60,25 @@ out <-
     tdr$nest(.by = visit_group) %>%
     dp$mutate(
         # keep obs depending on visit_group, see conds in visit_group mutate comments above
-        data = pr$map2(
-            .x = data,
-            .y = c("diff", "patientens_globala"),
-            .f = \(df, .var) {
-                df %>%
-                    dp$arrange(dp$across(ts$all_of(c("patientkod", .var)))) %>%
-                    dp$distinct(.data[["patientkod"]], .keep_all = TRUE)
-            }
+        data = list(
+            pr$map(
+                c("patientens_globala", "haq", "das28"), \(v) {
+                    pr$map2(
+                        .x = data,
+                        .y = c(v, "diff"),
+                        .f = \(df, .var) {
+                            df %>%
+                                dp$mutate(iteration = .var) %>%
+                                dp$arrange(dp$across(ts$all_of(c("patientkod", .var)))) %>%
+                                dp$distinct(.data[["patientkod"]], .keep_all = TRUE)
+                        }
+                    ) %>% pr$list_rbind()
+                }
+            ) %>% pr$list_rbind()
         )
     ) %>%
     tdr$unnest(data)
+
+# hmmm, this seems convoluted still...
 
 fst$write_fst(out, "app/logic/data/vap_behandling_4.fst")
