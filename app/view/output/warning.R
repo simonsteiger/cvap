@@ -9,11 +9,15 @@ box::use(
     aui = app / logic / aux_ui,
 )
 
-icon_samplesize <- function(input, ...) {
+icon_samplesize <- function(id, input, value) {
     sh$div(
-        class = "d-flex flex-row align-items-center gap-2",
-        sh$tags$i(class = "fa fa-triangle-exclamation icon-danger"),
-        paste0("Mindre än 10 observationer: ", paste0(input, collapse = ", "))
+        class = "d-flex flex-row justify-content-between align-items-center",
+        sh$div(
+            class = "d-flex flex-row align-items-center gap-2",
+            sh$tags$i(class = "fa fa-users-slash icon-danger"),
+            paste0("Få data i ", length(input), " län")
+        ),
+        aui$inp_toggle(id = id, label = "Exkludera", value = value)
     )
 }
 
@@ -27,7 +31,7 @@ icon_samplesize_modal <- function(id, input) {
             label = sh$div(
                 class = "d-flex flex-row align-items-center gap-2",
                 sh$tags$i(class = "fa fa-triangle-exclamation icon-danger"),
-                "Se län med få obs"
+                paste0("Få data i ", length(input), " län")
             ),
             modal_title = "Varningar",
             footer_confirm = NULL,
@@ -57,23 +61,22 @@ server <- function(id, .data, top_ns) {
                 unique()
         })
 
-        icons <- sh$reactive(icon_samplesize_modal(sh$NS(id, "lan"), low_n_lans()))
+        last_input <- sh$eventReactive(low_n_lans(), {
+            input$exclude_low_n %||% FALSE
+        })
+
+        icons <- sh$reactive(
+            icon_samplesize(
+                sh$NS(paste(top_ns, id, sep = "-"), "exclude_low_n"),
+                low_n_lans(),
+                last_input()
+            )
+        )
 
         output$sidebar <- sh$renderUI({
             if (length(low_n_lans()) >= 1) {
                 aui$sidebar(
-                    title = "Varningar",
-                    header = aui$btn_modal(
-                        id,
-                        label = sh$tagList(sh$icon("wrench"), "Hantera"),
-                        modal_title = "Filtermeny",
-                        footer_confirm = "Bekräfta",
-                        footer_dismiss = "Avbryt",
-                        aui$inp_toggle(
-                            id = sh$NS(paste(top_ns, id, sep = "-"), "exclude_low_n"),
-                            label = "Exkludera län med få obs"
-                        )
-                    ),
+                    header = sh$div(class = "py-card-header", "Varningar"),
                     body = icons()
                 )
             } else {

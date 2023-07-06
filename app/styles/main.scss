@@ -4,15 +4,15 @@ $danger: #c9281d;
 $success: #86d130;
 
 .hover {
-    @include standard-hover
+    @include standard-hover;
 }
 
 .hover-success {
-    @include standard-hover($color: mix(white, $success, 60%))
+    @include standard-hover($bg-color: mix(white, $success, 60%))
 }
 
 .hover-danger {
-    @include standard-hover($color: mix(white, $danger, 60%))
+    @include standard-hover($bg-color: mix(white, $danger, 60%))
 }
 
 .bg-tertiary {
@@ -20,7 +20,7 @@ $success: #86d130;
 }
 
 .py-card-header {
-    padding: 0.45rem 0.45rem;
+    padding: 0.45rem 0rem 0.45rem;
 }
 
 .icon-danger {

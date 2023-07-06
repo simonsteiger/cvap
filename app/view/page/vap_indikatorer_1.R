@@ -47,19 +47,8 @@ ui <- function(id, data) {
             ),
             aui$row_sidebar(
                 sidebar = sh$div(
-                    aui$sidebar(
-                        title = "Översikt",
-                        header = aui$btn_modal(
-                            ns("go"),
-                            label = sh$tagList(sh$icon("filter"), "Anpassa"),
-                            modal_title = "Filtermeny",
-                            footer_confirm = "Bekräfta",
-                            footer_dismiss = "Avbryt",
-                            inputs
-                        ),
-                        body = sh$htmlOutput(ns("overview"))
-                    ),
-                    warning$ui(ns("warning")),
+                    aui$sidebar_filter(ns("go_input"), ns("overview"), inputs),
+                    warning$ui(ns("warning"))
                 ),
                 main = sh$tagList(
                     bar$ui(ns("output")),
@@ -80,11 +69,11 @@ server <- function(id, access_page, data, geo) {
     sh$moduleServer(id, function(input, output, session) {
         ase$obs_return(input)
 
-        out_icons <- sh$eventReactive(list(input$go, access_page), {
+        out_icons <- sh$eventReactive(list(input$go_input, access_page), {
             overview$server("input")
         })
 
-        pre_sift <- sh$eventReactive(list(input$go, access_page), {
+        pre_sift <- sh$eventReactive(list(input$go_input, access_page), {
             sieve <- sift$server("input", sh$reactive(data))
             data[sieve(), ]
         })
@@ -98,7 +87,11 @@ server <- function(id, access_page, data, geo) {
             na.rm = TRUE
         )
 
-        sum_warn <- warning$server("warning", sum_synopsis, "app-vap_indikatorer_1")
+        sum_warn <- warning$server(
+            "warning",
+            sum_synopsis,
+            "app-vap_indikatorer_1"
+        )
 
         sum_sort <- sort$server(
             "output",
@@ -121,12 +114,12 @@ server <- function(id, access_page, data, geo) {
         )
 
         map$server(
-                id = "output",
-                .data = sum_warn,
-                geo = geo,
-                group = "inkluderad",
-                text = text
-            )
+            id = "output",
+            .data = sum_warn,
+            geo = geo,
+            group = "inkluderad",
+            text = text
+        )
 
         output$overview <- sh$renderUI(out_icons())
 

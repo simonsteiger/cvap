@@ -1,8 +1,10 @@
-$hover-color: #f8b859; /*f1e2cb*/
+$bd-color: #f8b859; /*f1e2cb*/
 
-@mixin standard-hover($color: $hover-color) {
+@mixin standard-hover($bg-color: white, $bd-color: orange) {
     &:hover {
-        background-color: $color;
+        background-color: $bg-color;
+        border-color: $bd-color;
         transition: all ease-in-out 300ms;
       }
+      border-width: 2px;
 }

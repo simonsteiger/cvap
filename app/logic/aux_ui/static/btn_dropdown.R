@@ -4,7 +4,7 @@ box::use(
 )
 
 #' @export
-btn_dropdown <- function(...) {
+btn_dropdown <- function(label, ...) {
     dots <- rl$list2(...)
 
     sh$div(
@@ -14,7 +14,7 @@ btn_dropdown <- function(...) {
             type = "button",
             `data-bs-toggle` = "dropdown",
             `aria-expanded` = "false",
-            "Anpassa filtren"
+            label
         ),
         sh$tags$ul(
             class = "dropdown-menu",

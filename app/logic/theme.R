@@ -11,8 +11,8 @@ light <- bsl$bs_theme(
   secondary = "#e8e9f3",
   success = "#a8e069",
   info = "#e8e9f3",
-  warning = "#c26130",
-  danger = "#fd5448",
+  warning = "#fbdbdb",
+  danger = "#c9281d",
   base_font = bsl$font_google("Fira Sans"),
   heading_font = bsl$font_google("Fira Sans"),
   code_font = bsl$font_google("Fira Sans")

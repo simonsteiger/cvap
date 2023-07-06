@@ -46,17 +46,7 @@ ui <- function(id, data) {
                 center = aui$head(text = text)
             ),
             aui$row_sidebar(
-                sidebar = aui$sidebar(
-                    header = aui$btn_modal(
-                        ns("go"),
-                        label = sh$tagList(sh$icon("filter"), "Anpassa"),
-                        modal_title = "Filtermeny",
-                        footer_confirm = "Bekräfta",
-                        footer_dismiss = "Avbryt",
-                        inputs
-                    ),
-                    body = sh$htmlOutput(ns("overview"))
-                ),
+                sidebar = aui$sidebar_filter(ns("go_input"), ns("overview"), inputs),
                 main = sh$tagList(
                     bar$ui(ns("output")),
                     map$ui(ns("output")),
@@ -76,11 +66,11 @@ server <- function(id, access_page, data, geo) {
     sh$moduleServer(id, function(input, output, session) {
         ase$obs_return(input)
 
-        out_icons <- sh$eventReactive(list(input$go, access_page), {
+        out_icons <- sh$eventReactive(list(input$go_input, access_page), {
             overview$server("input")
         })
 
-        pre_sift <- sh$eventReactive(list(input$go, access_page), {
+        pre_sift <- sh$eventReactive(list(input$go_input, access_page), {
             sieve <- sift$server("input", sh$reactive(data))
             data[sieve(), ]
         })

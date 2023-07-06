@@ -9,7 +9,7 @@ box::use(
     app / logic / aux_ui / static / head,
     app / logic / aux_ui / static / logo,
     app / logic / aux_ui / static / rows,
-    app / logic / aux_ui / static / sidebar,
+    app / logic / aux_ui / static / sidebars,
     app / logic / aux_ui / static / navboxes,
     app / logic / aux_ui / input / inp_daterange,
     app / logic / aux_ui / input / inp_date,
@@ -51,7 +51,10 @@ head <- head$head
 logo <- logo$logo
 
 #' @export
-sidebar <- sidebar$sidebar
+sidebar <- sidebars$sidebar
+
+#' @export
+sidebar_filter <- sidebars$sidebar_filter
 
 #' @export
 row_sidebar <- rows$row_sidebar

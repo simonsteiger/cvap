@@ -46,17 +46,7 @@ ui <- function(id, data) {
                 center = aui$head(text = text)
             ),
             aui$row_sidebar(
-                sidebar = aui$sidebar(
-                    header = aui$btn_modal(
-                        ns("go"),
-                        label = sh$tagList(sh$icon("filter"), "Anpassa"),
-                        modal_title = "Filtermeny",
-                        footer_confirm = "Bekräfta",
-                        footer_dismiss = "Avbryt",
-                        inputs
-                    ),
-                    body = sh$htmlOutput(ns("overview"))
-                ),
+                sidebar = aui$sidebar_filter(ns("go_input"), ns("overview"), inputs),
                 main = sh$tagList(
                     bar$ui(ns("output")),
                     map$ui(ns("output")),
