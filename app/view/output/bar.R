@@ -53,7 +53,7 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id, .data, x = "lan", y = "outcome", group = NULL, text = "Title", format = NULL, timeline = FALSE) {
+server <- function(id, .data, stash = NULL, x = "lan", y = "outcome", group = NULL, text = "Title", format = NULL, timeline = FALSE) {
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
 
@@ -98,8 +98,10 @@ server <- function(id, .data, x = "lan", y = "outcome", group = NULL, text = "Ti
 
         res_export <- sh$reactive({
             gg$ggplot(out(), gg$aes(.data[[x]], .data[[y]])) +
-            gg$geom_col(gg$aes(fill = as.factor(.data[[group]]))) +
-            gg$coord_flip()
+                gg$geom_col(gg$aes(fill = as.factor(.data[[group]]))) +
+                gg$coord_flip() +
+                gg$ylab(stash()$outcome) +
+                gg$labs(caption = stash()$caption)
         })
 
         output$bar <- e4r$renderEcharts4r(res_interactive())
