@@ -63,7 +63,7 @@ server <- function(id, .data, geo, x = "lan", y = "outcome", group = NULL, text 
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
 
-        res <- sh$reactive({
+        res_interactive <- sh$reactive({
             if (isFALSE(input$load)) { # abort if load is FALSE
                 NULL
             } else { # otherwise draw map
@@ -127,6 +127,10 @@ server <- function(id, .data, geo, x = "lan", y = "outcome", group = NULL, text 
             }
         })
 
-        output$map <- e4r$renderEcharts4r(res())
+        # res_export <- sh$reactive({
+        #     
+        # })
+
+        output$map <- e4r$renderEcharts4r(res_interactive())
     })
 }

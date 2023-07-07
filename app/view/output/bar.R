@@ -5,6 +5,7 @@ box::use(
     dp = dplyr,
     lub = lubridate,
     fct = forcats,
+    gg = ggplot2,
 )
 
 box::use(
@@ -45,7 +46,7 @@ ui <- function(id) {
                 modal_title = "Anpassa download",
                 footer_confirm = NULL,
                 footer_dismiss = NULL,
-                "Download controls"
+                sh$plotOutput(ns("export"))
             )
         )
     )
@@ -75,7 +76,7 @@ server <- function(id, .data, x = "lan", y = "outcome", group = NULL, text = "Ti
             out <- .data
         }
 
-        res <- sh$reactive({
+        res_interactive <- sh$reactive({
             out <- out() %>%
                 e4r$e_charts_(x, timeline = timeline) %>%
                 e4r$e_bar_(y) %>%
@@ -95,6 +96,14 @@ server <- function(id, .data, x = "lan", y = "outcome", group = NULL, text = "Ti
             # Flip coords only at end to avoid confusion with axis flip and target axis for formatter
         })
 
-        output$bar <- e4r$renderEcharts4r(res())
+        res_export <- sh$reactive({
+            gg$ggplot(out(), gg$aes(.data[[x]], .data[[y]])) +
+            gg$geom_col(gg$aes(fill = as.factor(.data[[group]]))) +
+            gg$coord_flip()
+        })
+
+        output$bar <- e4r$renderEcharts4r(res_interactive())
+
+        output$export <- sh$renderPlot(res_export())
     })
 }
