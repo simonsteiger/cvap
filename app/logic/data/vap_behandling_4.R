@@ -62,23 +62,28 @@ out <-
         # keep obs depending on visit_group, see conds in visit_group mutate comments above
         data = list(
             pr$map(
-                c("patientens_globala", "haq", "das28"), \(v) {
+                c("patientens_globala", "haq", "das28"), \(outer) {
                     pr$map2(
                         .x = data,
-                        .y = c(v, "diff"),
-                        .f = \(df, .var) {
+                        .y = c(outer, "diff"),
+                        .f = \(df, inner) {
                             df %>%
-                                dp$mutate(iteration = .var) %>%
-                                dp$arrange(dp$across(ts$all_of(c("patientkod", .var)))) %>%
+                                dp$mutate(outcome = outer, iteration = inner) %>%
+                                dp$arrange(dp$across(ts$all_of(c("patientkod", inner)))) %>%
                                 dp$distinct(.data[["patientkod"]], .keep_all = TRUE)
                         }
-                    ) %>% pr$list_rbind()
+                    ) %>%
+                        pr$list_rbind()
                 }
-            ) %>% pr$list_rbind()
-        )
+            ) %>%
+                pr$list_rbind()
+        ) # returns an inflated version of what we need, FIX!
     ) %>%
-    tdr$unnest(data)
-
-# hmmm, this seems convoluted still...
+    tdr$unnest(data) %>%
+    dp$filter( # cleaning out what is not needed later
+        (visit_group == "Behandlingsstart" & iteration == "diff") |
+            (visit_group == "Uppföljning" & iteration != "diff")
+    ) %>%
+    dp$distinct(patientkod, visit_group, outcome, iteration, .keep_all = TRUE)
 
 fst$write_fst(out, "app/logic/data/vap_behandling_4.fst")

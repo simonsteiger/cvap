@@ -35,3 +35,13 @@ inp_picker_dxcat <- function(id, choices) {
         sort = FALSE
     )
 }
+
+#' @export
+inp_picker_outcome <- function(id, choices) {
+    inp_picker(
+        id,
+        label = "Välj utfallsmått",
+        choices = choices,
+        sort = FALSE
+    )
+}

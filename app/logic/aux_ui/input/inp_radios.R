@@ -35,7 +35,7 @@ inp_radio_sex <- function(id) {
 inp_radio_lookback <- function(id) {
     inp_radio(
         id = id,
-        label = "Välj kön",
+        label = "Välj period",
         choices = c(
             "ett år" = 1,
             "två år" = 2,
