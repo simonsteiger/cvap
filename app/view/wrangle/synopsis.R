@@ -5,7 +5,7 @@ box::use(
     sh = shiny,
     dp = dplyr,
     ts = tidyselect,
-    rl = rlang,
+    rl = rlang[`%||%`],
     gg = ggplot2,
     ts = tidyselect,
     lub = lubridate,
@@ -28,13 +28,17 @@ ui <- function(id, ...) {
 }
 
 #' @export
-server <- function(id, .data, ...) {
+server <- function(id, .data, .fn, .var = "outcome", .by, riket = TRUE, ...) {
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
 
         dots <- rl$quos(...)
 
-        out <- sh$reactive(
+        test <- sh$reactive({
+            input$outcome %||% .var
+        })
+
+        out <- sh$reactive({
             # If data is preprocessed, no need to floor_date
             if (str$str_detect(deparse(substitute(.data)), "^dat_.+")) {
                 .data()
@@ -42,11 +46,39 @@ server <- function(id, .data, ...) {
                 .data() %>%
                     dp$mutate(dp$across(ts$where(lub$is.Date), \(x) lub$floor_date(x, "years")))
             }
-        )
+        })
 
-        syn <- sh$reactive(
-            out() %>%
-                ase$synopsise(...)
-        )
+        dat_riket <- sh$reactive({
+            if (riket) {
+                srqprep$prep_riket(out(), test(), .fn, .by, !!!dots)
+            } else {
+                out()
+            }
+        })
+
+        dat_sum <- sh$reactive({
+            dat_riket() %>%
+                dp$summarise(
+                    outcome = .fn(.data[[test()]], !!!dots),
+                    missing = sum(is.na(.data[[test()]])),
+                    nonmissing = sum(!is.na(.data[[test()]])),
+                    .by = ts$all_of(.by)
+                )
+        })
+
+        digits <- sh$reactive({
+            dp$case_when(
+                max(dat_sum()[["outcome"]]) <= 10 ~ 2,
+                max(dat_sum()[["outcome"]]) %>% dp$between(10.01, 99.99) ~ 1,
+                max(dat_sum()[["outcome"]]) >= 100 ~ 0,
+            )
+        })
+
+        sh$reactive({
+            dat_sum() %>%
+                dp$mutate(
+                    outcome = round(.data[["outcome"]], digits())
+                )
+        })
     })
 }

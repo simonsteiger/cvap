@@ -26,8 +26,10 @@ list_df$basdata <- list_df$basdata %>%
     dp$select(patientkod, fodelsedag, dxcat, lan, tillhor)
 
 list_df$besoksdata <- list_df$besoksdata %>%
-    dp$select(patientkod, datum, das28, haq, patientens_globala) %>%
-    dp$mutate(patientens_globala = as.numeric(patientens_globala)) # unparsable strings become NA
+    dp$select(patientkod, datum, smarta, haq, patientens_globala) %>%
+    dp$mutate(
+        dp$across(ts$all_of(c("patientens_globala", "smarta")), \(x) as.numeric(x))
+    ) # unparsable strings become NA
 
 list_df$bio <- list_df$bio %>%
     dp$arrange(patientkod, ordinerat) %>%
@@ -62,7 +64,7 @@ out <-
         # keep obs depending on visit_group, see conds in visit_group mutate comments above
         data = list(
             pr$map(
-                c("patientens_globala", "haq", "das28"), \(outer) {
+                c("patientens_globala", "haq", "smarta"), \(outer) {
                     pr$map2(
                         .x = data,
                         .y = c(outer, "diff"),
@@ -84,6 +86,6 @@ out <-
         (visit_group == "Behandlingsstart" & iteration == "diff") |
             (visit_group == "Uppföljning" & iteration != "diff")
     ) %>%
-    dp$distinct(patientkod, visit_group, outcome, iteration, .keep_all = TRUE)
+    dp$distinct(patientkod, visit_group, outcome, .keep_all = TRUE)
 
 fst$write_fst(out, "app/logic/data/vap_behandling_4.fst")

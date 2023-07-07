@@ -33,6 +33,7 @@ ui <- function(id, data) {
 
     inputs <- sh$tagList(
         aui$inp_daterange(sh$NS(ns("input"), "ordinerat"), "Välj tidsfönster för ordinerationdatum"),
+        aui$inp_radio_outcome(sh$NS(ns("input"), "outcome"), aui$choices$glob_haq_smarta),
         aui$inp_radio_sex(sh$NS(ns("input"), "kon")),
         aui$inp_slider_age(sh$NS(ns("input"), "alder")),
         aui$inp_picker_lan(sh$NS(ns("input"), "lan"), unique(data$lan))
@@ -73,19 +74,19 @@ server <- function(id, access_page, data, geo) {
             overview$server("input")
         })
 
-        pre_sift <- sh$eventReactive(list(input$go_input, access_page), {
+        # synopsis server is in input namespace to allow plotting user-chosen outcome
+        sum_synopsis <- sh$eventReactive(list(input$go_input, access_page), {
             sieve <- sift$server("input", sh$reactive(data))
-            data[sieve(), ]
+            res <- synopsis$server(
+                "input",
+                sh$reactive(data[sieve(), ]),
+                .fn = stats$median,
+                .var = "patientens_globala",
+                .by = c("lan", "visit_group"),
+                na.rm = TRUE
+            )
+            res()
         })
-
-        sum_synopsis <- synopsis$server(
-            "summary",
-            pre_sift,
-            .fn = stats$median,
-            .var = "patientens_globala",
-            .by = c("lan", "visit_group"),
-            na.rm = TRUE
-        )
 
         sum_warn <- warning$server(
             "warning",

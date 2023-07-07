@@ -74,17 +74,9 @@ server <- function(id, access_page, data, geo) {
             overview$server("input")
         })
 
-        pre_sift <- sh$eventReactive(list(input$go_input, access_page), {
-            sieve <- sift$server("input", sh$reactive(data))
-            data[sieve(), ]
-        })
-
-        pre_lookback <- sh$eventReactive(list(input$go_input, access_page), {
-            res <- lookback$server("input", pre_sift, input$outcome)
-            res()
-        })
-
         sum_synopsis <- sh$eventReactive(list(input$go_input, access_page), {
+            sieve <- sift$server("input", sh$reactive(data))
+            pre_lookback <- lookback$server("input", sh$reactive(data[sieve(), ]), input$outcome)
             res <- synopsis$server(
                 "summary",
                 pre_lookback,

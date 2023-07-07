@@ -55,5 +55,6 @@ inp_radio_outcome <- function(id, choices) {
 
 #' @export
 choices <- list(
-    das28_cdai = c("DAS28 < 3.2" = "das28_low", "CDAI <= 10" = "cdai_low")
+    das28_cdai = c("DAS28 < 3.2" = "das28_low", "CDAI <= 10" = "cdai_low"),
+    glob_haq_smarta = c("Allmän hälsa" = "patientens_globala", "HAQ" = "haq", "Smärta" = "smarta")
 )

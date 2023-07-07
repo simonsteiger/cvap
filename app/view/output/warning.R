@@ -17,7 +17,7 @@ icon_samplesize <- function(id, input, value) {
             sh$tags$i(class = "fa fa-users-slash icon-danger"),
             paste0("Få data i ", length(input), " län")
         ),
-        aui$inp_toggle(id = id, label = "Exkludera", value = value)
+        aui$inp_toggle(id = id, label = "Dölj", value = value)
     )
 }
 
