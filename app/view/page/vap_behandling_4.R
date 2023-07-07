@@ -34,6 +34,7 @@ ui <- function(id, data) {
     inputs <- sh$tagList(
         aui$inp_daterange(sh$NS(ns("input"), "ordinerat"), "Välj tidsfönster för ordinerationdatum"),
         aui$inp_radio_outcome(sh$NS(ns("input"), "outcome"), aui$choices$glob_haq_smarta),
+        aui$inp_radio_prep_typ(sh$NS(ns("input"), "prep_typ")),
         aui$inp_radio_sex(sh$NS(ns("input"), "kon")),
         aui$inp_slider_age(sh$NS(ns("input"), "alder")),
         aui$inp_picker_lan(sh$NS(ns("input"), "lan"), unique(data$lan))

@@ -34,7 +34,7 @@ server <- function(id, .data, .fn, .var = "outcome", .by, riket = TRUE, ...) {
 
         dots <- rl$quos(...)
 
-        test <- sh$reactive({
+        outcome <- sh$reactive({
             input$outcome %||% .var
         })
 
@@ -50,7 +50,7 @@ server <- function(id, .data, .fn, .var = "outcome", .by, riket = TRUE, ...) {
 
         dat_riket <- sh$reactive({
             if (riket) {
-                srqprep$prep_riket(out(), test(), .fn, .by, !!!dots)
+                srqprep$prep_riket(out(), outcome(), .fn, .by, !!!dots)
             } else {
                 out()
             }
@@ -59,9 +59,9 @@ server <- function(id, .data, .fn, .var = "outcome", .by, riket = TRUE, ...) {
         dat_sum <- sh$reactive({
             dat_riket() %>%
                 dp$summarise(
-                    outcome = .fn(.data[[test()]], !!!dots),
-                    missing = sum(is.na(.data[[test()]])),
-                    nonmissing = sum(!is.na(.data[[test()]])),
+                    outcome = .fn(.data[[outcome()]], !!!dots),
+                    missing = sum(is.na(.data[[outcome()]])),
+                    nonmissing = sum(!is.na(.data[[outcome()]])),
                     .by = ts$all_of(.by)
                 )
         })

@@ -91,6 +91,9 @@ inp_radio_outcome <- inp_radios$inp_radio_outcome
 inp_radio_lookback <- inp_radios$inp_radio_lookback
 
 #' @export
+inp_radio_prep_typ <- inp_radios$inp_radio_prep_typ
+
+#' @export
 inp_toggle <- inp_toggles$inp_toggle
 
 #' @export

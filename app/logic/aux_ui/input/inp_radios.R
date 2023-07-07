@@ -58,3 +58,13 @@ choices <- list(
     das28_cdai = c("DAS28 < 3.2" = "das28_low", "CDAI <= 10" = "cdai_low"),
     glob_haq_smarta = c("Allmän hälsa" = "patientens_globala", "HAQ" = "haq", "Smärta" = "smarta")
 )
+
+#' @export
+inp_radio_prep_typ <- function(id) {
+    inp_radio(
+        id = id,
+        label = "Välj typ av behandling",
+        choices = c("bDMARD" = "bioprep", "csDMARD" = "csdmard", "Antingen eller" = "Båda")
+        # Båda is a free pass through the filters
+    )
+}
