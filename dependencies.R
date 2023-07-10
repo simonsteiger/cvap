@@ -14,6 +14,7 @@ library(geodata)
 library(sp)
 library(geojsonio)
 library(rmapshaper)
+library(ggtext)
 
 # sk dependencies
 library(box)

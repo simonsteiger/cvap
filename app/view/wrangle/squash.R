@@ -18,16 +18,19 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id, .data, ...) {
+server <- function(id, .data, .fn, .by, ...) {
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
 
-        dots <- rl$quos(...)
+        dots <- rl$list2(...)
 
         sh$reactive(
             .data() %>%
                 dp$mutate(dp$across(ts$where(lub$is.Date), \(x) lub$floor_date(x, "years"))) %>%
-                ase$squash(...)
+                dp$summarise(
+                    outcome = .fn(!!!dots),
+                    .by = ts$all_of(.by)
+                )
         )
     })
 }

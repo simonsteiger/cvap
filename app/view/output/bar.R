@@ -6,6 +6,7 @@ box::use(
     lub = lubridate,
     fct = forcats,
     gg = ggplot2,
+    ggt = ggtext,
 )
 
 box::use(
@@ -100,8 +101,21 @@ server <- function(id, .data, stash = NULL, x = "lan", y = "outcome", group = NU
             gg$ggplot(out(), gg$aes(.data[[x]], .data[[y]])) +
                 gg$geom_col(gg$aes(fill = as.factor(.data[[group]]))) +
                 gg$coord_flip() +
-                gg$ylab(stash()$outcome) +
-                gg$labs(caption = stash()$caption)
+                gg$ylab(NULL) +
+                gg$xlab(NULL) +
+                gg$labs(
+                    title = stash()$title,
+                    subtitle = stash()$subtitle
+                    ) +
+                gg$theme(
+                    plot.subtitle = ggt$element_textbox_simple(
+                        # family = "Commissioner",
+                        # colour = dark_col,
+                        hjust = 0,
+                        lineheight = 0.5,
+                        margin = gg$margin(t = 20, b = 10)
+                    )
+                )
         })
 
         output$bar <- e4r$renderEcharts4r(res_interactive())

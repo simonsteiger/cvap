@@ -74,17 +74,16 @@ server <- function(id, access_page, data, geo) {
             overview$server("input")
         })
 
-        pre_sift <- sh$eventReactive(list(input$go_input, access_page), {
+        pre_multigroup <- sh$eventReactive(list(input$go_input, access_page), {
             sieve <- sift$server("input", sh$reactive(data))
-            data[sieve(), ]
+            res <- multigroup$server(
+                "input",
+                sh$reactive(data[sieve(), ]),
+                unit = "months",
+                start = "min_inkl_diag"
+            )
+            res()
         })
-
-        pre_multigroup <- multigroup$server(
-            "multigroup",
-            pre_sift,
-            unit = "months",
-            start = "min_inkl_diag"
-        )
 
         sum_synopsis <- synopsis$server(
             "summary",

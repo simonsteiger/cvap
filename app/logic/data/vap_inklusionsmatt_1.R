@@ -15,7 +15,7 @@ ski$read_dir("/Users/simonsteiger/Desktop/data/fst/")
 
 bas <- list_df$basdata %>%
     srqprep$prep_recode(diagnoskod_1, srqdict$rec_dxcat, .new_name = dxcat) %>%
-    dp$filter(tidig_ra == 1) %>% # QUESTION is this correct if we also want early SPA, PSA, AS?
+    dp$filter(tidig_ra == 1) %>% # TODO likely need to flexibly determine who is early dxcat
     dp$mutate(
         alder = lub$interval(fodelsedag, inkluderad) / lub$dyears(1),
         min_inkl_diag = pmin(diagnosdatum1, inkluderad, na.rm = TRUE),

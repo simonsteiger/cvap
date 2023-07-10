@@ -1,6 +1,8 @@
 box::use(
+    sh = shiny,
     str = stringr,
     lub = lubridate,
+    pr = purrr,
 )
 
 #' @export
@@ -29,4 +31,18 @@ sift_cols <- function(col, val, var, skip) {
         # No control, so don't filter
         TRUE
     }
+}
+
+#' @export
+sift_vars <- function(data, input, skip = NULL) {
+  stopifnot(sh$is.reactive(data))
+
+  vars <- sh$reactive(colnames(data()))
+
+  sh$reactive({
+    each_var <-
+      pr$map(vars(), \(v) sift_cols(data()[[v]], input[[v]], v, skip))
+
+    pr$reduce(each_var, `&`)
+  })
 }

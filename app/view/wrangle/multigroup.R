@@ -21,6 +21,8 @@ server <- function(id, .data, unit, start) {
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
 
+        # TODO if the input to dxcat is tidig_SpA/PsA/AS, use different timescale
+
         unit_fn <- switch(unit,
             "months" = lub$dmonths,
             "weeks" = lub$dweeks,
