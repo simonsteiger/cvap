@@ -52,7 +52,8 @@ ui <- function(id) {
                 modal_title = "Anpassa download",
                 footer_confirm = NULL,
                 footer_dismiss = NULL,
-                "Download controls"
+                # sh$plotOutput(ns("export"))
+                "Placeholder"
             )
         )
     )
@@ -126,10 +127,6 @@ server <- function(id, .data, geo, x = "lan", y = "outcome", group = NULL, text 
                 }
             }
         })
-
-        # res_export <- sh$reactive({
-        #     
-        # })
 
         output$map <- e4r$renderEcharts4r(res_interactive())
     })

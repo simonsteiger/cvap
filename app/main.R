@@ -32,7 +32,9 @@ box::use(
 
 ski$read_dir("app/logic/data/")
 
-geo <- gj$geojson_read("app/logic/data/gadm/sweden.geojson")
+geo <- gj$geojson_read("app/logic/data/gadm/sweden.geojson") # larger file
+
+# geo <- gj$geojson_read("app/logic/data/gadm/sweden_test.geojson") # smaller file
 
 syf$font_add_google("Roboto", "Roboto")
 syf$font_add_google("Fraunces", "Fraunces")
