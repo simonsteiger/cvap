@@ -7,11 +7,14 @@ box::use(
     fct = forcats,
     gg = ggplot2,
     ggt = ggtext,
+    pal = palettes,
 )
 
 box::use(
     ase = app / logic / aux_server,
     aui = app / logic / aux_ui,
+    srqlib / srqcolor,
+    srqlib / srqauto,
 )
 
 #' @export
@@ -98,23 +101,53 @@ server <- function(id, .data, stash = NULL, x = "lan", y = "outcome", group = NU
         })
 
         res_export <- sh$reactive({
+            scale_y <- gg$scale_y_continuous(
+                name = NULL,
+                labels = srqauto$guess_label_num("y", out()[[y]])
+            )
+
             gg$ggplot(out(), gg$aes(.data[[x]], .data[[y]])) +
-                gg$geom_col(gg$aes(fill = as.factor(.data[[group]]))) +
+                gg$geom_col(
+                    gg$aes(fill = as.factor(.data[[group]])),
+                    position = gg$position_dodge2(
+                        preserve = "single",
+                        padding = 0.2
+                    )
+                ) +
+                pal$scale_fill_palette_d(srqcolor$ramp(dp$n_distinct(out()[[group]]))) +
+                pal$scale_color_palette_d(srqcolor$ramp(dp$n_distinct(out()[[group]]))) +
                 gg$coord_flip() +
-                gg$ylab(NULL) +
+                scale_y +
                 gg$xlab(NULL) +
                 gg$labs(
+                    x = NULL,
+                    y = NULL, # keep settings from scale_y
                     title = stash()$title,
-                    subtitle = stash()$subtitle
-                    ) +
+                    subtitle = stash()$subtitle,
+                    caption = paste0("Data uttagen: ", lub$today(), "\nwww.srq.nu")
+                ) +
+                gg$theme_classic() +
                 gg$theme(
+                    text = gg$element_text(family = "Roboto"),
+                    legend.title = gg$element_blank(),
+                    legend.position = "bottom",
+                    plot.title = ggt$element_textbox_simple(
+                        family = "Fraunces",
+                        # colour = srqcolor$srqblu,
+                        hjust = 0,
+                        size = 18,
+                        margin = gg$margin(t = 5)
+                    ),
                     plot.subtitle = ggt$element_textbox_simple(
-                        # family = "Commissioner",
-                        # colour = dark_col,
+                        family = "Roboto",
+                        # colour = srqcolor$srqblu,
                         hjust = 0,
                         lineheight = 0.5,
-                        margin = gg$margin(t = 20, b = 10)
-                    )
+                        margin = gg$margin(t = 10, b = 10)
+                    ),
+                    plot.background = gg$element_blank(),
+                    strip.background = gg$element_blank(),
+                    strip.placement = "outside"
                 )
         })
 

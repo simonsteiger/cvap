@@ -13,7 +13,9 @@ light <- bsl$bs_theme(
   info = "#e8e9f3",
   warning = "#fbdbdb",
   danger = "#c9281d",
-  base_font = bsl$font_google("Fira Sans"),
-  heading_font = bsl$font_google("Fira Sans"),
-  code_font = bsl$font_google("Fira Sans")
+  base_font = bsl$font_collection(
+    bsl$font_google("Roboto Flex", local = FALSE), "Roboto", "sans-serif"
+  ),
+  heading_font = bsl$font_google("Roboto Slab"),
+  code_font = bsl$font_google("Roboto Mono")
 )

@@ -8,6 +8,8 @@ box::use(
   gj = geojsonio,
   sass,
   magrittr[`%>%`],
+  sht = showtext,
+  syf = sysfonts,
 )
 
 box::use(
@@ -31,6 +33,11 @@ box::use(
 ski$read_dir("app/logic/data/")
 
 geo <- gj$geojson_read("app/logic/data/gadm/sweden.geojson")
+
+syf$font_add_google("Roboto", "Roboto")
+syf$font_add_google("Fraunces", "Fraunces")
+# syf$font_add_google("Commissioner", "Commissioner")
+sht$showtext_auto()
 
 #' @export
 ui <- function(id) {
