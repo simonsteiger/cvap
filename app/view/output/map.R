@@ -8,6 +8,7 @@ box::use(
     hw = htmlwidgets,
     fct = forcats,
     rl = rlang[`%||%`],
+    gg = ggplot2,
 )
 
 box::use(
@@ -47,13 +48,12 @@ ui <- function(id) {
         footer = sh$div(
             class = "d-flex justify-content-start align-items-center gap-3",
             aui$btn_modal(
-                ns("download"),
+                ns("download_map"),
                 label = sh$tagList(sh$icon("download"), "Download"),
                 modal_title = "Anpassa download",
                 footer_confirm = NULL,
                 footer_dismiss = NULL,
-                # sh$plotOutput(ns("export"))
-                "Placeholder"
+                sh$plotOutput(ns("exmap"))
             )
         )
     )
@@ -111,7 +111,7 @@ server <- function(id, .data, geo, x = "lan", y = "outcome", group = NULL, text 
 
                 basic <- out %>%
                     e4r$e_charts_(x, timeline = if (!is.null(group)) TRUE else FALSE) %>%
-                    e4r$e_map_register("Sweden", geo) %>%
+                    e4r$e_map_register("Sweden", geo$json) %>%
                     e4r$e_map_(y, map = "Sweden", nameProperty = "NAME_1") %>%
                     e4r$e_visual_map_(y, color = palette) %>%
                     e4r$e_theme("infographic") %>%
@@ -128,6 +128,16 @@ server <- function(id, .data, geo, x = "lan", y = "outcome", group = NULL, text 
             }
         })
 
+        res_export <- sh$reactive({
+            geo$sf %>%
+                dp$left_join(.data(), dp$join_by("NAME_1" == "lan")) %>%
+                gg$ggplot() +
+                gg$geom_sf(gg$aes(fill = .data[[y]])) +
+                gg$theme_void()
+        })
+
         output$map <- e4r$renderEcharts4r(res_interactive())
+
+        output$exmap <- sh$renderPlot(res_export())
     })
 }

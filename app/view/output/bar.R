@@ -45,12 +45,12 @@ ui <- function(id) {
         footer = sh$div(
             class = "d-flex justify-content-start",
             aui$btn_modal(
-                ns("download"),
+                ns("download_bar"),
                 label = sh$tagList(sh$icon("download"), "Download"),
                 modal_title = "Anpassa download",
                 footer_confirm = NULL,
                 footer_dismiss = NULL,
-                sh$plotOutput(ns("export"))
+                sh$plotOutput(ns("exbar"))
             )
         )
     )
@@ -153,6 +153,6 @@ server <- function(id, .data, stash = NULL, x = "lan", y = "outcome", group = NU
 
         output$bar <- e4r$renderEcharts4r(res_interactive())
 
-        output$export <- sh$renderPlot(res_export())
+        output$exbar <- sh$renderPlot(res_export())
     })
 }

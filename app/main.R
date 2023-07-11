@@ -6,6 +6,7 @@ box::use(
   pr = purrr,
   rt = shiny.router,
   gj = geojsonio,
+  gjsf = geojsonsf,
   sass,
   magrittr[`%>%`],
   sht = showtext,
@@ -32,9 +33,8 @@ box::use(
 
 ski$read_dir("app/logic/data/")
 
-geo <- gj$geojson_read("app/logic/data/gadm/sweden.geojson") # larger file
-
-# geo <- gj$geojson_read("app/logic/data/gadm/sweden_test.geojson") # smaller file
+geo_json <- gj$geojson_read("app/logic/data/gadm/sweden.geojson") # larger file
+geo_sf <- gjsf$geojson_sf(readLines("app/logic/data/gadm/sweden.geojson"))
 
 syf$font_add_google("Roboto", "Roboto")
 syf$font_add_google("Fraunces", "Fraunces")
@@ -148,77 +148,77 @@ server <- function(id) {
       "vap_indikatorer_1",
       access_page = input$vap_indikatorer_1,
       data = list_df$vap_indikatorer_1,
-      geo = geo
+      geo = list(json = geo_json, sf = geo_sf)
     )
 
     vap_indikatorer_2$server(
       "vap_indikatorer_2",
       access_page = input$vap_indikatorer_2,
       data = list_df$vap_indikatorer_2,
-      geo = geo
+      geo = list(json = geo_json, sf = geo_sf)
     )
 
     vap_indikatorer_3$server(
       "vap_indikatorer_3",
       access_page = input$vap_indikatorer_3,
       data = list_df$vap_indikatorer_3,
-      geo = geo
+      geo = list(json = geo_json, sf = geo_sf)
     )
 
     vap_indikatorer_4$server(
       "vap_indikatorer_4",
       access_page = input$vap_indikatorer_4,
       data = list_df$vap_indikatorer_4,
-      geo = geo
+      geo = list(json = geo_json, sf = geo_sf)
     )
 
     vap_behandling_1$server(
       "vap_behandling_1",
       access_page = input$vap_behandling_1,
       data = list_df$vap_behandling_1,
-      geo = geo
+      geo = list(json = geo_json, sf = geo_sf)
     )
 
     vap_behandling_2$server(
       "vap_behandling_2",
       access_page = input$vap_behandling_2,
       data = list_df$vap_behandling_2,
-      geo = geo
+      geo = list(json = geo_json, sf = geo_sf)
     )
 
     vap_behandling_3$server(
       "vap_behandling_3",
       access_page = input$vap_behandling_3,
       data = list_df$vap_behandling_3,
-      geo = geo
+      geo = list(json = geo_json, sf = geo_sf)
     )
 
     vap_behandling_4$server(
       "vap_behandling_4",
       access_page = input$vap_behandling_4,
       data = list_df$vap_behandling_4,
-      geo = geo
+      geo = list(json = geo_json, sf = geo_sf)
     )
 
     vap_inklusionsmatt_1$server(
       "vap_inklusionsmatt_1",
       access_page = input$vap_inklusionsmatt_1,
       data = list_df$vap_inklusionsmatt_1,
-      geo = geo
+      geo = list(json = geo_json, sf = geo_sf)
     )
 
     vap_kvalitetssakring_1$server(
       "vap_kvalitetssakring_1",
       access_page = input$vap_kvalitetssakring_1,
       data = list_df$vap_kvalitetssakring_1,
-      geo = geo
+      geo = list(json = geo_json, sf = geo_sf)
     )
 
     vap_kvalitetssakring_2$server(
       "vap_kvalitetssakring_2",
       access_page = input$vap_kvalitetssakring_2,
       data = list_df$vap_kvalitetssakring_2,
-      geo = geo
+      geo = list(json = geo_json, sf = geo_sf)
     )
   })
 }
