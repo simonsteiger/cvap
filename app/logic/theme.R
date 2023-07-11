@@ -14,8 +14,8 @@ light <- bsl$bs_theme(
   warning = "#fbdbdb",
   danger = "#c9281d",
   base_font = bsl$font_collection(
-    bsl$font_google("Roboto Flex", local = FALSE), "Roboto", "sans-serif"
+    bsl$font_google("Roboto Flex", local = FALSE), "Roboto", "serif"
   ),
-  heading_font = bsl$font_google("Roboto Slab"),
+  heading_font = bsl$font_google("Commissioner"),
   code_font = bsl$font_google("Roboto Mono")
 )

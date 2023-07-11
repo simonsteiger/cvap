@@ -28,7 +28,7 @@ box::use(
     app / view / output / overview,
 )
 
-text <- aui$navbox_data$tag[[1]][[2]]
+text <- aui$navbox_data$tag[[2]][[2]]
 
 #' @export
 ui <- function(id, data) {
@@ -121,7 +121,7 @@ server <- function(id, access_page, data, geo) {
 
         map$server(
                 id = "output",
-                .data = sum_sort,
+                .data = sum_synopsis,
                 geo = geo,
                 group = "ongoing_timestamp",
                 text = text

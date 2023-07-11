@@ -121,7 +121,7 @@ server <- function(id, access_page, data, geo) {
 
         map$server(
             id = "output",
-            .data = sum_sort,
+            .data = sum_synopsis,
             geo = geo,
             group = "ongoing_timestamp",
             text = text

@@ -38,7 +38,7 @@ geo <- gj$geojson_read("app/logic/data/gadm/sweden.geojson") # larger file
 
 syf$font_add_google("Roboto", "Roboto")
 syf$font_add_google("Fraunces", "Fraunces")
-# syf$font_add_google("Commissioner", "Commissioner")
+syf$font_add_google("Commissioner", "Commissioner")
 sht$showtext_auto()
 
 #' @export

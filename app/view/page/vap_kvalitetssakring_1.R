@@ -123,7 +123,7 @@ server <- function(id, access_page, data, geo) {
 
         map$server(
             id = "output",
-            .data = sum_sort,
+            .data = sum_warn,
             geo = geo,
             group = "timestamp_group",
             text = text

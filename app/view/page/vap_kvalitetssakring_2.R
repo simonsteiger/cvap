@@ -92,7 +92,7 @@ server <- function(id, access_page, data, geo) {
 
         map$server(
             id = "output",
-            .data = sum_sort,
+            .data = sh$reactive(data),
             geo = geo,
             group = "year",
             text = text

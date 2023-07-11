@@ -3,11 +3,12 @@ box::use(
     rl = rlang[`%||%`],
     dp = dplyr,
     sh = shiny,
+    pr = purrr,
+    lub = lubridate,
     magrittr[`%>%`],
 )
 
 box::use(
-    swissknife / sklang[`%//%`],
     srqlib / srqcolor,
 )
 
@@ -47,13 +48,13 @@ spell_outcome <- function(x) {
 
 #' @export
 spell_period <- function(x) {
-    x %//% return(NULL) # empty list is not null but length 0, so // instead of ||
-    if (!is.list(x) || length(unlist(x)) > 2) stop("x must be a one element list of length 1 or 2")
-    x <- x[[1]] # tests OK, simplify below code by peeling off list
+    x <- x$inkluderad %||% x$ordinerat %||% x$ongoing %||% stop("No date variable")
 
     if (length(x) == 2) {
-        gl$glue("från {x[1]} till {x[2]}.")
-    } else { # assume that there is a lookback input
+        gl$glue("från {x[1]} till {x[2]}")
+    } else if (!is.null(input$lookback)) { # assume that there is a lookback input
+        gl$glue("från {x}")
+    } else {
         input$lookback %||% stop("Require input$lookback to generate period text")
         gl$glue("från {x-lub$years(input$lookback)} till {x}")
     }
@@ -81,7 +82,7 @@ create_subtitle <- function(input, .var) {
             spell_outcome(input$outcome %||% .var),
             spell_kon(input$kon),
             spell_alder(input$alder),
-            # spell_period(input[pr$map_lgl(input, lub$is.Date)]),
+            spell_period(input), # can't use `[` to index reactive [pr$map_lgl(input, lub$is.Date)]
             sep = " "
         ), ".",
         if (!is.null(input$dxcat) || !is.null(input$prep_typ)) {

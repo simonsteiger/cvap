@@ -13,12 +13,11 @@ ui <- function(id, data) {
     sh$tagList(
         aui$container_fluid(
             aui$row(
-                class_row = "row mt-4",
                 colwidths = c(2, 8, 2),
-                center = sh$div(
-                    class = "pt-4",
-                    sh$h2(class = "pb-2 text-center", "Välkommen till SRQs"),
-                    sh$h1(class = "text-center", "Visualiserings- och Analysplattform")
+                center = aui$head(
+                    text = NULL,
+                    sh$h2(class = "pb-2 fs-2 h-font text-center", "Välkommen till SRQs"),
+                    sh$h1(class = "fs-1 h-font text-center", "Visualiserings- och Analysplattform")
                     )
             ),
             aui$row(

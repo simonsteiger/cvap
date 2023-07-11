@@ -1,4 +1,5 @@
 @import "hover";
+@import url("https://fonts.googleapis.com/css?family=Commissioner");
 $tertiary: #f8f9fb;
 $danger: #c9281d;
 $success: #86d130;
@@ -25,4 +26,8 @@ $success: #86d130;
 
 .icon-danger {
     color: $danger;
+}
+
+.h-font {
+    font-family: Commissioner, Georgia, Times, serif;
 }

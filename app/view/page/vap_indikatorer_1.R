@@ -55,7 +55,7 @@ ui <- function(id, data) {
                     bar$ui(ns("output")),
                     map$ui(ns("output")),
                     aui$card(
-                        header = sh$div(class = "py-card-header", sh$h6("Sammanfattning")),
+                        header = sh$div(class = "py-card-header", "Sammanfattning"),
                         body = "Sample text."
                     ),
                     table$ui(ns("output"))
