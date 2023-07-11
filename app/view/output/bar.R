@@ -6,13 +6,13 @@ box::use(
     lub = lubridate,
     fct = forcats,
     gg = ggplot2,
-    ggt = ggtext,
     pal = palettes,
 )
 
 box::use(
     ase = app / logic / aux_server,
     aui = app / logic / aux_ui,
+    app / logic / theme,
     srqlib / srqcolor,
     srqlib / srqauto,
 )
@@ -43,15 +43,8 @@ ui <- function(id) {
         ),
         body = e4r$echarts4rOutput(ns("bar")),
         footer = sh$div(
-            class = "d-flex justify-content-start",
-            aui$btn_modal(
-                ns("download_bar"),
-                label = sh$tagList(sh$icon("download"), "Download"),
-                modal_title = "Anpassa download",
-                footer_confirm = NULL,
-                footer_dismiss = NULL,
-                sh$plotOutput(ns("exbar"))
-            )
+            class = "d-flex justify-content-start align-items-center gap-3",
+            sh$downloadButton(ns("exbar"), "Download", class = "hover")
         )
     )
 }
@@ -127,32 +120,18 @@ server <- function(id, .data, stash = NULL, x = "lan", y = "outcome", group = NU
                     caption = paste0("Data uttagen: ", lub$today(), "\nwww.srq.nu")
                 ) +
                 gg$theme_classic() +
-                gg$theme(
-                    text = gg$element_text(family = "Roboto"),
-                    legend.title = gg$element_blank(),
-                    legend.position = "bottom",
-                    plot.title = ggt$element_textbox_simple(
-                        family = "Fraunces",
-                        # colour = srqcolor$srqblu,
-                        hjust = 0,
-                        size = 18,
-                        margin = gg$margin(t = 5)
-                    ),
-                    plot.subtitle = ggt$element_textbox_simple(
-                        family = "Roboto",
-                        # colour = srqcolor$srqblu,
-                        hjust = 0,
-                        lineheight = 0.5,
-                        margin = gg$margin(t = 10, b = 10)
-                    ),
-                    plot.background = gg$element_blank(),
-                    strip.background = gg$element_blank(),
-                    strip.placement = "outside"
-                )
+                theme$ggexport
         })
 
         output$bar <- e4r$renderEcharts4r(res_interactive())
 
-        output$exbar <- sh$renderPlot(res_export())
+        output$exbar <- sh$downloadHandler(
+            filename = function() {
+                paste0(lub$today(), "_vapX_bar", ".pdf")
+            },
+            content = function(file) {
+                gg$ggsave(file, res_export(), width = 5, height = 7)
+            }
+        )
     })
 }

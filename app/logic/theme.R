@@ -1,5 +1,7 @@
 box::use(
   bsl = bslib,
+  gg = ggplot2,
+  ggt = ggtext,
 )
 
 #' @export
@@ -18,4 +20,35 @@ light <- bsl$bs_theme(
   ),
   heading_font = bsl$font_google("Commissioner"),
   code_font = bsl$font_google("Roboto Mono")
+)
+
+#' @export
+ggexport <- gg$theme(
+  text = gg$element_text(family = "Roboto"),
+  legend.title = gg$element_blank(),
+  legend.position = "bottom",
+  plot.title = ggt$element_textbox_simple(
+    family = "Fraunces",
+    # colour = srqcolor$srqblu,
+    hjust = 0,
+    size = 18,
+    margin = gg$margin(t = 10)
+  ),
+  plot.subtitle = ggt$element_textbox_simple(
+    family = "Roboto",
+    # colour = srqcolor$srqblu,
+    hjust = 0,
+    lineheight = 1.2,
+    margin = gg$margin(t = 20, b = 20)
+  ),
+  plot.caption = gg$element_text(
+    family = "Roboto",
+    # colour = srqcolor$srqblu,
+    hjust = 1,
+    lineheight = 1,
+    margin = gg$margin(t = 20, b = 10)
+  ),
+  plot.background = gg$element_blank(),
+  strip.background = gg$element_blank(),
+  strip.placement = "outside"
 )

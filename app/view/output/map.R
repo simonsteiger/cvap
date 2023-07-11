@@ -9,10 +9,12 @@ box::use(
     fct = forcats,
     rl = rlang[`%||%`],
     gg = ggplot2,
+    pal = palettes,
 )
 
 box::use(
     srqlib / srqcolor,
+    app / logic / theme,
     aui = app / logic / aux_ui,
 )
 
@@ -47,20 +49,13 @@ ui <- function(id) {
         body = e4r$echarts4rOutput(ns("map")),
         footer = sh$div(
             class = "d-flex justify-content-start align-items-center gap-3",
-            aui$btn_modal(
-                ns("download_map"),
-                label = sh$tagList(sh$icon("download"), "Download"),
-                modal_title = "Anpassa download",
-                footer_confirm = NULL,
-                footer_dismiss = NULL,
-                sh$plotOutput(ns("exmap"))
-            )
+            sh$downloadButton(ns("exmap"), "Download", class = "hover")
         )
     )
 }
 
 #' @export
-server <- function(id, .data, geo, x = "lan", y = "outcome", group = NULL, text = "Title") {
+server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group = NULL, text = "Title") {
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
 
@@ -129,15 +124,39 @@ server <- function(id, .data, geo, x = "lan", y = "outcome", group = NULL, text 
         })
 
         res_export <- sh$reactive({
+            limits <- c(min(.data()[[y]], na.rm = TRUE), max(.data()[[y]], na.rm = TRUE))
+
             geo$sf %>%
                 dp$left_join(.data(), dp$join_by("NAME_1" == "lan")) %>%
                 gg$ggplot() +
                 gg$geom_sf(gg$aes(fill = .data[[y]])) +
-                gg$theme_void()
+                pal$scale_fill_palette_c(
+                    srqcolor$ramp(100, "abyss"),
+                    na.value = "#ededed",
+                    limits = limits,
+                    breaks = c(limits, mean(limits)),
+                ) +
+                gg$labs(
+                    x = NULL,
+                    y = NULL, # keep settings from scale_y
+                    title = stash()$title,
+                    subtitle = stash()$subtitle,
+                    caption = paste0("Data uttagen: ", lub$today(), "\nwww.srq.nu"),
+                ) +
+                gg$xlim(c(6, 28)) +
+                gg$theme_void() +
+                theme$ggexport
         })
 
         output$map <- e4r$renderEcharts4r(res_interactive())
 
-        output$exmap <- sh$renderPlot(res_export())
+        output$exmap <- sh$downloadHandler(
+            filename = function() {
+                paste0(lub$today(), "_vapX_map", ".pdf")
+            },
+            content = function(file) {
+                gg$ggsave(file, res_export(), width = 3.4, height = 7)
+            }
+        )
     })
 }

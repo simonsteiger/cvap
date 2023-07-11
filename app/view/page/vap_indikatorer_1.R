@@ -124,6 +124,7 @@ server <- function(id, access_page, data, geo) {
             id = "output",
             .data = sum_warn,
             geo = geo,
+            stash = out_stash,
             group = "inkluderad",
             text = title
         )
