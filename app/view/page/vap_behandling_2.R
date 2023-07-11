@@ -26,9 +26,10 @@ box::use(
     app / view / output / bar,
     app / view / output / map,
     app / view / output / overview,
+    app / view / output / stash,
 )
 
-text <- aui$navbox_data$tag[[2]][[2]]
+title <- aui$navbox_data$tag[[2]][[2]]
 
 #' @export
 ui <- function(id, data) {
@@ -46,7 +47,7 @@ ui <- function(id, data) {
             aui$row(
                 class_row = "row m-4 d-flex justify-content-center align-items-center",
                 left = sh$div(aui$btn_return(ns("return"))),
-                center = aui$head(text = text)
+                center = aui$head(text = title)
             ),
             aui$row_sidebar(
                 sidebar = aui$sidebar_filter(ns("go_input"), ns("overview"), inputs),
@@ -68,6 +69,11 @@ ui <- function(id, data) {
 server <- function(id, access_page, data, geo) {
     sh$moduleServer(id, function(input, output, session) {
         ase$obs_return(input)
+
+        out_stash <- sh$eventReactive(list(input$go_input, access_page), {
+            res <- stash$server("input", "Antal pågående behandlingar per 100 000 invånare", title)
+            res()
+        })
 
         out_icons <- sh$eventReactive(list(input$go_input, access_page), {
             overview$server("input")
@@ -115,16 +121,18 @@ server <- function(id, access_page, data, geo) {
         bar$server(
             "output",
             sum_sort,
+            stash = out_stash,
             group = "ongoing_timestamp",
-            text = text
+            text = title
         )
 
         map$server(
                 id = "output",
                 .data = sum_synopsis,
                 geo = geo,
+                stash = out_stash,
                 group = "ongoing_timestamp",
-                text = text
+                text = title
             )
 
         output$overview <- sh$renderUI(out_icons())

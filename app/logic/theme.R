@@ -48,6 +48,7 @@ ggexport <- gg$theme(
     lineheight = 1,
     margin = gg$margin(t = 20, b = 10)
   ),
+  plot.margin = gg$margin(10, 15, 10, 10),
   plot.background = gg$element_blank(),
   strip.background = gg$element_blank(),
   strip.placement = "outside"

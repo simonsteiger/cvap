@@ -23,6 +23,7 @@ box::use(
     app / view / output / map,
     app / view / output / overview,
     app / view / output / warning,
+    app / view / output / stash,
 )
 
 text <- aui$navbox_data$tag[[2]][[4]]
@@ -71,6 +72,11 @@ server <- function(id, access_page, data, geo) {
     sh$moduleServer(id, function(input, output, session) {
         ase$obs_return(input)
 
+        out_stash <- sh$eventReactive(list(input$go_input, access_page), {
+            res <- stash$server("input", title)
+            res()
+        })
+
         out_icons <- sh$eventReactive(list(input$go_input, access_page), {
             overview$server("input")
         })
@@ -82,7 +88,7 @@ server <- function(id, access_page, data, geo) {
                 "input",
                 sh$reactive(data[sieve(), ]),
                 .fn = stats$median,
-                .var = "patientens_globala",
+                .var = "patientens_globala", # TODO remove to allow user to choose outcome
                 .by = c("lan", "visit_group"),
                 na.rm = TRUE
             )
@@ -110,6 +116,7 @@ server <- function(id, access_page, data, geo) {
         bar$server(
             "output",
             sum_sort,
+            stash = out_stash,
             group = "visit_group",
             text = text
         )
@@ -118,6 +125,7 @@ server <- function(id, access_page, data, geo) {
             id = "output",
             .data = sum_synopsis,
             geo = geo,
+            stash = out_stash,
             group = "visit_group",
             text = text
         )

@@ -32,7 +32,7 @@ ui <- function(id, data) {
     ns <- sh$NS(id)
 
     inputs <- sh$tagList(
-        aui$inp_daterange(sh$NS(ns("input"), "ordinerat"), "Välj tidsfönster för ordinerationdatum"),
+        aui$inp_daterange(sh$NS(ns("input"), "ordinerat"), "Välj tidsfönster för ordinationdatum"),
         aui$inp_radio_sex(sh$NS(ns("input"), "kon")),
         aui$inp_slider_age(sh$NS(ns("input"), "alder")),
         aui$inp_picker_lan(sh$NS(ns("input"), "lan"), unique(data$lan))
@@ -68,6 +68,11 @@ ui <- function(id, data) {
 server <- function(id, access_page, data, geo) {
     sh$moduleServer(id, function(input, output, session) {
         ase$obs_return(input)
+
+        out_stash <- sh$eventReactive(list(input$go_input, access_page), {
+            res <- stash$server("input", "???", title)
+            res()
+        })
 
         out_icons <- sh$eventReactive(list(input$go_input, access_page), {
             overview$server("input")
@@ -108,17 +113,19 @@ server <- function(id, access_page, data, geo) {
         bar$server(
             "output",
             sum_sort,
+            stash = out_stash,
             group = "visit_group",
             text = text
         )
 
         map$server(
-                id = "output",
-                .data = sum_warn,
-                geo = geo,
-                group = "visit_group",
-                text = text
-            )
+            id = "output",
+            .data = sum_warn,
+            geo = geo,
+            stash = out_stash,
+            group = "visit_group",
+            text = text
+        )
 
         output$overview <- sh$renderUI(out_icons())
     })

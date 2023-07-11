@@ -10,6 +10,8 @@ box::use(
     rl = rlang[`%||%`],
     gg = ggplot2,
     pal = palettes,
+    mg = magick,
+    cow = cowplot,
 )
 
 box::use(
@@ -143,9 +145,8 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                     subtitle = stash()$subtitle,
                     caption = paste0("Data uttagen: ", lub$today(), "\nwww.srq.nu"),
                 ) +
-                gg$xlim(c(6, 28)) +
-                gg$theme_void() +
-                theme$ggexport
+                gg$xlim(c(1, 33)) + # show more latitudes to give text more space
+                gg$theme_void()
         })
 
         output$map <- e4r$renderEcharts4r(res_interactive())
@@ -155,7 +156,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                 paste0(lub$today(), "_vapX_map", ".pdf")
             },
             content = function(file) {
-                gg$ggsave(file, res_export(), width = 3.4, height = 7)
+                gg$ggsave(file, res_export(), width = 5, height = 7)
             }
         )
     })

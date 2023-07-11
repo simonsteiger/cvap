@@ -48,23 +48,23 @@ spell_outcome <- function(x) {
 
 #' @export
 spell_period <- function(x) {
-    x <- x$inkluderad %||% x$ordinerat %||% x$ongoing %||% stop("No date variable")
+    date <- x$inkluderad %||% x$ordinerat %||% x$ongoing %||% stop("No date variable")
 
-    if (length(x) == 2) {
-        gl$glue("från {x[1]} till {x[2]}")
-    } else if (!is.null(input$lookback)) { # assume that there is a lookback input
-        gl$glue("från {x}")
+    if (length(date) == 2) {
+        gl$glue("från {date[1]} till {date[2]}")
+    } else if (is.null(x$lookback)) { # assume that there is a lookback input
+        gl$glue("från {date}")
     } else {
-        input$lookback %||% stop("Require input$lookback to generate period text")
-        gl$glue("från {x-lub$years(input$lookback)} till {x}")
+        x$lookback %||% stop("Require input$lookback to generate period text")
+        gl$glue("från {date-lub$years(input$lookback)} till {date}")
     }
 }
 
 #' @export
 spell_dxcat <- function(x) {
     x %||% return(NULL)
-    x <- if (x == "Annan") "en diagnos inom kategori 'Annan'" else x
-    gl$glue("diagnosticerad med {x}")
+    x[x %in% "Annan"] <- "en diagnos inom kategori 'Annan'"
+    gl$glue("diagnosticerad med {paste0(x, collapse = ', ')}")
 }
 
 #' @export
