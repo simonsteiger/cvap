@@ -1,3 +1,6 @@
+# The main module sets up the overarching app structure
+# It reads data and creates UIs and servers for the 11 VAP pages
+
 box::use(
   sh = shiny,
   bsl = bslib,
@@ -15,6 +18,7 @@ box::use(
 
 box::use(
   ski = swissknife / skinit,
+  swissknife / sklang[`%//%`],
   aui = app / logic / aux_ui,
   app / logic / theme,
   app / view / page / home,
@@ -31,11 +35,21 @@ box::use(
   app / view / page / vap_kvalitetssakring_2,
 )
 
+# Read all data files in the data folder
 ski$read_dir("app/logic/data/")
 
+# If there were no files, run the preprocessing scripts and try again
+if (!exists("list_df")) {
+  filenames <- list.files("app/logic/data/", pattern = "^vap_.+\\.R$")
+  pr$walk(paste0("app/logic/data/", filenames), source, .progress = c("Preprocessing datasets..."))
+  ski$read_dir("app/logic/data/")
+}
+
+# Load the geo data
 geo_json <- gj$geojson_read("app/logic/data/gadm/sweden.geojson") # larger file
 geo_sf <- gjsf$geojson_sf(readLines("app/logic/data/gadm/sweden.geojson"))
 
+# Add the fonts needed for pdf exports
 syf$font_add_google("Roboto", "Roboto")
 syf$font_add_google("Fraunces", "Fraunces")
 syf$font_add_google("Commissioner", "Commissioner")
@@ -90,7 +104,6 @@ ui <- function(id) {
           list_df$vap_behandling_1
         )
       ),
-      # How do behandling 2 and indikatorer 2 differ (meaningfully)?
       rt$route(
         "vap_behandling_2",
         vap_behandling_2$ui(
