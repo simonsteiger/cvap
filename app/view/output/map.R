@@ -71,7 +71,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                         dp$mutate(
                             !!group := {
                                 # Only sort by y if group does not imply chronological order
-                                if (!lub$is.Date(.data[[group]]) && group != "visit_group") {
+                                if (!lub$is.Date(.data[[group]]) && !is.numeric(.data[[group]]) && group != "visit_group") {
                                     as.factor(.data[[group]]) %>% fct$fct_reorder(-.data[[y]])
                                 } else {
                                     .data[[group]]

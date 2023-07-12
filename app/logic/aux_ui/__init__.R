@@ -101,3 +101,6 @@ choices <- inp_radios$choices
 
 #' @export
 inp_radio_start <- inp_radios$inp_radio_start
+
+#' @export
+inp_radio_dxcat <- inp_radios$inp_radio_dxcat

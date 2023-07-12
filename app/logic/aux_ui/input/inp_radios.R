@@ -81,3 +81,12 @@ inp_radio_start <- function(id) {
         )
     )
 }
+
+#' @export
+inp_radio_dxcat <- function(id, choices) {
+    inp_radio(
+        id = id,
+        label = "Välj diagnos",
+        choices = choices
+    )
+}

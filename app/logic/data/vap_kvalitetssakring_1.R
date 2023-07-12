@@ -50,12 +50,12 @@ out <-
     dp$left_join(list_df$bas_bio, list_df$besoksdata, by = "patientkod") %>%
     dp$mutate(alder = lub$interval(fodelsedag, datum) / lub$dyears(1))
 
-unit_seq <- seq(from = 20, to = 60, by = 10)
-unit_min <- lub$dweeks(10) / lub$ddays(1)
+unit_seq <- seq(from = 4, to = 12, by = 2)
+unit_min <- lub$dmonths(2) / lub$ddays(1)
 
 # TODO currently working with fixed min_ins_ord - correct?
 res <- pr$map(unit_seq, \(t) {
-    t_days <- lub$dweeks(t) / lub$ddays(1)
+    t_days <- lub$dmonths(t) / lub$ddays(1)
     out %>%
         dp$mutate(diff = as.numeric(datum - min_ins_ord)) %>%
         dp$filter(min_ins_ord <= lub$today() - t_days) %>%

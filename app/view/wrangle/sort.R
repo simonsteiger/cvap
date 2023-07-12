@@ -74,6 +74,18 @@ server <- function(id, .data, group = NULL, ...) {
                         .data[[date_var]] == max(.data[[date_var]])
                     )
                 )
+            } else if (is.numeric(.data()[[group]])) {
+                group_var <- colnames(.data()) %>%
+                    `[`(., . %in% group)
+
+                return(
+                    srqprep$prep_custom_order(
+                        .data(),
+                        .reorder = "lan",
+                        .by = "outcome",
+                        .data[[group_var]] == max(.data[[group_var]])
+                    )
+                )
             }
         })
     })

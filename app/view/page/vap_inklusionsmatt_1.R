@@ -35,6 +35,7 @@ ui <- function(id, data) {
     inputs <- sh$tagList(
         aui$inp_daterange(sh$NS(ns("input"), "inkluderad"), "Välj tidsfönster för inklusionsdatum"),
         aui$inp_radio_start(sh$NS(ns("input"), "start")),
+        aui$inp_radio_dxcat(sh$NS(ns("input"), "dxcat"), unique(data$dxcat)),
         aui$inp_radio_sex(sh$NS(ns("input"), "kon")),
         aui$inp_slider_age(sh$NS(ns("input"), "alder")),
         aui$inp_picker_lan(sh$NS(ns("input"), "lan"), unique(data$lan))
