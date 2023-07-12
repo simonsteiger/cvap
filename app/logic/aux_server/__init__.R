@@ -1,7 +1,8 @@
 box::use(
     app / logic / aux_server / obs_return,
     app / logic / aux_server / sift,
-    app / logic / aux_server / spell,
+    app / logic / aux_server / spells,
+    app / logic / aux_server / icons,
 )
 
 #' @export
@@ -14,22 +15,7 @@ sift_cols <- sift$sift_cols
 sift_vars <- sift$sift_vars
 
 #' @export
-spell_kon <- spell$spell_kon
+create_subtitle <- spells$create_subtitle
 
 #' @export
-spell_alder <- spell$spell_alder
-
-#' @export
-spell_outcome <- spell$spell_outcome
-
-#' @export
-spell_period <- spell$spell_period
-
-#' @export
-spell_dxcat <- spell$spell_dxcat
-
-#' @export
-spell_prep_typ <- spell$spell_prep_typ
-
-#' @export
-create_subtitle <- spell$create_subtitle
+iconostasis <- icons$iconostasis

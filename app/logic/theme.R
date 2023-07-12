@@ -32,7 +32,7 @@ ggexport <- gg$theme(
     # colour = srqcolor$srqblu,
     hjust = 0,
     size = 18,
-    margin = gg$margin(t = 10)
+    # margin = gg$margin(t = 10) # handle all outer margins in plot.margin
   ),
   plot.subtitle = ggt$element_textbox_simple(
     family = "Roboto",
@@ -46,9 +46,9 @@ ggexport <- gg$theme(
     # colour = srqcolor$srqblu,
     hjust = 1,
     lineheight = 1,
-    margin = gg$margin(t = 20, b = 10)
+    margin = gg$margin(t = 20)
   ),
-  plot.margin = gg$margin(10, 15, 10, 10),
+  plot.margin = gg$margin(25, 30, 25, 25),
   plot.background = gg$element_blank(),
   strip.background = gg$element_blank(),
   strip.placement = "outside"

@@ -98,3 +98,6 @@ inp_toggle <- inp_toggles$inp_toggle
 
 #' @export
 choices <- inp_radios$choices
+
+#' @export
+inp_radio_start <- inp_radios$inp_radio_start

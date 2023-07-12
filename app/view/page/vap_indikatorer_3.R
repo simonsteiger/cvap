@@ -23,6 +23,7 @@ box::use(
     app / view / output / map,
     app / view / output / overview,
     app / view / output / warning,
+    app / view / output / stash,
 )
 
 text <- aui$navbox_data$tag[[1]][[3]]

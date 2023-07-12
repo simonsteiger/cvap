@@ -6,7 +6,7 @@ box::use(
 #' @export
 inp_date <- function(id, label, value = lub$today()) {
     sh$div(
-        class = "mb-3 mx-1",
+        class = "mb-4 mx-1",
         sh$dateInput(
             inputId = id,
             label = label,
@@ -22,7 +22,7 @@ inp_date <- function(id, label, value = lub$today()) {
 #' @export
 inp_daterange <- function(id, label, start = lub$ymd("2020-01-01"), end = lub$ymd("2021-12-31")) {
     sh$div(
-        class = "mb-3 mx-1",
+        class = "mb-4 mx-1",
         sh$dateRangeInput(
             inputId = id,
             label = label,

@@ -146,7 +146,8 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                     caption = paste0("Data uttagen: ", lub$today(), "\nwww.srq.nu"),
                 ) +
                 gg$xlim(c(1, 33)) + # show more latitudes to give text more space
-                gg$theme_void()
+                gg$theme_void() +
+                theme$ggexport
         })
 
         output$map <- e4r$renderEcharts4r(res_interactive())

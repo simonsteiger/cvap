@@ -6,7 +6,7 @@ box::use(
 #' @export
 inp_picker <- function(id, label, choices, multiple = TRUE, sort = TRUE) {
     sh$div(
-        class = "mb-3 mx-1",
+        class = "mb-4 mx-1",
         sw$pickerInput(
             inputId = id,
             label = label,

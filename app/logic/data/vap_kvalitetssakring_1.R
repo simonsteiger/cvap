@@ -32,7 +32,7 @@ list_df$bio <- list_df$bio %>%
     dp$arrange(patientkod, ordinerat) %>%
     dp$distinct(patientkod, .keep_all = TRUE) %>%
     dp$mutate(
-        prep_start = pmax(ordinerat, insatt, na.rm = TRUE),
+        min_ins_ord = pmin(ordinerat, insatt, na.rm = TRUE),
         preparat = ifelse(preparat == "Roactemra", "RoActemra", preparat)
     )
 
@@ -48,9 +48,26 @@ list_df$bas_bio <-
 
 out <-
     dp$left_join(list_df$bas_bio, list_df$besoksdata, by = "patientkod") %>%
-    dp$mutate(
-        min_ins_ord = pmin(insatt, ordinerat, na.rm = TRUE),
-        alder = lub$interval(fodelsedag, datum) / lub$dyears(1)
-    )
+    dp$mutate(alder = lub$interval(fodelsedag, datum) / lub$dyears(1))
 
-fst$write_fst(out, "app/logic/data/vap_kvalitetssakring_1.fst")
+unit_seq <- seq(from = 20, to = 60, by = 10)
+unit_min <- lub$dweeks(10) / lub$ddays(1)
+
+# TODO currently working with fixed min_ins_ord - correct?
+res <- pr$map(unit_seq, \(t) {
+    t_days <- lub$dweeks(t) / lub$ddays(1)
+    out %>%
+        dp$mutate(diff = as.numeric(datum - min_ins_ord)) %>%
+        dp$filter(min_ins_ord <= lub$today() - t_days) %>%
+        dp$mutate(
+            visit_group = ifelse(diff <= t_days & diff >= unit_min, TRUE, FALSE),
+            timestamp = factor(t)
+        ) %>%
+        dp$arrange(patientkod, dp$desc(visit_group)) %>%
+        dp$distinct(patientkod, .keep_all = TRUE)
+}) %>%
+    pr$list_rbind()
+
+
+
+fst$write_fst(res, "app/logic/data/vap_kvalitetssakring_1.fst")

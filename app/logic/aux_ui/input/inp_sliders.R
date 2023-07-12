@@ -8,7 +8,7 @@ inp_slider <- function(id, label, min, max, value) {
   stopifnot(is.numeric(c(min, max)))
 
   sh$div(
-    class = "mb-3 mx-1",
+    class = "mb-4 mx-1",
     sh$sliderInput(
       inputId = id,
       label = label,

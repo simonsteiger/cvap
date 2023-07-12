@@ -6,7 +6,7 @@ box::use(
 #' @export
 inp_radio <- function(id, label, choices, selected = NULL) {
     sh$div(
-        class = "mb-3 mx-1",
+        class = "mb-4 mx-1",
         sw$prettyRadioButtons(
             inputId = id,
             label = label,
@@ -66,5 +66,18 @@ inp_radio_prep_typ <- function(id) {
         label = "Välj typ av behandling",
         choices = c("bDMARD" = "bioprep", "csDMARD" = "csdmard", "Antingen eller" = "Båda")
         # Båda is a free pass through the filters
+    )
+}
+
+#' @export
+inp_radio_start <- function(id) {
+    inp_radio(
+        id = id,
+        label = "Välj duration från sjukdomsdebut till",
+        choices = c(
+            "Inklusion eller diagnos" = "min_inkl_diag",
+            "Inklusion" = "inkluderad",
+            "Diagnos" = "diagnosdatum1"
+        )
     )
 }
