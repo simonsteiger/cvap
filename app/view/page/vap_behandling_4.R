@@ -26,7 +26,7 @@ box::use(
     app / view / output / stash,
 )
 
-text <- aui$navbox_data$tag[[2]][[4]]
+title <- aui$navbox_data$tag[[2]][[4]]
 
 #' @export
 ui <- function(id, data) {
@@ -46,7 +46,7 @@ ui <- function(id, data) {
             aui$row(
                 class_row = "row m-4 d-flex justify-content-center align-items-center",
                 left = sh$div(aui$btn_return(ns("return"))),
-                center = aui$head(text = text)
+                center = aui$head(text = title)
             ),
             aui$row_sidebar(
                 sidebar = sh$div(
@@ -118,7 +118,7 @@ server <- function(id, access_page, data, geo) {
             sum_sort,
             stash = out_stash,
             group = "visit_group",
-            text = text
+            text = title
         )
 
         map$server(
@@ -127,7 +127,7 @@ server <- function(id, access_page, data, geo) {
             geo = geo,
             stash = out_stash,
             group = "visit_group",
-            text = text
+            text = title
         )
 
         output$overview <- sh$renderUI(out_icons())

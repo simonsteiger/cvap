@@ -12,7 +12,7 @@ box::use(
 )
 
 #' @export
-server <- function(id, .var, title) {
+server <- function(id, title, .var = NULL) {
     sh$moduleServer(id, function(input, output, session) {
         subtitle <- sh$reactive({
             ase$create_subtitle(input, .var)

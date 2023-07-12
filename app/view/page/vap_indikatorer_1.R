@@ -71,7 +71,7 @@ server <- function(id, access_page, data, geo) {
         ase$obs_return(input)
 
         out_stash <- sh$eventReactive(list(input$go_input, access_page), {
-            res <- stash$server("input", "Andel patienter som får diagnos inom 20 veckor", title)
+            res <- stash$server("input", title, "Andel patienter som får diagnos inom 20 veckor")
             res()
         })
 

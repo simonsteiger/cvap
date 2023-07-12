@@ -67,6 +67,18 @@ icon_start <- function(input, ...) {
     )
 }
 
+icon_prep_typ <- function(input, ...) {
+    translated <- switch(input,
+    "bioprep" = "bDMARD",
+    "csdmard" = "csDMARD",
+    "bDMARD / csDMARD"
+    )
+    sh$div(
+        class = "d-flex flex-row align-items-center gap-3",
+        sh$icon("syringe"), translated
+    )
+}
+
 icon_lan_modal <- function(input, ...) {
     dots <- rl$list2(...)
     cond_one <- length(unlist(input)) > 1
@@ -111,5 +123,6 @@ iconostasis <- list(
     ongoing = icon_date,
     lan = icon_lan_modal,
     dxcat = icon_dxcat,
-    start = icon_start
+    start = icon_start,
+    prep_typ = icon_prep_typ
 )

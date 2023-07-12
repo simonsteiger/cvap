@@ -26,7 +26,7 @@ box::use(
     app / view / output / stash,
 )
 
-text <- aui$navbox_data$tag[[1]][[4]]
+title <- aui$navbox_data$tag[[1]][[4]]
 
 #' @export
 ui <- function(id, data) {
@@ -44,7 +44,7 @@ ui <- function(id, data) {
             aui$row(
                 class_row = "row m-4 d-flex justify-content-center align-items-center",
                 left = sh$div(aui$btn_return(ns("return"))),
-                center = aui$head(text = text)
+                center = aui$head(text = title)
             ),
             aui$row_sidebar(
                 sidebar = sh$div(
@@ -71,7 +71,7 @@ server <- function(id, access_page, data, geo) {
         ase$obs_return(input)
 
         out_stash <- sh$eventReactive(list(input$go_input, access_page), {
-            res <- stash$server("input", "???", title)
+            res <- stash$server("input", title, "???")
             res()
         })
 
@@ -116,7 +116,7 @@ server <- function(id, access_page, data, geo) {
             sum_sort,
             stash = out_stash,
             group = "visit_group",
-            text = text,
+            text = title,
             format = "percent"
         )
 
@@ -128,7 +128,7 @@ server <- function(id, access_page, data, geo) {
                 geo = geo,
                 stash = out_stash,
                 group = "visit_group",
-                text = text
+                text = title
             )
     })
 }
