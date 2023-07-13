@@ -3,6 +3,7 @@ box::use(
     fst,
     dp = dplyr,
     lub = lubridate,
+    pr = purrr,
 )
 
 box::use(
@@ -19,14 +20,20 @@ out <- list_df$basdata %>%
         alder = lub$interval(fodelsedag, inkluderad) / lub$dyears(1),
         min_inkl_diag = pmin(diagnosdatum1, inkluderad, na.rm = TRUE),
         lan = ifelse(lan == "Örebro", "Orebro", lan)
-    ) %>%
-    srqprep$prep_dynamic_groups(
-        .start = srqdate$no_limit,
-        .end = lub$today(),
-        .start_var = "min_inkl_diag",
-        .end_var = "symtomdebut_1",
-        diff >= -140 ~ TRUE,
-        .default = FALSE
     )
+
+out <- pr$map(c("min_inkl_diag", "diagnosdatum1", "inkluderad"), \(v) {
+    out %>%
+        dp$mutate(start = v) %>%
+        srqprep$prep_dynamic_groups(
+            .start = srqdate$no_limit,
+            .end = lub$today(),
+            .start_var = "symtomdebut_1",
+            .end_var = v,
+            diff <= 140 & diff >= 0 ~ TRUE,
+            .default = FALSE
+        )
+}) %>%
+    pr$list_rbind()
 
 fst$write_fst(out, "app/logic/data/vap_indikatorer_1.fst")

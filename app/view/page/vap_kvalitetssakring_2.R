@@ -18,7 +18,6 @@ box::use(
     app / view / wrangle / sift,
     app / view / wrangle / synopsis,
     app / view / wrangle / sort,
-    app / view / wrangle / multigroup,
     app / view / output / table,
     app / view / output / bar,
     app / view / output / map,
