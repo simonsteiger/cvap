@@ -33,7 +33,7 @@ server <- function(id, .data, group = NULL, ...) {
             } else if (is.null(group)) { # no custom reordering necessary
                 return(
                     .data() %>%
-                        dp$mutate(lan = fct$fct_reorder(as.factor(lan), .data[["outcome"]])) %>%
+                        dp$mutate(lan = fct$fct_reorder(as.factor(lan), .data()[["outcome"]])) %>%
                         dp$arrange(lan)
                 )
             } else if (is.factor(.data()[[group]])) {

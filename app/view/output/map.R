@@ -99,7 +99,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                         )
                     })
                 } else {
-                    out <- .data
+                    out <- .data()
 
                     title <- list(
                         text = text,
@@ -108,13 +108,15 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                     )
                 }
 
+                # In visual_map, change...
                 # Label legend limits: text = list("High", "Low")
+                # Legend position: left = "right"
 
                 basic <- out %>%
                     e4r$e_charts_(x, timeline = if (!is.null(group)) TRUE else FALSE) %>%
                     e4r$e_map_register("Sweden", geo$json) %>%
                     e4r$e_map_(y, map = "Sweden", nameProperty = "NAME_1") %>%
-                    e4r$e_visual_map_(y, color = palette) %>%
+                    e4r$e_visual_map_(min = min(out[[y]]), max = max(out[[y]]), color = palette) %>%
                     e4r$e_theme("infographic") %>%
                     e4r$e_toolbox_feature(feature = c("saveAsImage"))
 

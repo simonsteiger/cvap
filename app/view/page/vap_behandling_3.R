@@ -112,7 +112,8 @@ server <- function(id, access_page, data, geo) {
             "output",
             sum_sort,
             stash = out_stash,
-            text = title
+            text = title,
+            timeline = FALSE # FIX This is ignored or overridden, huh!
         )
 
         map$server(
@@ -120,7 +121,6 @@ server <- function(id, access_page, data, geo) {
             .data = sum_synopsis,
             geo = geo,
             stash = out_stash,
-            group = NULL,
             text = title
         )
 
