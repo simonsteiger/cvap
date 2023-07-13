@@ -71,28 +71,29 @@ server <- function(id, access_page, data, geo) {
     sh$moduleServer(id, function(input, output, session) {
         ase$obs_return(input)
 
-        out_stash <- sh$eventReactive(list(input$go_input, access_page), {
-            res <- stash$server("input", title, "Antal pågående behandlingar")
-            res()
-        })
+        out_stash <- sh$bindEvent(
+            stash$server("input", title, "Antal pågående behandlingar"),
+            list(input$go_input, access_page)
+        )
 
-        out_icons <- sh$eventReactive(list(input$go_input, access_page), {
-            overview$server("input")
-        })
+        out_icons <- sh$bindEvent(
+            overview$server("input"),
+            list(input$go_input, access_page)
+        )
 
         sieve <- sift$server("input", sh$reactive(data))
 
         pre_ongoing <- ongoing$server("input", sh$reactive(data[sieve(), ]))
 
-        sum_squash <- sh$eventReactive(list(input$go_input, access_page), {
-            res <- squash$server(
+        sum_squash <- sh$bindEvent(
+            squash$server(
                 "summary",
                 pre_ongoing,
                 .fn = dp$n,
                 .by = c("lan", "dxcat")
-            )
-            res()
-        })
+            ),
+            list(input$go_input, access_page)
+        )
 
         sum_sort <- sort$server(
             "output",

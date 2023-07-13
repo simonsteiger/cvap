@@ -71,14 +71,15 @@ server <- function(id, access_page, data, geo) {
     sh$moduleServer(id, function(input, output, session) {
         ase$obs_return(input)
 
-        out_stash <- sh$eventReactive(list(input$go_input, access_page), {
-            res <- stash$server("input", title, "Andel patienter som får diagnos inom 20 veckor")
-            res()
-        })
+        out_stash <- sh$bindEvent(
+            stash$server("input", title, "Andel patienter som får diagnos inom 20 veckor"),
+            list(input$go_input, access_page)
+        )
 
-        out_icons <- sh$eventReactive(list(input$go_input, access_page), {
-            overview$server("input")
-        })
+        out_icons <- sh$bindEvent(
+            overview$server("input"),
+            list(input$go_input, access_page)
+        )
 
         sieve <- sift$server("input", sh$reactive(data))
 

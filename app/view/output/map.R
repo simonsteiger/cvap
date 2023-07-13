@@ -108,6 +108,8 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                     )
                 }
 
+                # Label legend limits: text = list("High", "Low")
+
                 basic <- out %>%
                     e4r$e_charts_(x, timeline = if (!is.null(group)) TRUE else FALSE) %>%
                     e4r$e_map_register("Sweden", geo$json) %>%
