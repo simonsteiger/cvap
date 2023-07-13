@@ -79,36 +79,37 @@ server <- function(id, access_page, data, geo) {
             overview$server("input")
         })
 
-        pre_sift <- sh$eventReactive(list(input$go_input, access_page), {
-            sieve <- sift$server("input", sh$reactive(data))
-            data[sieve(), ]
-        })
+        sieve <- sift$server("input", sh$reactive(data))
 
-        pre_ongoing <- sh$eventReactive(list(input$go_input, access_page), {
-            res <- ongoing$server("input", pre_sift)
-            res()
-        })
+        pre_ongoing <- ongoing$server("input", sh$reactive(data[sieve(), ]))
 
-        sum_squash <- squash$server(
-            "summary",
-            pre_ongoing,
-            .fn = dp$n,
-            .by = c("lan", "ongoing_timestamp", "population")
+        sum_squash <- sh$bindEvent(
+            squash$server(
+                "summary",
+                pre_ongoing,
+                .fn = dp$n,
+                .by = c("lan", "ongoing_timestamp", "population")
+            ),
+            list(input$go_input, access_page)
         )
 
-        sum_synopsis <- synopsis$server(
-            "summary",
-            sum_squash,
-            .fn = `%per100k%`,
-            .var = "outcome",
-            .by = c("lan", "ongoing_timestamp", "population"),
-            riket = FALSE,
-            .data[["population"]]
+        # Already wrapped because later we'll allow this step to be turned off!
+        sum_synopsis <- sh$bindEvent(
+            synopsis$server(
+                "summary",
+                sum_squash,
+                .fn = `%per100k%`,
+                .var = "outcome",
+                .by = c("lan", "ongoing_timestamp", "population"),
+                riket = FALSE,
+                .data[["population"]]
+            ),
+            list(input$go_input, access_page)
         )
 
         sum_sort <- sort$server(
             "output",
-            sum_synopsis,
+            sum_synopsis, # Once synopsis can be turned off, we may want %||% sum_squash here
             group = "ongoing_timestamp"
         )
 
@@ -127,13 +128,13 @@ server <- function(id, access_page, data, geo) {
         )
 
         map$server(
-                id = "output",
-                .data = sum_synopsis,
-                geo = geo,
-                stash = out_stash,
-                group = "ongoing_timestamp",
-                text = title
-            )
+            id = "output",
+            .data = sum_synopsis,
+            geo = geo,
+            stash = out_stash,
+            group = "ongoing_timestamp",
+            text = title
+        )
 
         output$overview <- sh$renderUI(out_icons())
     })

@@ -10,26 +10,28 @@ box::use(
     ski = swissknife / skinit,
     srqlib / srqprep,
     srqlib / srqdate,
+    srqlib / srqdict,
 )
 
 ski$read_dir("/Users/simonsteiger/Desktop/data/fst/")
 
 out <- list_df$basdata %>%
-    dp$filter(tidig_ra == 1) %>% # also check for dxcat == "RA"?
+srqprep$prep_recode(diagnoskod_1, srqdict$rec_dxcat, .new_name = dxcat) %>%
+    dp$filter(tidig_ra == 1 & dxcat == "RA") %>% # TODO check for dxcat == "RA" correct?
     dp$mutate(
         alder = lub$interval(fodelsedag, inkluderad) / lub$dyears(1),
         min_inkl_diag = pmin(diagnosdatum1, inkluderad, na.rm = TRUE),
         lan = ifelse(lan == "Örebro", "Orebro", lan)
     )
 
-out <- pr$map(c("min_inkl_diag", "diagnosdatum1", "inkluderad"), \(v) {
+out <- pr$map(c("min_inkl_diag", "diagnosdatum1", "inkluderad"), \(t) {
     out %>%
-        dp$mutate(start = v) %>%
+        dp$mutate(start = factor(t)) %>%
         srqprep$prep_dynamic_groups(
             .start = srqdate$no_limit,
             .end = lub$today(),
             .start_var = "symtomdebut_1",
-            .end_var = v,
+            .end_var = t,
             diff <= 140 & diff >= 0 ~ TRUE,
             .default = FALSE
         )

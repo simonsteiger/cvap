@@ -80,22 +80,19 @@ server <- function(id, access_page, data, geo) {
             overview$server("input")
         })
 
-        pre_sift <- sh$eventReactive(list(input$go_input, access_page), {
-            sieve <- sift$server("input", sh$reactive(data))
-            data[sieve(), ]
-        })
+        sieve <- sift$server("input", sh$reactive(data))
 
-        pre_ongoing <- sh$eventReactive(list(input$go_input, access_page), {
-            res <- ongoing$server("input", pre_sift)
+        pre_ongoing <- ongoing$server("input", sh$reactive(data[sieve(), ]))
+
+        sum_squash <- sh$eventReactive(list(input$go_input, access_page), {
+            res <- squash$server(
+                "summary",
+                pre_ongoing,
+                .fn = dp$n,
+                .by = c("lan", "dxcat")
+            )
             res()
         })
-
-        sum_squash <- squash$server(
-            "summary",
-            pre_ongoing,
-            .fn = dp$n,
-            .by = c("lan", "dxcat")
-        )
 
         sum_sort <- sort$server(
             "output",

@@ -81,19 +81,22 @@ server <- function(id, access_page, data, geo) {
             overview$server("input")
         })
 
+        sieve <- sift$server("input", sh$reactive(data))
+
+        pre_sift <- sh$reactive(data[sieve(), ])
+
         # synopsis server is in input namespace to allow plotting user-chosen outcome
-        sum_synopsis <- sh$eventReactive(list(input$go_input, access_page), {
-            sieve <- sift$server("input", sh$reactive(data))
-            res <- synopsis$server(
+        sum_synopsis <- sh$bindEvent(
+            synopsis$server(
                 "input",
-                sh$reactive(data[sieve(), ]),
+                pre_sift,
                 .fn = stats$median,
                 .var = "patientens_globala", # TODO remove to allow user to choose outcome
                 .by = c("lan", "visit_group"),
                 na.rm = TRUE
-            )
-            res()
-        })
+            ),
+         list(input$go_input, access_page)
+         )
 
         sum_warn <- warning$server(
             "warning",

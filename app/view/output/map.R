@@ -61,6 +61,8 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
 
+        time_vars <- c("visit_group", "timestamp")
+
         res_interactive <- sh$reactive({
             if (isFALSE(input$load)) { # abort if load is FALSE
                 NULL
@@ -71,7 +73,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                         dp$mutate(
                             !!group := {
                                 # Only sort by y if group does not imply chronological order
-                                if (!lub$is.Date(.data[[group]]) && !is.numeric(.data[[group]]) && group != "visit_group") {
+                                if (!lub$is.Date(.data[[group]]) && !group %in% time_vars) {
                                     as.factor(.data[[group]]) %>% fct$fct_reorder(-.data[[y]])
                                 } else {
                                     .data[[group]]

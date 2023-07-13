@@ -63,7 +63,7 @@ res <- out %>%
                             dp$filter(d3[[s2]] <= lub$today() - t_days) %>%
                             dp$mutate(
                                 visit_group = ifelse(diff <= t_days, TRUE, FALSE),
-                                timestamp = t2,
+                                timestamp = factor(t2),
                                 start = factor(s2)
                             ) %>%
                             dp$arrange(patientkod, dp$desc(visit_group)) %>%

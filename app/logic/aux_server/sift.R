@@ -6,6 +6,9 @@ box::use(
 )
 
 #' @export
+#' ATTENTION does not work with by-item-selection of numeric vars
+#' Numeric vars are always treated as ranges or cut-offs
+#' For by-item-selection, treat respective vars as factors or characters!
 sift_cols <- function(col, val, var, skip) {
     if (var %in% skip || # dev-specified skip var
         is.null(val) || # input name unavailable (hidden)
@@ -17,6 +20,8 @@ sift_cols <- function(col, val, var, skip) {
         return(as.logical(col) == val)
     } else if (is.numeric(col) && length(val) == 1) {
         return(!is.na(col) & col >= as.numeric(val))
+    } else if (is.numeric(col) && length(val) == 2) { # numeric range
+        return(!is.na(col) & col >= min(val) & col <= max(val))
     } else if (is.numeric(col) && length(val) == 2) { # numeric range
         return(!is.na(col) & col >= min(val) & col <= max(val))
     } else if (lub$is.Date(col) && length(val) == 1) {
@@ -35,14 +40,14 @@ sift_cols <- function(col, val, var, skip) {
 
 #' @export
 sift_vars <- function(data, input, skip = NULL) {
-  stopifnot(sh$is.reactive(data))
+    stopifnot(sh$is.reactive(data))
 
-  vars <- sh$reactive(colnames(data()))
+    vars <- sh$reactive(colnames(data()))
 
-  sh$reactive({
-    each_var <-
-      pr$map(vars(), \(v) sift_cols(data()[[v]], input[[v]], v, skip))
+    sh$reactive({
+        each_var <-
+            pr$map(vars(), \(v) sift_cols(data()[[v]], input[[v]], v, skip))
 
-    pr$reduce(each_var, `&`)
-  })
+        pr$reduce(each_var, `&`)
+    })
 }

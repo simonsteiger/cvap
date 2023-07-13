@@ -79,36 +79,37 @@ server <- function(id, access_page, data, geo) {
             overview$server("input")
         })
 
-        pre_sift <- sh$eventReactive(list(input$go_input, access_page), {
-            sieve <- sift$server("input", sh$reactive(data))
-            data[sieve(), ]
-        })
+        sieve <- sift$server("input", sh$reactive(data))
 
-        pre_ongoing <- sh$eventReactive(list(input$go_input, access_page), {
-            res <- ongoing$server("input", pre_sift)
-            res()
-        })
+        pre_ongoing <- ongoing$server("input", sh$reactive(data[sieve(), ]))
 
-        sum_squash <- squash$server(
-            "summary",
-            pre_ongoing,
-            .fn = dp$n,
-            .by = c("lan", "population", "ongoing_timestamp")
+        sum_squash <- sh$bindEvent(
+            squash$server(
+                "summary",
+                pre_ongoing,
+                .fn = dp$n,
+                .by = c("lan", "population", "ongoing_timestamp")
+            ),
+            list(input$go_input, access_page)
         )
 
-        sum_synopsis <- synopsis$server(
-            "summary",
-            sum_squash,
-            .fn = `%per100k%`,
-            .var = "outcome",
-            .by = c("lan", "ongoing_timestamp", "population"),
-            riket = FALSE,
-            .data[["population"]]
+        # TODO allow user to disable this step
+        sum_synopsis <- sh$bindEvent(
+            synopsis$server(
+                "summary",
+                sum_squash,
+                .fn = `%per100k%`,
+                .var = "outcome",
+                .by = c("lan", "ongoing_timestamp", "population"),
+                riket = FALSE,
+                .data[["population"]]
+            ),
+            list(input$go_input, access_page)
         )
 
         sum_sort <- sort$server(
             "output",
-            sum_synopsis,
+            sum_synopsis, # Once synopsis can be disabled, use %||% sum_squash
             group = "ongoing_timestamp"
         )
 

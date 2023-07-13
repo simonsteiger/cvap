@@ -80,19 +80,21 @@ server <- function(id, access_page, data, geo) {
             overview$server("input")
         })
 
-        sum_synopsis <- sh$eventReactive(list(input$go_input, access_page), {
-            sieve <- sift$server("input", sh$reactive(data))
-            pre_lookback <- lookback$server("input", sh$reactive(data[sieve(), ]), input$outcome)
-            res <- synopsis$server(
+        sieve <- sift$server("input", sh$reactive(data))
+
+        pre_lookback <- lookback$server("input", sh$reactive(data[sieve(), ]), input$outcome)
+
+        sum_synopsis <- sh$bindEvent(
+            synopsis$server(
                 "summary",
                 pre_lookback,
                 .fn = mean,
                 .var = "outcome",
                 .by = "lan",
                 na.rm = TRUE
-            )
-            res()
-        })
+            ),
+            list(input$go_input, access_page)
+        )
 
         sum_sort <- sort$server(
             "output",

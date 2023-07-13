@@ -82,6 +82,9 @@ inp_slider_age <- inp_sliders$inp_slider_age
 inp_picker_lan <- inp_pickers$inp_picker_lan
 
 #' @export
+inp_picker_timestamp <- inp_pickers$inp_picker_timestamp
+
+#' @export
 inp_picker_dxcat <- inp_pickers$inp_picker_dxcat
 
 #' @export

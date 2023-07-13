@@ -79,18 +79,20 @@ server <- function(id, access_page, data, geo) {
             overview$server("input")
         })
 
-        pre_sift <- sh$eventReactive(list(input$go_input, access_page), {
-            sieve <- sift$server("input", sh$reactive(data))
-            data[sieve(), ]
-        })
+        sieve <- sift$server("input", sh$reactive(data))
 
-        sum_synopsis <- synopsis$server(
-            "summary",
-            pre_sift,
-            .fn = mean,
-            .var = "das28_low",
-            .by = c("lan", "visit_group"),
-            na.rm = TRUE
+        pre_sift <- sh$reactive(data[sieve(), ])
+
+        sum_synopsis <- sh$bindEvent(
+            synopsis$server(
+                "summary",
+                pre_sift,
+                .fn = mean,
+                .var = "das28_low",
+                .by = c("lan", "visit_group"),
+                na.rm = TRUE
+            ),
+            list(input$go_input, access_page)
         )
 
         sum_warn <- warning$server(
@@ -123,12 +125,12 @@ server <- function(id, access_page, data, geo) {
         output$overview <- sh$renderUI(out_icons())
 
         map$server(
-                id = "output",
-                .data = sum_warn,
-                geo = geo,
-                stash = out_stash,
-                group = "visit_group",
-                text = title
-            )
+            id = "output",
+            .data = sum_warn,
+            geo = geo,
+            stash = out_stash,
+            group = "visit_group",
+            text = title
+        )
     })
 }

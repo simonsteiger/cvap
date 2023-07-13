@@ -1,6 +1,7 @@
 box::use(
     sh = shiny,
     sw = shinyWidgets,
+    rl = rlang[`%||%`],
 )
 
 #' @export
@@ -43,5 +44,14 @@ inp_picker_outcome <- function(id, choices) {
         label = "Välj utfallsmått",
         choices = choices,
         sort = FALSE
+    )
+}
+
+#' @export
+inp_picker_timestamp <- function(id, choices, unit = NULL) {
+    inp_picker(
+        id,
+        label = paste("Välj jämforelser", unit),
+        choices = choices
     )
 }
