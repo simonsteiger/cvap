@@ -35,10 +35,10 @@ box::use(
   app / view / page / vap_kvalitetssakring_2,
 )
 
-# Read all data files in the data folder
+# Read all data files in the data folder, and if there are none, list_df won't exist
 ski$read_dir("app/logic/data/")
 
-# If there were no files, run the preprocessing scripts and try again
+# If there were no files to read, run the preprocessing scripts and try again
 if (!exists("list_df")) {
   filenames <- list.files("app/logic/data/", pattern = "^vap_.+\\.R$")
   pr$walk(paste0("app/logic/data/", filenames), source, .progress = c("Preprocessing datasets..."))
@@ -46,7 +46,7 @@ if (!exists("list_df")) {
 }
 
 # Load the geo data
-geo_json <- gj$geojson_read("app/logic/data/gadm/sweden.geojson") # larger file
+geo_json <- gj$geojson_read("app/logic/data/gadm/sweden.geojson")
 geo_sf <- gjsf$geojson_sf(readLines("app/logic/data/gadm/sweden.geojson"))
 
 # Add the fonts needed for pdf exports
