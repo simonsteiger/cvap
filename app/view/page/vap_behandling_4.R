@@ -92,7 +92,6 @@ server <- function(id, access_page, data, geo) {
                 "input",
                 pre_sift,
                 .fn = stats$median,
-                .var = "patientens_globala", # TODO remove to allow user to choose outcome
                 .by = c("lan", "visit_group"),
                 na.rm = TRUE
             ),

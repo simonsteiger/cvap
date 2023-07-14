@@ -34,6 +34,7 @@ ui <- function(id, data) {
 
     inputs <- sh$tagList(
         aui$inp_daterange(sh$NS(ns("input"), "inkluderad"), "Välj tidsfönster för inklusiondatum"),
+        aui$inp_radio_outcome(sh$NS(ns("input"), "outcome"), aui$choices$das28_cdai),
         aui$inp_radio_sex(sh$NS(ns("input"), "kon")),
         aui$inp_slider_age(sh$NS(ns("input"), "alder")),
         aui$inp_picker_lan(sh$NS(ns("input"), "lan"), unique(data$lan))
@@ -71,7 +72,7 @@ server <- function(id, access_page, data, geo) {
         ase$obs_return(input)
 
         out_stash <- sh$bindEvent(
-            stash$server("input", title, "???"),
+            stash$server("input", title),
             list(input$go_input, access_page)
         )
 
@@ -86,10 +87,9 @@ server <- function(id, access_page, data, geo) {
 
         sum_synopsis <- sh$bindEvent(
             synopsis$server(
-                "summary",
+                "input",
                 pre_sift,
                 .fn = mean,
-                .var = "das28_low",
                 .by = c("lan", "visit_group"),
                 na.rm = TRUE
             ),

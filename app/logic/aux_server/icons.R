@@ -91,7 +91,7 @@ icon_outcome <- function(input, ...) {
     )
     sh$div(
         class = "d-flex flex-row align-items-center gap-3",
-        sh$icon("bullseye"), translated
+        sh$icon("square-root-variable"), translated # bullseye is good, too
     )
 }
 

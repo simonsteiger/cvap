@@ -6,6 +6,7 @@ box::use(
     pr = purrr,
     ts = tidyselect,
     rl = rlang,
+    tdr = tidyr,
 )
 
 box::use(
@@ -26,7 +27,7 @@ list_df$basdata <- list_df$basdata %>%
     dp$select(patientkod, fodelsedag, dxcat, lan, tillhor)
 
 list_df$besoksdata <- list_df$besoksdata %>%
-    dp$select(patientkod, datum, das28)
+    dp$select(patientkod, datum, das28, cdai)
 
 list_df$bio <- list_df$bio %>%
     dp$arrange(patientkod, ordinerat) %>%
@@ -54,10 +55,37 @@ out <-
             diff >= 120 & diff <= 365 ~ "Uppföljning",
             .default = NA
         )),
-        das28_low = ifelse(das28 < 3.2, TRUE, FALSE)
+        das28_low = ifelse(das28 < 3.2, TRUE, FALSE),
+        cdai_low = ifelse(cdai <= 10, TRUE, FALSE),
     ) %>%
     dp$filter(!is.na(visit_group)) %>%
-    dp$arrange(patientkod, das28) %>%
-    dp$distinct(patientkod, visit_group, .keep_all = TRUE)
+    tdr$nest(.by = visit_group) %>%
+    dp$mutate(
+        # keep obs depending on visit_group, see conds in visit_group mutate comments above
+        data = list(
+            pr$map(
+                c("das28_low", "cdai_low"), \(outer) {
+                    pr$map2(
+                        .x = data,
+                        .y = c("diff", outer),
+                        .f = \(df, inner) {
+                            df %>%
+                                dp$mutate(outcome = outer, iteration = inner) %>%
+                                dp$arrange(dp$across(ts$all_of(c("patientkod", inner)))) %>%
+                                dp$distinct(.data[["patientkod"]], .keep_all = TRUE)
+                        }
+                    ) %>%
+                        pr$list_rbind()
+                }
+            ) %>%
+                pr$list_rbind()
+        ) # returns an inflated version of what we need, FIX!
+    ) %>%
+    tdr$unnest(data) %>%
+    dp$filter( # cleaning out what is not needed later
+        (visit_group == "Behandlingsstart" & iteration == "diff") |
+            (visit_group == "Uppföljning" & iteration != "diff")
+    ) %>%
+    dp$distinct(patientkod, visit_group, outcome, .keep_all = TRUE)
 
 fst$write_fst(out, "app/logic/data/vap_indikatorer_4.fst")

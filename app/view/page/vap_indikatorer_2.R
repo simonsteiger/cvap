@@ -37,6 +37,7 @@ ui <- function(id, data) {
 
     inputs <- sh$tagList(
         aui$inp_daterange(sh$NS(ns("input"), "ongoing"), "Välj tidsfönster för behandlingar"),
+        aui$inp_radio_outcome(sh$NS(ns("input"), "outcome"), c("Antal per 100 000" = "per100k", "Total antal" = "n")),
         aui$inp_radio_sex(sh$NS(ns("input"), "kon")),
         # aui$inp_slider_age(sh$NS(ns("input"), "alder")),
         aui$inp_picker_lan(sh$NS(ns("input"), "lan"), unique(data$lan))
@@ -84,29 +85,28 @@ server <- function(id, access_page, data, geo) {
 
         pre_ongoing <- ongoing$server("input", sh$reactive(data[sieve(), ]))
 
-        sum_squash <- sh$bindEvent(
-            squash$server(
+        sum_synopsis <- sh$eventReactive(list(input$go_input, access_page), {
+            res <- squash$server(
                 "summary",
                 pre_ongoing,
                 .fn = dp$n,
-                .by = c("lan", "population", "ongoing_timestamp")
-            ),
-            list(input$go_input, access_page)
-        )
+                .by = c("lan", "ongoing_timestamp", "population")
+            )
 
-        # TODO allow user to disable this step
-        sum_synopsis <- sh$bindEvent(
-            synopsis$server(
-                "summary",
-                sum_squash,
-                .fn = `%per100k%`,
-                .var = "outcome",
-                .by = c("lan", "ongoing_timestamp", "population"),
-                riket = FALSE,
-                .data[["population"]]
-            ),
-            list(input$go_input, access_page)
-        )
+            if (out_stash()$input$outcome == "per100k") {
+                res <- synopsis$server(
+                    "summary",
+                    res,
+                    .fn = `%per100k%`,
+                    .var = "outcome",
+                    .by = c("lan", "ongoing_timestamp", "population"),
+                    riket = FALSE,
+                    .data[["population"]]
+                )
+            }
+
+            res()
+        })
 
         sum_sort <- sort$server(
             "output",
