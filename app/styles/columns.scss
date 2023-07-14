@@ -1,0 +1,44 @@
+@import "main";
+
+/* 
+Currently not used, hope I can figure out how to make custom breakpoints in the future 
+Remember to include this file back in main => bsl$add_rule()
+*/
+
+@mixin flexcol($xl, $lg, $md, $sm) {
+  column-width: $xl;
+  flex: 0 0 auto;
+  -webkit-box-flex: 0 0 auto;
+  width:100%;
+
+  @include media-breakpoint-down(lg) {
+    column-width: $lg;
+  }
+  
+  @include media-breakpoint-down(md) {
+    column-width: $md;
+  }
+
+  @include media-breakpoint-down(sm) {
+    column-width: $sm;
+  }
+}
+
+.col-2-3-4-12 {
+  @include flexcol(2rem, 3rem, 4rem, 12rem)
+}
+
+.col-10-9-8-12 {
+  @include flexcol(10rem, 9rem, 8rem, 12rem)
+}
+
+.col-5-6-12 {
+  @include flexcol(5rem, 6rem, 12rem, 12rem)
+}
+
+.col-7-12 {
+  @include flexcol(7rem, 12rem, 12rem, 12rem)
+}
+
+
+

@@ -13,6 +13,9 @@ $spacer-triple: 0.9rem;
   box-shadow: 0 1rem 3rem rgba($black, .275);
   outline: 0;
   width: $box-width;
+  @include media-breakpoint-down(lg) {
+    width: 280px;
+  }
   
   .title {
     padding-bottom: $spacer-single;

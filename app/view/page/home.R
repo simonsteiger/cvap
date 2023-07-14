@@ -21,9 +21,9 @@ ui <- function(id, data) {
                     )
             ),
             aui$row(
-                colwidths = c(2, 8, 2),
+                colwidths = c(0, 12, 0),
                 center = sh$div(
-                    class = "d-flex flex-wrap align-items-stretch justify-content-center mx-5",
+                    class = "d-flex flex-wrap align-items-stretch justify-content-center",
                     !!!aui$navbox_map(id, data)
                 )
             ),
