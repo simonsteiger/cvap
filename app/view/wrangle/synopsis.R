@@ -44,7 +44,9 @@ server <- function(id, .data, .fn, .var = "outcome", .by, riket = TRUE, ...) {
                 .data()
             } else {
                 .data() %>%
-                    dp$mutate(dp$across(ts$where(lub$is.Date), \(x) lub$floor_date(x, "years")))
+                    dp$mutate(
+                        dp$across(ts$where(lub$is.Date), \(x) lub$ceiling_date(x, "years") - 1)
+                    )
             }
         })
 

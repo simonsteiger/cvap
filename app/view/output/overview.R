@@ -29,9 +29,6 @@ server <- function(id) {
             # Iterate over all input names that have a corresponding icon-function
             # If current name is last name, make icon only
             # Else, make icon and hr tag
-
-            if (debug) print(paste0("length = ", length(inputs_with_icons)))
-
             pr$map(
                 inputs_with_icons,
                 \(name) {

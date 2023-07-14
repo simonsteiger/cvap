@@ -90,7 +90,7 @@ server <- function(id, access_page, data, geo) {
                 "summary",
                 pre_ongoing,
                 .fn = dp$n,
-                .by = c("lan", "dxcat")
+                .by = c("lan", "dxcat", "ongoing_timestamp")
             ),
             list(input$go_input, access_page)
         )

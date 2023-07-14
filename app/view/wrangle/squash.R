@@ -26,7 +26,9 @@ server <- function(id, .data, .fn, .by, ...) {
 
         sh$reactive(
             .data() %>%
-                dp$mutate(dp$across(ts$where(lub$is.Date), \(x) lub$floor_date(x, "years"))) %>%
+                dp$mutate(
+                    dp$across(ts$where(lub$is.Date), \(x) lub$ceiling_date(x, "years") - 1)
+                ) %>%
                 dp$summarise(
                     outcome = .fn(!!!dots),
                     .by = ts$all_of(.by)
