@@ -4,6 +4,7 @@ box::use(
     bsl = bslib,
     pr = purrr,
     rl = rlang,
+    ut = utils,
 )
 
 box::use(
@@ -29,12 +30,16 @@ server <- function(id) {
             # If current name is last name, make icon only
             # Else, make icon and hr tag
 
+            if (debug) print(paste0("length = ", length(inputs_with_icons)))
+
             pr$map(
                 inputs_with_icons,
                 \(name) {
-                    if (which(names(input) == name) == length(inputs_with_icons)) {
+                    if (name == ut$tail(inputs_with_icons, 1)) {
+
                         ase$iconostasis[[name]](input[[name]], id = id)
                     } else {
+
                         sh$tagList(ase$iconostasis[[name]](input[[name]]), sh$hr())
                     }
                 }

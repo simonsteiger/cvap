@@ -69,13 +69,29 @@ icon_start <- function(input, ...) {
 
 icon_prep_typ <- function(input, ...) {
     translated <- switch(input,
-    "bioprep" = "bDMARD",
-    "csdmard" = "csDMARD",
-    "bDMARD / csDMARD"
+        "bioprep" = "bDMARD",
+        "csdmard" = "csDMARD",
+        "bDMARD / csDMARD"
     )
     sh$div(
         class = "d-flex flex-row align-items-center gap-3",
         sh$icon("syringe"), translated
+    )
+}
+
+icon_outcome <- function(input, ...) {
+    translated <- switch(input,
+        "das28_low" = "DAS28 < 3.2",
+        "cdai_low" = "CDAI <= 10",
+        "patientens_globala" = "Allmän hälsa",
+        "haq" = "HAQ",
+        "smarta" = "Smärta",
+        "per100k" = "Antal per 100 000",
+        "n" = "Total antal"
+    )
+    sh$div(
+        class = "d-flex flex-row align-items-center gap-3",
+        sh$icon("bullseye"), translated
     )
 }
 
@@ -119,10 +135,11 @@ iconostasis <- list(
     kon = icon_kon,
     alder = icon_alder,
     inkluderad = icon_date,
-    ordinerat = icon_date,
+    ordinerat = icon_date, # could the issue arise with several date icons?
     ongoing = icon_date,
     lan = icon_lan_modal,
     dxcat = icon_dxcat,
     start = icon_start,
-    prep_typ = icon_prep_typ
+    prep_typ = icon_prep_typ,
+    outcome = icon_outcome
 )

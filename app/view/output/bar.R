@@ -80,7 +80,7 @@ server <- function(id, .data, stash = NULL, x = "lan", y = "outcome", group = NU
                 e4r$e_charts_(x, timeline = timeline) %>%
                 e4r$e_bar_(y) %>%
                 e4r$e_tooltip() %>%
-                e4r$e_legend(bottom = 0, show = !timeline) %>%
+                e4r$e_legend(left = "right", bottom = 0) %>%
                 e4r$e_toolbox_feature(feature = c("saveAsImage")) %>%
                 e4r$e_title(text, paste0("Data uttagen: ", lub$today())) %>%
                 e4r$e_y_axis(max = max(out()[[y]], na.rm = TRUE))
