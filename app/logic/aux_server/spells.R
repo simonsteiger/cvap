@@ -14,6 +14,8 @@ box::use(
 
 #' @export
 spell_kon <- function(x) {
+    x %||% return(NULL)
+
     if (x == "Båda") {
         "för båda kön"
     } else if (x == "Man") {
@@ -48,7 +50,7 @@ spell_outcome <- function(x) {
 
 #' @export
 spell_period <- function(x) {
-    date <- x$inkluderad %||% x$ordinerat %||% x$ongoing %||% stop("No date variable")
+    date <- x$inkluderad %||% x$ordinerat %||% x$ongoing %||% return(NULL)
 
     if (length(date) == 2) {
         gl$glue("från {date[1]} till {date[2]}")
@@ -56,7 +58,7 @@ spell_period <- function(x) {
         gl$glue("från {date}")
     } else {
         x$lookback %||% stop("Require input$lookback to generate period text")
-        gl$glue("från {date-lub$years(input$lookback)} till {date}")
+        gl$glue("från {date-lub$years(x$lookback)} till {date}")
     }
 }
 

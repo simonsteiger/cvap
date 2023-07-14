@@ -33,7 +33,7 @@ ui <- function(id, data) {
     ns <- sh$NS(id)
 
     inputs <- sh$tagList(
-        # aui$inp_daterange(sh$NS(ns("input"), "inkluderad"), "Välj tidsfönster för inklusionsdatum"),
+        aui$inp_daterange(sh$NS(ns("input"), "year"), "Välj tidsfönster"),
         # aui$inp_radio_sex(sh$NS(ns("input"), "kon")),
         # aui$inp_slider_age(sh$NS(ns("input"), "alder")),
         # aui$inp_picker_lan(sh$NS(ns("input"), "lan"), unique(data$lan))
@@ -70,10 +70,10 @@ server <- function(id, access_page, data, geo) {
     sh$moduleServer(id, function(input, output, session) {
         ase$obs_return(input)
 
-        out_stash <- sh$eventReactive(list(input$go_input, access_page), {
-            res <- stash$server("input", title, "???")
-            res()
-        })
+        out_stash <- sh$bindEvent(
+            stash$server("input", title, "Täckningsgrad RA"),
+            list(input$go_input, access_page)
+        )
 
         sum_sort <- sort$server(
             "output",
@@ -84,6 +84,7 @@ server <- function(id, access_page, data, geo) {
         table$server(
             "output",
             sum_sort,
+            stash = out_stash,
             arrange = c("lan", "year")
         )
 

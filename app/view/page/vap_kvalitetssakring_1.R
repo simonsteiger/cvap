@@ -111,6 +111,7 @@ server <- function(id, access_page, data, geo) {
         table$server(
             "output",
             sum_sort,
+            stash = out_stash,
             arrange = c("lan", "timestamp")
         )
 

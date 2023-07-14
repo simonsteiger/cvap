@@ -38,7 +38,7 @@ ui <- function(id, data) {
     inputs <- sh$tagList(
         aui$inp_date(sh$NS(ns("input"), "ongoing"), "Välj tidpunkt för pågående behandlingar"),
         aui$inp_radio_lookback(sh$NS(ns("input"), "lookback")),
-        aui$inp_radio_outcome(ns("outcome"), aui$choices$das28_cdai),
+        aui$inp_radio_outcome(sh$NS(ns("input"), "outcome"), aui$choices$das28_cdai),
         aui$inp_radio_sex(sh$NS(ns("input"), "kon")),
         aui$inp_picker_lan(sh$NS(ns("input"), "lan"), unique(data$lan))
     )
@@ -72,7 +72,7 @@ server <- function(id, access_page, data, geo) {
         ase$obs_return(input)
 
         out_stash <- sh$bindEvent(
-            stash$server("input", title),
+            stash$server("input", "???", title),
             list(input$go_input, access_page)
         )
 
@@ -83,7 +83,7 @@ server <- function(id, access_page, data, geo) {
 
         sieve <- sift$server("input", sh$reactive(data))
 
-        pre_lookback <- lookback$server("input", sh$reactive(data[sieve(), ]), input$outcome)
+        pre_lookback <- lookback$server("input", sh$reactive(data[sieve(), ]))
 
         sum_synopsis <- sh$bindEvent(
             synopsis$server(
@@ -105,6 +105,7 @@ server <- function(id, access_page, data, geo) {
         table$server(
             "output",
             sum_sort,
+            stash = out_stash,
             arrange = "lan"
         )
 

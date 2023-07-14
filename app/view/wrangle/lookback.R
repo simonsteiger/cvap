@@ -19,13 +19,13 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id, .data, .var) {
+server <- function(id, .data, .var = NULL) {
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
 
         sh$reactive({
             .data() %>%
-                dp$rename(outcome = .data[[.var]]) %>%
+                dp$rename(outcome = .data[[.var %||% input$outcome]]) %>%
                 # separately get rid of missing outcome values to avoid picking NA outcomes
                 dp$filter(!is.na(outcome)) %>%
                 dp$filter(
