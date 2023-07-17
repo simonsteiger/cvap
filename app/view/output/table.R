@@ -57,13 +57,15 @@ server <- function(id, .data, stash = NULL, arrange = NULL) {
         stopifnot(sh$is.reactive(.data))
         stopifnot(sh$is.reactive(stash))
 
-        output$table <- rtbl$renderReactable(
+        output$table <- rtbl$renderReactable({
+            sh$req(nrow(.data()) > 0)
+
             rtbl$reactable(
                 .data() %>%
                     dp$arrange(dp$across(arrange)) %>%
                     dp$rename(!!stash()$outcome := outcome) %>%
                     dp$rename_with(translate)
             )
-        )
+        })
     })
 }

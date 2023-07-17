@@ -3,6 +3,7 @@ box::use(
     app / logic / aux_server / sift,
     app / logic / aux_server / spells,
     app / logic / aux_server / icons,
+    app / logic / aux_server / errors,
 )
 
 #' @export
@@ -19,3 +20,6 @@ create_subtitle <- spells$create_subtitle
 
 #' @export
 iconostasis <- icons$iconostasis
+
+#' @export
+error_no_data <- errors$error_no_data

@@ -132,6 +132,8 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
         })
 
         res_export <- sh$reactive({
+            sh$req(nrow(.data()) > 0)
+
             limits <- c(min(.data()[[y]], na.rm = TRUE), max(.data()[[y]], na.rm = TRUE))
 
             geo$sf %>%
@@ -156,7 +158,10 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                 theme$ggexport
         })
 
-        output$map <- e4r$renderEcharts4r(res_interactive())
+        output$map <- e4r$renderEcharts4r({
+            sh$req(nrow(.data()) > 0)
+            res_interactive()
+            })
 
         output$exmap <- sh$downloadHandler(
             filename = function() {

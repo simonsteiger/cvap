@@ -55,6 +55,8 @@ server <- function(id, .data, top_ns) {
         stopifnot(sh$is.reactive(.data))
 
         low_n_lans <- sh$reactive({
+            sh$req(nrow(.data()) > 0)
+
             .data() %>%
                 dp$filter(nonmissing < 10) %>%
                 dp$pull(lan) %>%

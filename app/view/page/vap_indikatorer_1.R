@@ -103,6 +103,10 @@ server <- function(id, access_page, data, geo) {
             "app-vap_indikatorer_1"
         )
 
+        sh$observe({
+            if (nrow(sum_warn()) == 0) ase$error_no_data(session)
+        })
+
         sum_sort <- sort$server(
             "output",
             sum_warn,

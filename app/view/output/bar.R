@@ -97,6 +97,8 @@ server <- function(id, .data, stash = NULL, x = "lan", y = "outcome", group = NU
         })
 
         res_export <- sh$reactive({
+            sh$req(nrow(.data()) > 0)
+
             scale_y <- gg$scale_y_continuous(
                 name = NULL,
                 labels = srqauto$guess_label_num("y", out()[[y]])
@@ -126,7 +128,10 @@ server <- function(id, .data, stash = NULL, x = "lan", y = "outcome", group = NU
                 theme$ggexport
         })
 
-        output$bar <- e4r$renderEcharts4r(res_interactive())
+        output$bar <- e4r$renderEcharts4r({
+            sh$req(nrow(.data()) > 0)
+            res_interactive()
+            })
 
         output$exbar <- sh$downloadHandler(
             filename = function() {
