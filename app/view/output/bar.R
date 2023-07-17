@@ -76,6 +76,11 @@ server <- function(id, .data, stash = NULL, x = "lan", y = "outcome", group = NU
         }
 
         res_interactive <- sh$reactive({
+            if (nrow(.data()) > 0 && all(is.na(.data()[[y]]))) ase$error_no_data(session)
+            sh$req(!all(is.na(.data()[[y]])))
+
+            limit_upper <- max(out()[[y]], na.rm = TRUE)
+
             out <- out() %>%
                 e4r$e_charts_(x, timeline = timeline) %>%
                 e4r$e_bar_(y) %>%
@@ -83,7 +88,7 @@ server <- function(id, .data, stash = NULL, x = "lan", y = "outcome", group = NU
                 e4r$e_legend(bottom = 0, show = !timeline) %>%
                 e4r$e_toolbox_feature(feature = c("saveAsImage")) %>%
                 e4r$e_title(text, paste0("Data uttagen: ", lub$today())) %>%
-                e4r$e_y_axis(max = max(out()[[y]], na.rm = TRUE))
+                e4r$e_y_axis(max = limit_upper)
 
             if (!is.null(format)) {
                 out %>%
@@ -97,7 +102,7 @@ server <- function(id, .data, stash = NULL, x = "lan", y = "outcome", group = NU
         })
 
         res_export <- sh$reactive({
-            sh$req(nrow(.data()) > 0)
+            sh$req(nrow(.data()) > 0 && any(!is.na(.data()[[y]])))
 
             scale_y <- gg$scale_y_continuous(
                 name = NULL,

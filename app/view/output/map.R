@@ -132,7 +132,8 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
         })
 
         res_export <- sh$reactive({
-            sh$req(nrow(.data()) > 0)
+            sh$req(nrow(.data()) > 0 && !all(is.na(.data()[[y]])))
+            if (nrow(.data()) > 0 && all(is.na(.data()[[y]]))) ase$error_no_data(session)
 
             limits <- c(min(.data()[[y]], na.rm = TRUE), max(.data()[[y]], na.rm = TRUE))
 
