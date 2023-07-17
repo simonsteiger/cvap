@@ -24,7 +24,10 @@ server <- function(id, .data, group = NULL, ...) {
         dots <- rl$quos(...)
 
         sh$reactive({
-            if (input$sort) { # TRUE = alphabetical
+            # First check if there's sortable data, if not, do nothing
+            if (nrow(.data()) > 0 && all(is.na(.data()$outcome))) { # is the nrow check necessary?
+                return(.data())
+            } else if (input$sort) { # TRUE = alphabetical
                 return(
                     .data() %>%
                         dp$mutate(lan = as.factor(lan)) %>%

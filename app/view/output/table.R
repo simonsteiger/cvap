@@ -9,6 +9,7 @@ box::use(
 
 box::use(
     aui = app / logic / aux_ui,
+    ase = app / logic / aux_server,
 )
 
 translate <- function(chr_vec, ...) {
@@ -58,7 +59,8 @@ server <- function(id, .data, stash = NULL, arrange = NULL) {
         stopifnot(sh$is.reactive(stash))
 
         output$table <- rtbl$renderReactable({
-            sh$req(nrow(.data()) > 0)
+            if (nrow(.data()) > 0 && all(is.na(.data()$outcome))) ase$error_no_data(session)
+            sh$req(nrow(.data()) > 0 && !all(is.na(.data()$outcome)))
 
             rtbl$reactable(
                 .data() %>%

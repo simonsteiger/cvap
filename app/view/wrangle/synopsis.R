@@ -77,6 +77,9 @@ server <- function(id, .data, .fn, .var = "outcome", .by, riket = TRUE, ...) {
         })
 
         sh$reactive({
+            if (nrow(dat_sum()) == 0) ase$error_no_data(session)
+            sh$req(nrow(dat_sum()) > 0)
+
             dat_sum() %>%
                 dp$mutate(
                     outcome = round(.data[["outcome"]], digits())

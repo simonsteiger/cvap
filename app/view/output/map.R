@@ -67,7 +67,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
             if (isFALSE(input$load)) { # abort if load is FALSE
                 NULL
             } else { # otherwise draw map
-                if (!is.null(group)) {
+                if (!is.null(group) && nrow(.data()) > 0 && !all(is.na(.data()[[y]]))) {
                     out <-
                         .data() %>%
                         dp$mutate(
@@ -132,9 +132,6 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
         })
 
         res_export <- sh$reactive({
-            sh$req(nrow(.data()) > 0 && !all(is.na(.data()[[y]])))
-            if (nrow(.data()) > 0 && all(is.na(.data()[[y]]))) ase$error_no_data(session)
-
             limits <- c(min(.data()[[y]], na.rm = TRUE), max(.data()[[y]], na.rm = TRUE))
 
             geo$sf %>%
@@ -160,7 +157,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
         })
 
         output$map <- e4r$renderEcharts4r({
-            sh$req(nrow(.data()) > 0)
+            sh$req(nrow(.data()) > 0 && !all(is.na(.data()[[y]])))
             res_interactive()
             })
 

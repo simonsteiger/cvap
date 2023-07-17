@@ -56,8 +56,8 @@ server <- function(id, .data, stash = NULL, x = "lan", y = "outcome", group = NU
 
         time_vars <- c("visit_group", "timestamp")
 
-        if (!is.null(group)) {
-            out <- sh$reactive(
+        out <- sh$reactive({
+            if (!is.null(group) && nrow(.data()) > 0 && !all(is.na(.data()[[y]]))) {
                 .data() %>%
                     dp$mutate(
                         !!group := {
@@ -70,15 +70,12 @@ server <- function(id, .data, stash = NULL, x = "lan", y = "outcome", group = NU
                         }
                     ) %>%
                     dp$group_by(.data[[group]])
-            )
-        } else {
-            out <- .data
-        }
+            } else {
+                .data()
+            }
+        })
 
         res_interactive <- sh$reactive({
-            if (nrow(.data()) > 0 && all(is.na(.data()[[y]]))) ase$error_no_data(session)
-            sh$req(!all(is.na(.data()[[y]])))
-
             limit_upper <- max(out()[[y]], na.rm = TRUE)
 
             out <- out() %>%
@@ -102,8 +99,6 @@ server <- function(id, .data, stash = NULL, x = "lan", y = "outcome", group = NU
         })
 
         res_export <- sh$reactive({
-            sh$req(nrow(.data()) > 0 && any(!is.na(.data()[[y]])))
-
             scale_y <- gg$scale_y_continuous(
                 name = NULL,
                 labels = srqauto$guess_label_num("y", out()[[y]])
@@ -134,9 +129,9 @@ server <- function(id, .data, stash = NULL, x = "lan", y = "outcome", group = NU
         })
 
         output$bar <- e4r$renderEcharts4r({
-            sh$req(nrow(.data()) > 0)
+            sh$req(nrow(.data()) > 0 && !all(is.na(.data()[[y]])))
             res_interactive()
-            })
+        })
 
         output$exbar <- sh$downloadHandler(
             filename = function() {
