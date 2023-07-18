@@ -51,7 +51,10 @@ ui <- function(id, data) {
                 center = aui$head(text = title)
             ),
             aui$row_sidebar(
-                sidebar = aui$sidebar_filter(ns("go_input"), ns("overview"), inputs),
+                sidebar = sh$div(
+                    aui$sidebar_filter(ns("go_input"), ns("overview"), inputs),
+                    sift$ui(ns("input"))
+                    ),
                 main = sh$tagList(
                     bar$ui(ns("output")),
                     map$ui(ns("output")),

@@ -48,8 +48,7 @@ ui <- function(id, data) {
             ),
             aui$row_sidebar(
                 sidebar = sh$div(
-                    aui$sidebar_filter(ns("go_input"), ns("overview"), inputs),
-                    warning$ui(ns("warning"))
+                    aui$sidebar_filter(ns("go_input"), ns("overview"), inputs)
                 ),
                 main = sh$tagList(
                     bar$ui(ns("output")),

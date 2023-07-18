@@ -2,6 +2,7 @@ box::use(
     sh = shiny,
     pr = purrr,
     shw = shinyWidgets,
+    shf = shinyFeedback,
     magrittr[`%>%`],
 )
 
@@ -10,9 +11,11 @@ box::use(
 )
 
 #' @export
-ui <- function(id, ...) {
+ui <- function(id) {
     ns <- sh$NS(id)
-    sh$tagList(...)
+    sh$tagList(
+        sh$textOutput(ns("no_lan")) # output of warning when no lan selected
+    )
 }
 
 #' @export
@@ -42,6 +45,16 @@ server <- function(id, data) {
             }
         })
 
+        no_lan <- sh$reactive(
+            shf$feedbackDanger(
+                "lan",
+                is.null(input$lan),
+                "Välj i minst ett län.",
+                session = session
+            )
+        )
+
+        output$no_lan <- sh$renderText(no_lan())
 
         ase$sift_vars(data, input)
     })

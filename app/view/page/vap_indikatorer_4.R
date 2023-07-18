@@ -98,8 +98,7 @@ server <- function(id, access_page, data, geo) {
 
         sum_warn <- warning$server(
             "warning",
-            sum_synopsis,
-            "app-vap_indikatorer_4"
+            sum_synopsis
         )
 
         sum_sort <- sort$server(

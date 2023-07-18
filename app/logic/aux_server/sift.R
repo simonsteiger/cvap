@@ -42,6 +42,8 @@ sift_cols <- function(col, val, var, skip) {
 sift_vars <- function(data, input, skip = NULL) {
     stopifnot(sh$is.reactive(data))
 
+    # TODO add error if user selects no lans
+
     vars <- sh$reactive(colnames(data()))
 
     sh$reactive({

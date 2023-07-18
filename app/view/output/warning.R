@@ -50,7 +50,7 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id, .data, top_ns) {
+server <- function(id, .data) {
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
 
@@ -69,7 +69,7 @@ server <- function(id, .data, top_ns) {
 
         icons <- sh$reactive(
             icon_samplesize(
-                sh$NS(paste(top_ns, id, sep = "-"), "exclude_low_n"),
+                session$ns("exclude_low_n"),
                 low_n_lans(),
                 last_input()
             )

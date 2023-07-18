@@ -37,7 +37,8 @@ ui <- function(id, data) {
         aui$inp_radio_start(sh$NS(ns("input"), "start")),
         aui$inp_radio_sex(sh$NS(ns("input"), "kon")),
         aui$inp_slider_age(sh$NS(ns("input"), "alder")),
-        aui$inp_picker_lan(sh$NS(ns("input"), "lan"), unique(data$lan))
+        aui$inp_picker_lan(sh$NS(ns("input"), "lan"), unique(data$lan)),
+        sift$ui(ns("input"))
     )
 
     sh$tagList(
@@ -99,8 +100,7 @@ server <- function(id, access_page, data, geo) {
 
         sum_warn <- warning$server(
             "warning",
-            sum_synopsis,
-            "app-vap_indikatorer_1"
+            sum_synopsis
         )
 
         sh$observe({

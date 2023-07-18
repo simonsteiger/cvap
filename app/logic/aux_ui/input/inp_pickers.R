@@ -5,7 +5,7 @@ box::use(
 )
 
 #' @export
-inp_picker <- function(id, label, choices, multiple = TRUE, sort = TRUE) {
+inp_picker <- function(id, label, choices, multiple = TRUE, sort = TRUE, options = list()) {
     sh$div(
         class = "mb-4 mx-1",
         sw$pickerInput(
@@ -13,7 +13,8 @@ inp_picker <- function(id, label, choices, multiple = TRUE, sort = TRUE) {
             label = label,
             choices = if (sort) sort(choices) else choices,
             selected = if (multiple) choices else NULL,
-            multiple = multiple
+            multiple = multiple,
+            options = options,
         )
     )
 }
@@ -24,6 +25,7 @@ inp_picker_lan <- function(id, choices) {
         id,
         label = "Välj län",
         choices = choices,
+        options = list(`actions-box` = TRUE)
     )
 }
 
