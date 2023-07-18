@@ -14,7 +14,7 @@ box::use(
 ui <- function(id) {
     ns <- sh$NS(id)
     sh$tagList(
-        sh$textOutput(ns("no_lan")) # output of warning when no lan selected
+        sh$textOutput(ns("no_lan")), # output of warning when no lan selected
     )
 }
 
@@ -54,8 +54,29 @@ server <- function(id, data) {
             )
         )
 
+        sieve <- ase$sift_vars(data, input)
+
+        n_cases <- sh$reactive({
+            # check rows of data frame unless lan is NULL
+            # hack necessary because sift_vars skips NULL inputs
+            n <- if (!is.null(input$lan)) nrow(data()[sieve(), ]) else 0
+
+            sh$tags$button(
+                type = "button",
+                style = "pointer-events: none;",
+                class = ifelse(n > 0, "btn btn-secondary", "btn btn-danger"),
+                sh$div(
+                    class = "d-flex flex-row align-items-center gap-2",
+                    if (n == 0) sh$icon("users-slash") else sh$icon("users"),
+                    if (n == 0) paste0("Ingen data, anpassa urval") else n
+                    )
+            )
+        })
+
         output$no_lan <- sh$renderText(no_lan())
 
-        ase$sift_vars(data, input)
+        output$n_cases <- sh$renderUI(n_cases())
+
+        sieve
     })
 }
