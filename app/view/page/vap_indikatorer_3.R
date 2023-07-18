@@ -50,7 +50,11 @@ ui <- function(id, data) {
             ),
             aui$row_sidebar(
                 sidebar = sh$div(
-                    aui$sidebar_filter(ns("go_input"), ns("overview"), inputs),
+                    aui$sidebar_filter(
+                        ns("go_input"), ns("overview"),
+                        inputs,
+                        modal_summary = sh$htmlOutput(sh$NS(ns("input"), "n_cases"))
+                    ),
                     warning$ui(ns("warning"))
                 ),
                 main = sh$tagList(
@@ -77,7 +81,10 @@ server <- function(id, access_page, data, geo) {
             list(input$go_input, access_page)
         )
 
-        sh$observe(shj$toggleState("go_input", !is.null(out_stash()$input$lan)))
+        sh$observe({
+            cnd <- nrow(pre_sift()) > 0 & !is.null(out_stash()$input$lan)
+            shj$toggleState("go_input", cnd)
+        })
 
         out_icons <- sh$bindEvent(
             overview$server("input"),

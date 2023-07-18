@@ -79,7 +79,10 @@ server <- function(id, access_page, data, geo) {
             list(input$go_input, access_page)
         )
 
-        sh$observe(shj$toggleState("go_input", !is.null(out_stash()$input$lan)))
+        sh$observe({
+            cnd <- nrow(pre_sift()) > 0 & !is.null(out_stash()$input$lan)
+            shj$toggleState("go_input", cnd)
+        })
 
         sieve <- sift$server("input", sh$reactive(data))
 

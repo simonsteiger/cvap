@@ -20,7 +20,7 @@ sidebar <- function(header = NULL, body = NULL, ...) {
 }
 
 #' @export
-sidebar_filter <- function(id_modal, id_overview, ..., footer_summary = NULL) {
+sidebar_filter <- function(id_modal, id_overview, ..., modal_summary = NULL) {
     sidebar(
         header = sh$div(
             class = "d-flex justify-content-between align-items-center",
@@ -32,7 +32,7 @@ sidebar_filter <- function(id_modal, id_overview, ..., footer_summary = NULL) {
                 footer_confirm = "Bekräfta",
                 footer_dismiss = "Avbryt",
                 ...,
-                footer_summary = footer_summary
+                modal_summary = modal_summary
             )
         ),
         body = sh$htmlOutput(id_overview)

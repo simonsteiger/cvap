@@ -4,7 +4,7 @@ box::use(
 )
 
 #' @export
-btn_modal <- function(id, label, modal_title, footer_confirm = NULL, footer_dismiss = NULL, ..., footer_summary = NULL) {
+btn_modal <- function(id, label, modal_title, footer_confirm = NULL, footer_dismiss = NULL, ..., modal_summary = NULL) {
     dots <- rl$list2(...)
 
     if (!is.null(footer_dismiss)) {
@@ -76,7 +76,7 @@ btn_modal <- function(id, label, modal_title, footer_confirm = NULL, footer_dism
                     ),
                     sh$div(
                         class = "modal-footer justify-content-between",
-                        sh$div(footer_summary),
+                        sh$div(modal_summary),
                         #sh$tags$button(type = "button", class = "btn btn-primary", "that's it"),
                         sh$div(
                             footer_dismiss,

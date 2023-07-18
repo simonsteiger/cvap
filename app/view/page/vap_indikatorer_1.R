@@ -51,7 +51,11 @@ ui <- function(id, data) {
             ),
             aui$row_sidebar(
                 sidebar = sh$div(
-                    aui$sidebar_filter(ns("go_input"), ns("overview"), inputs, footer_summary = sh$htmlOutput(sh$NS(ns("input"), "n_cases"))),
+                    aui$sidebar_filter(
+                        ns("go_input"), ns("overview"),
+                        inputs,
+                        modal_summary = sh$htmlOutput(sh$NS(ns("input"), "n_cases"))
+                    ),
                     warning$ui(ns("warning"))
                 ),
                 main = sh$tagList(
