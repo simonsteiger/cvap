@@ -10,8 +10,7 @@ box::use(
     rl = rlang[`%||%`],
     gg = ggplot2,
     pal = palettes,
-    mg = magick,
-    cow = cowplot,
+    shj = shinyjs,
 )
 
 box::use(
@@ -159,7 +158,13 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
         output$map <- e4r$renderEcharts4r({
             sh$req(nrow(.data()) > 0 && !all(is.na(.data()[[y]])))
             res_interactive()
-            })
+        })
+
+        # Deactivate download button if no data
+        sh$observe({
+            cnd <- nrow(.data()) > 0 && !all(is.na(.data()[[y]]))
+            shj$toggleState("exmap", cnd)
+        })
 
         output$exmap <- sh$downloadHandler(
             filename = function() {

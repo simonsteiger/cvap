@@ -7,6 +7,7 @@ box::use(
     fct = forcats,
     gg = ggplot2,
     pal = palettes,
+    shj = shinyjs,
 )
 
 box::use(
@@ -131,6 +132,12 @@ server <- function(id, .data, stash = NULL, x = "lan", y = "outcome", group = NU
         output$bar <- e4r$renderEcharts4r({
             sh$req(nrow(.data()) > 0 && !all(is.na(.data()[[y]])))
             res_interactive()
+        })
+
+        # Deactivate download button if no data
+        sh$observe({
+            cnd <- nrow(.data()) > 0 && !all(is.na(.data()[[y]]))
+            shj$toggleState("exbar", cnd)
         })
 
         output$exbar <- sh$downloadHandler(
