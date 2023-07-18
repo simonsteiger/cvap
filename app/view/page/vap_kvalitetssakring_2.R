@@ -10,6 +10,7 @@ box::use(
     em = echarts4r.maps,
     sw = shinyWidgets,
     ht = htmltools,
+    shj = shinyjs,
 )
 
 box::use(
@@ -34,9 +35,8 @@ ui <- function(id, data) {
 
     inputs <- sh$tagList(
         aui$inp_daterange(sh$NS(ns("input"), "year"), "Välj tidsfönster"),
-        # aui$inp_radio_sex(sh$NS(ns("input"), "kon")),
-        # aui$inp_slider_age(sh$NS(ns("input"), "alder")),
-        # aui$inp_picker_lan(sh$NS(ns("input"), "lan"), unique(data$lan))
+        aui$inp_picker_lan(sh$NS(ns("input"), "lan"), unique(data$lan)),
+        sift$ui(ns("input")) # outputs error when no lan selected
     )
 
     sh$tagList(
@@ -69,15 +69,34 @@ server <- function(id, access_page, data, geo) {
     sh$moduleServer(id, function(input, output, session) {
         ase$obs_return(input)
 
+        out_icons <- sh$bindEvent(
+            overview$server("input"),
+            list(input$go_input, access_page)
+        )
+
         out_stash <- sh$bindEvent(
             stash$server("input", title, "Täckningsgrad RA"),
             list(input$go_input, access_page)
         )
 
-        sum_sort <- sort$server(
-            "output",
-            sh$reactive(data),
-            group = NULL
+        sh$observe(shj$toggleState("go_input", !is.null(out_stash()$input$lan)))
+
+        sieve <- sift$server("input", sh$reactive(data))
+
+        pre_sift <- sh$reactive(data[sieve(), ])
+
+        out_stash <- sh$bindEvent(
+            stash$server("input", title, "Täckningsgrad RA"),
+            list(input$go_input, access_page)
+        )
+
+        sum_sort <- sh$bindEvent(
+            sort$server(
+                "output",
+                pre_sift,
+                group = NULL
+            ),
+            list(input$go_input, access_page)
         )
 
         table$server(
@@ -98,11 +117,13 @@ server <- function(id, access_page, data, geo) {
 
         map$server(
             id = "output",
-            .data = sh$reactive(data),
+            .data = pre_sift,
             stash = out_stash,
             geo = geo,
             group = "year",
             text = title
         )
+
+        output$overview <- sh$renderUI(out_icons())
     })
 }

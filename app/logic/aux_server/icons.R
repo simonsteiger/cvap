@@ -98,7 +98,7 @@ icon_outcome <- function(input, ...) {
 icon_lan_modal <- function(input, ...) {
     dots <- rl$list2(...)
     cond_one <- length(unlist(input)) > 1
-    cond_all <- length(unlist(input)) == 21
+    cond_all <- length(unlist(input)) == 21 # TODO take care of RIKET for Täckningsgrad
     res <- pr$map(input, \(x) sh$tags$li(x))
 
     sh$tagList(
@@ -137,6 +137,7 @@ iconostasis <- list(
     inkluderad = icon_date,
     ordinerat = icon_date, # could the issue arise with several date icons?
     ongoing = icon_date,
+    year = icon_date,
     lan = icon_lan_modal,
     dxcat = icon_dxcat,
     start = icon_start,

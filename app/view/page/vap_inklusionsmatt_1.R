@@ -10,6 +10,7 @@ box::use(
     em = echarts4r.maps,
     sw = shinyWidgets,
     ht = htmltools,
+    shj = shinyjs,
 )
 
 box::use(
@@ -40,6 +41,7 @@ ui <- function(id, data) {
         aui$inp_slider_age(sh$NS(ns("input"), "alder")),
         aui$inp_picker_timestamp(sh$NS(ns("input"), "timestamp"), levels(data$timestamp)),
         aui$inp_picker_lan(sh$NS(ns("input"), "lan"), unique(data$lan)),
+        sift$ui(ns("input")) # outputs error when no lan selected
     )
 
     sh$tagList(
@@ -77,6 +79,8 @@ server <- function(id, access_page, data, geo) {
             stash$server("input", title, "???"),
             list(input$go_input, access_page)
         )
+
+        sh$observe(shj$toggleState("go_input", !is.null(out_stash()$input$lan)))
 
         out_icons <- sh$bindEvent(
             overview$server("input"),

@@ -11,6 +11,7 @@ box::use(
     sw = shinyWidgets,
     ht = htmltools,
     rl = rlang,
+    shj = shinyjs,
 )
 
 box::use(
@@ -40,7 +41,8 @@ ui <- function(id, data) {
         aui$inp_radio_sex(sh$NS(ns("input"), "kon")),
         # aui$inp_slider_age(sh$NS(ns("input"), "alder")),
         aui$inp_picker_dxcat(sh$NS(ns("input"), "dxcat"), levels(data$dxcat)),
-        aui$inp_picker_lan(sh$NS(ns("input"), "lan"), unique(data$lan))
+        aui$inp_picker_lan(sh$NS(ns("input"), "lan"), unique(data$lan)),
+        sift$ui(ns("input")) # outputs error when no lan selected
     )
 
     sh$tagList(
@@ -51,10 +53,7 @@ ui <- function(id, data) {
                 center = aui$head(text = title)
             ),
             aui$row_sidebar(
-                sidebar = sh$div(
-                    aui$sidebar_filter(ns("go_input"), ns("overview"), inputs),
-                    sift$ui(ns("input"))
-                    ),
+                sidebar = aui$sidebar_filter(ns("go_input"), ns("overview"), inputs),
                 main = sh$tagList(
                     bar$ui(ns("output")),
                     map$ui(ns("output")),
@@ -78,6 +77,8 @@ server <- function(id, access_page, data, geo) {
             stash$server("input", title, "Antal pågående behandlingar"),
             list(input$go_input, access_page)
         )
+
+        sh$observe(shj$toggleState("go_input", !is.null(out_stash()$input$lan)))
 
         out_icons <- sh$bindEvent(
             overview$server("input"),

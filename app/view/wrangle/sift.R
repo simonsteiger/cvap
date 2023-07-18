@@ -49,7 +49,7 @@ server <- function(id, data) {
             shf$feedbackDanger(
                 "lan",
                 is.null(input$lan),
-                "Välj i minst ett län.",
+                "Välj minst ett län.",
                 session = session
             )
         )

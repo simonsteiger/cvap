@@ -16,6 +16,7 @@ library(geojsonio)
 library(rmapshaper)
 library(ggtext)
 library(shinyFeedback)
+library(shinyjs)
 
 # sk dependencies
 library(box)

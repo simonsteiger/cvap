@@ -14,6 +14,8 @@ box::use(
   magrittr[`%>%`],
   sht = showtext,
   syf = sysfonts,
+  shf = shinyFeedback,
+  shj = shinyjs,
 )
 
 box::use(
@@ -59,6 +61,8 @@ sht$showtext_auto()
 ui <- function(id) {
   ns <- sh$NS(id)
   bsl$page(
+    shj$useShinyjs(),
+    shf$useShinyFeedback(),
     theme = theme$light %>%
       bsl$bs_add_rules(sass$sass_file("app/styles/navbox.scss")),
     rt$router_ui(
