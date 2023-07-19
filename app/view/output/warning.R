@@ -14,7 +14,7 @@ icon_samplesize <- function(id, input, value) {
         class = "d-flex flex-row justify-content-between align-items-center",
         sh$div(
             class = "d-flex flex-row align-items-center gap-2",
-            sh$tags$i(class = "fa fa-users-slash icon-danger"),
+            sh$tags$i(class = "fa fa-users-slash c-danger"),
             paste0("Få data i ", length(input), " län")
         ),
         aui$inp_toggle(id = id, label = "Dölj", value = value)
@@ -30,7 +30,7 @@ icon_samplesize_modal <- function(id, input) {
             class_toggle = "btn btn-secondary hover",
             label = sh$div(
                 class = "d-flex flex-row align-items-center gap-2",
-                sh$tags$i(class = "fa fa-triangle-exclamation icon-danger"),
+                sh$tags$i(class = "fa fa-triangle-exclamation c-danger"),
                 paste0("Få data i ", length(input), " län")
             ),
             modal_title = "Varningar",

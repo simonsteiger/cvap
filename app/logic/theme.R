@@ -13,7 +13,7 @@ light <- bsl$bs_theme(
   secondary = "#e8e9f3",
   success = "#a8e069",
   info = "#e8e9f3",
-  warning = "#fbdbdb",
+  warning = "#f8b859",
   danger = "#c9281d",
   base_font = bsl$font_collection(
     bsl$font_google("Roboto Flex", local = FALSE), "Roboto", "serif"

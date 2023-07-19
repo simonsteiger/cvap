@@ -17,6 +17,7 @@ library(rmapshaper)
 library(ggtext)
 library(shinyFeedback)
 library(shinyjs)
+library(waiter)
 
 # sk dependencies
 library(box)

@@ -49,8 +49,9 @@ ui <- function(id) {
         ),
         body = e4r$echarts4rOutput(ns("map")),
         footer = sh$div(
-            class = "d-flex justify-content-start align-items-center gap-3",
-            sh$downloadButton(ns("exmap"), "Download", class = "hover")
+            class = "d-flex justify-content-between align-items-center gap-3",
+            sh$downloadButton(ns("exmap"), "Download", class = "hover"),
+            sh$htmlOutput(ns("notification"))
         )
     )
 }
@@ -60,6 +61,27 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
 
+        # Notification to show when map is loading
+        output$notification <- sh$renderUI(
+            sh$div(
+                class = "d-flex flex-row align-items-center gap-2",
+                sh$div(class = "spinner-grow spinner-grow-sm c-warning", role = "status"),
+                "Var god vänta...",
+            )
+        )
+
+        # Default status is hidden
+        shj$hide("notification")
+
+        # Show notification when load switch is turned on
+        sh$observe({
+            if (isTRUE(input$load)) {
+                shj$show("notification")
+                shj$delay(2500, shj$hide("notification"))
+            }
+        })
+
+        # Create interactive map for in-app view
         time_vars <- c("visit_group", "timestamp")
 
         res_interactive <- sh$reactive({
@@ -130,6 +152,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
             }
         })
 
+        # Create static map for download
         res_export <- sh$reactive({
             limits <- c(min(.data()[[y]], na.rm = TRUE), max(.data()[[y]], na.rm = TRUE))
 

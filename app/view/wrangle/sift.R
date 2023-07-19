@@ -68,7 +68,7 @@ server <- function(id, data) {
                 sh$div(
                     class = "d-flex flex-row align-items-center gap-2",
                     if (n == 0) sh$icon("users-slash") else sh$icon("users"),
-                    if (n == 0) paste0("Ingen data, anpassa urval") else n
+                    if (n == 0) "Ingen data, anpassa urval" else paste0("Antal observationer: ", n)
                     )
             )
         })

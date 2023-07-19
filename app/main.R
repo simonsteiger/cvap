@@ -16,6 +16,7 @@ box::use(
   syf = sysfonts,
   shf = shinyFeedback,
   shj = shinyjs,
+  waiter,
 )
 
 box::use(
@@ -63,6 +64,16 @@ ui <- function(id) {
   bsl$page(
     shj$useShinyjs(),
     shf$useShinyFeedback(),
+    waiter$useWaiter(),
+    waiter$waiterPreloader(
+      html = sh$div(
+        class = "fs-4 d-flex flex-column gap-3",
+        waiter$spin_folding_cube(),
+        "Initiera VAP, var god vänta..."
+      ),
+      fadeout = TRUE,
+      color = "#4161ab"
+    ),
     theme = theme$light %>%
       bsl$bs_add_rules(sass$sass_file("app/styles/navbox.scss")),
     rt$router_ui(
