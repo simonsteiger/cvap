@@ -116,7 +116,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                         list(
                             text = paste0(text, ", ", x),
                             subtext = paste0("Data uttagen: ", lub$today()),
-                            textStyle = list(color = "black", fontWeight = "bolder")
+                            textStyle = list(color = "#4161ab", fontWeight = "bolder")
                         )
                     })
                 } else {
@@ -125,7 +125,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                     title <- list(
                         text = text,
                         subtext = paste0("Data uttagen: ", lub$today()),
-                        textStyle = list(color = "black", fontWeight = "bolder")
+                        textStyle = list(color = "#4161ab", fontWeight = "bolder")
                     )
                 }
 
@@ -137,9 +137,15 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                     e4r$e_charts_(x, timeline = if (!is.null(group)) TRUE else FALSE) %>%
                     e4r$e_map_register("Sweden", geo$json) %>%
                     e4r$e_map_(y, map = "Sweden", nameProperty = "NAME_1") %>%
+                    e4r$e_tooltip(
+                        formatter = hw$JS("
+                            function(params){
+                                return('<b>Län:</b> ' + params.name + '<br /><b>Värde:</b> ' + params.value)
+                            }
+                        ")
+                    ) %>%
                     e4r$e_visual_map_(min = min(out[[y]]), max = max(out[[y]]), color = palette) %>%
-                    e4r$e_theme("infographic") %>%
-                    e4r$e_toolbox_feature(feature = c("saveAsImage"))
+                    e4r$e_theme_custom("app/static/echarts_theme.json")
 
                 if (!is.null(group)) {
                     basic %>%

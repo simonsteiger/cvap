@@ -34,7 +34,7 @@ ui <- function(id, data) {
     ns <- sh$NS(id)
 
     inputs <- sh$tagList(
-        aui$inp_daterange(sh$NS(ns("input"), "inkluderad"), "Välj tidsfönster för inklusiondatum"),
+        aui$inp_daterange(sh$NS(ns("input"), "ordinerat"), "Välj tidsfönster för ordinationsdatum"),
         aui$inp_radio_outcome(sh$NS(ns("input"), "outcome"), aui$choices$das28_cdai),
         aui$inp_radio_sex(sh$NS(ns("input"), "kon")),
         aui$inp_slider_age(sh$NS(ns("input"), "alder")),
