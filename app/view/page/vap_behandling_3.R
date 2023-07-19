@@ -127,7 +127,8 @@ server <- function(id, access_page, data, geo) {
             sum_sort,
             stash = out_stash,
             text = title,
-            timeline = FALSE # FIX This is ignored or overridden, huh!
+            timeline = FALSE, # FIX This is ignored or overridden, huh!
+            format = "percent"
         )
 
         map$server(
@@ -135,7 +136,8 @@ server <- function(id, access_page, data, geo) {
             .data = sum_synopsis,
             geo = geo,
             stash = out_stash,
-            text = title
+            text = title,
+            format = "percent"
         )
 
         output$overview <- sh$renderUI(out_icons())

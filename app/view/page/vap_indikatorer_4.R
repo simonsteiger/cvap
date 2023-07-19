@@ -141,7 +141,8 @@ server <- function(id, access_page, data, geo) {
             geo = geo,
             stash = out_stash,
             group = "visit_group",
-            text = title
+            text = title,
+            format = "percent"
         )
     })
 }

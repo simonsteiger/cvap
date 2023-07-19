@@ -115,7 +115,8 @@ server <- function(id, access_page, data, geo) {
             stash = out_stash,
             group = "year",
             text = title,
-            timeline = TRUE
+            timeline = TRUE,
+            format = "percent"
         )
 
         map$server(
@@ -124,7 +125,8 @@ server <- function(id, access_page, data, geo) {
             stash = out_stash,
             geo = geo,
             group = "year",
-            text = title
+            text = title,
+            format = "percent"
         )
 
         output$overview <- sh$renderUI(out_icons())
