@@ -145,7 +145,8 @@ server <- function(id, access_page, data, geo) {
             geo = geo,
             stash = out_stash,
             group = "inkluderad",
-            text = title
+            text = title,
+            format = "percent"
         )
 
         output$overview <- sh$renderUI(out_icons())

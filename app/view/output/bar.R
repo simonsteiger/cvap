@@ -51,7 +51,7 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id, .data, stash = NULL, x = "lan", y = "outcome", group = NULL, text = "Title", format = NULL, timeline = FALSE) {
+server <- function(id, .data, stash = NULL, x = "lan", y = "outcome", group = NULL, text = "Title", format = "decimal", timeline = FALSE) {
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
 
@@ -82,10 +82,10 @@ server <- function(id, .data, stash = NULL, x = "lan", y = "outcome", group = NU
             out <- out() %>%
                 e4r$e_charts_(x, timeline = timeline) %>%
                 e4r$e_bar_(y) %>%
-                e4r$e_tooltip() %>%
                 e4r$e_legend(bottom = 0, show = !timeline) %>%
                 e4r$e_title(text, paste0("Data uttagen: ", lub$today())) %>%
                 e4r$e_y_axis(max = limit_upper) %>%
+                e4r$e_tooltip() %>% # TODO JS formatter needs to be adjusted to grab correct values
                 e4r$e_theme_custom("app/static/echarts_theme.json")
 
             if (!is.null(format)) {

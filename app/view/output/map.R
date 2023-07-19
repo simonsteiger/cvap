@@ -17,6 +17,7 @@ box::use(
     srqlib / srqcolor,
     app / logic / theme,
     aui = app / logic / aux_ui,
+    ase = app / logic / aux_server,
 )
 
 palette <- c(
@@ -57,7 +58,7 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group = NULL, text = "Title") {
+server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group = NULL, text = "Title", format = "decimal") {
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
 
@@ -81,6 +82,15 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
             }
         })
 
+        # Convert outcome to percent if formatter is specified to "percent"
+        formatted_data <- sh$reactive({
+            if (format == "percent") {
+                dp$mutate(.data(), !!y := round(.data[[y]] * 100, 0))
+            } else {
+                .data()
+            }
+        })
+
         # Create interactive map for in-app view
         time_vars <- c("visit_group", "timestamp")
 
@@ -90,7 +100,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
             } else { # otherwise draw map
                 if (!is.null(group) && nrow(.data()) > 0 && !all(is.na(.data()[[y]]))) {
                     out <-
-                        .data() %>%
+                        formatted_data() %>%
                         dp$mutate(
                             !!group := {
                                 # Only sort by y if group does not imply chronological order
@@ -120,7 +130,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                         )
                     })
                 } else {
-                    out <- .data()
+                    out <- formatted_data()
 
                     title <- list(
                         text = text,
@@ -137,13 +147,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                     e4r$e_charts_(x, timeline = if (!is.null(group)) TRUE else FALSE) %>%
                     e4r$e_map_register("Sweden", geo$json) %>%
                     e4r$e_map_(y, map = "Sweden", nameProperty = "NAME_1") %>%
-                    e4r$e_tooltip(
-                        formatter = hw$JS("
-                            function(params){
-                                return('<b>Län:</b> ' + params.name + '<br /><b>Värde:</b> ' + params.value)
-                            }
-                        ")
-                    ) %>%
+                    e4r$e_tooltip(formatter = ase$format_list[[format]]()) %>%
                     e4r$e_visual_map_(min = min(out[[y]]), max = max(out[[y]]), color = palette) %>%
                     e4r$e_theme_custom("app/static/echarts_theme.json")
 

@@ -4,6 +4,7 @@ box::use(
     app / logic / aux_server / spells,
     app / logic / aux_server / icons,
     app / logic / aux_server / errors,
+    app / logic / aux_server / formatters,
 )
 
 #' @export
@@ -23,3 +24,12 @@ iconostasis <- icons$iconostasis
 
 #' @export
 error_no_data <- errors$error_no_data
+
+#' @export
+format_decimal <- formatters$format_decimal
+
+#' @export
+format_percent <- formatters$format_percent
+
+#' @export
+format_list <- formatters$format_list
