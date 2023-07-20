@@ -129,6 +129,18 @@ icon_lan_modal <- function(input, ...) {
         )
     )
 }
+#' @export
+icon_samplesize <- function(id, input, value) {
+    sh$div(
+        class = "d-flex flex-row justify-content-between align-items-center",
+        sh$div(
+            class = "d-flex flex-row align-items-center gap-2",
+            sh$tags$i(class = "fa fa-users-slash c-danger"),
+            paste0("Få data i ", length(input), " län")
+        ),
+        aui$inp_toggle(id = id, label = "Dölj", value = value)
+    )
+}
 
 #' @export
 iconostasis <- list(
@@ -142,5 +154,6 @@ iconostasis <- list(
     dxcat = icon_dxcat,
     start = icon_start,
     prep_typ = icon_prep_typ,
-    outcome = icon_outcome
+    outcome = icon_outcome,
+    samplesize = icon_samplesize
 )

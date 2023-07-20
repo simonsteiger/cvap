@@ -97,7 +97,9 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
         res_interactive <- sh$reactive({
             if (isFALSE(input$load)) { # abort if load is FALSE
                 NULL
-            } else { # otherwise draw map
+            } else { # else draw map
+                # Assert that group is not null and there is some data to plot
+                # indexing into .data would otherwise throw an error
                 if (!is.null(group) && nrow(.data()) > 0 && !all(is.na(.data()[[y]]))) {
                     out <-
                         formatted_data() %>%
@@ -121,7 +123,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                             sort(unique(out[[group]]))
                         }
 
-
+                    # Create the title for element on the timeline
                     title <- pr$map(lvls, \(x) {
                         list(
                             text = paste0(text, ", ", x),
@@ -141,10 +143,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                     )
                 }
 
-                # In visual_map, change...
-                # Label legend limits: text = list("High", "Low")
-                # Legend position: left = "right"
-
+                # Main assembly of echart
                 basic <- out %>%
                     e4r$e_charts_(x, timeline = if (!is.null(group)) TRUE else FALSE) %>%
                     e4r$e_map_register("Sweden", geo$json) %>%
@@ -163,18 +162,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
 
                 if (!is.null(group)) {
                     basic %>%
-                        e4r$e_timeline_opts(
-                            autoPlay = FALSE,
-                            #label = list(fontFamily = "Roboto", color = "#E0E6F1"),
-                            #controlStyle = list(color = "red"),
-                            # progress = list(
-                            #     label = list(fontFamily = "Roboto", color = "#4161ab")
-                            # ),
-                            # emphasis = list(
-                            #     #checkpointStyle = list(color = "red"),
-                            #     label = list(color = "black", fontFamily = "Roboto") # make this weak blue
-                            # )
-                        ) %>%
+                        e4r$e_timeline_opts(autoPlay = FALSE) %>%
                         e4r$e_timeline_serie(title = title)
                 } else {
                     basic %>%

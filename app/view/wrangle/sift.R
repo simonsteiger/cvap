@@ -45,6 +45,7 @@ server <- function(id, data) {
             }
         })
 
+        # Send a warning to user if no läns selected
         no_lan <- sh$reactive(
             shf$feedbackDanger(
                 "lan",
@@ -54,6 +55,7 @@ server <- function(id, data) {
             )
         )
 
+        # Create bool filter vector
         sieve <- ase$sift_vars(data, input)
 
         n_cases <- sh$reactive({

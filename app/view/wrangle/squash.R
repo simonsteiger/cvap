@@ -18,6 +18,8 @@ ui <- function(id) {
 }
 
 #' @export
+#' Summary module which reshapes the data frame
+#' in other words, does a summary and not a mutate operation
 server <- function(id, .data, .fn, .by, ...) {
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))

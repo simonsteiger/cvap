@@ -136,7 +136,7 @@
             "itemStyle": {
                 "areaColor": "#f8b859",
                 "borderColor": "#444",
-                "borderWidth": 1.25
+                "borderWidth": 1
             },
             "label": {
                 "color": "rgb(100,0,0)"

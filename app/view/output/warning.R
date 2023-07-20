@@ -7,41 +7,8 @@ box::use(
 
 box::use(
     aui = app / logic / aux_ui,
+    ase = app / logic / aux_server,
 )
-
-icon_samplesize <- function(id, input, value) {
-    sh$div(
-        class = "d-flex flex-row justify-content-between align-items-center",
-        sh$div(
-            class = "d-flex flex-row align-items-center gap-2",
-            sh$tags$i(class = "fa fa-users-slash c-danger"),
-            paste0("Få data i ", length(input), " län")
-        ),
-        aui$inp_toggle(id = id, label = "Dölj", value = value)
-    )
-}
-
-icon_samplesize_modal <- function(id, input) {
-    if (length(input) == 0) {
-        return("Inga varningar")
-    } else {
-        aui$btn_modal(
-            id = id,
-            class_toggle = "btn btn-secondary hover",
-            label = sh$div(
-                class = "d-flex flex-row align-items-center gap-2",
-                sh$tags$i(class = "fa fa-triangle-exclamation c-danger"),
-                paste0("Få data i ", length(input), " län")
-            ),
-            modal_title = "Varningar",
-            footer_confirm = NULL,
-            footer_dismiss = NULL,
-            sh$div(
-                paste0("Mindre än 10 observationer: ", paste0(input, collapse = ", "))
-            )
-        )
-    }
-}
 
 #' @export
 ui <- function(id) {
@@ -67,8 +34,9 @@ server <- function(id, .data) {
             input$exclude_low_n %||% FALSE
         })
 
+        # Create samplesize icon
         icons <- sh$reactive(
-            icon_samplesize(
+            ase$iconostasis$samplesize(
                 session$ns("exclude_low_n"),
                 low_n_lans(),
                 last_input()

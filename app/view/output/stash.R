@@ -12,6 +12,9 @@ box::use(
 )
 
 #' @export
+#' Stash saves user inputs for renaming plots and tables later
+#' This is necessary because inputs are in "input" namespace
+#' and can't simply be accessed from "output" namespace (where plot and table are)
 server <- function(id, title, .var = NULL) {
     sh$moduleServer(id, function(input, output, session) {
         subtitle <- sh$reactive({

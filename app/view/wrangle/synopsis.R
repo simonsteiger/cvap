@@ -39,7 +39,7 @@ server <- function(id, .data, .fn, .var = "outcome", .by, riket = TRUE, ...) {
         })
 
         out <- sh$reactive({
-            # If data is preprocessed, no need to floor_date
+            # If data is preprocessed (prefixed with dat_), no need to floor_date
             if (str$str_detect(deparse(substitute(.data)), "^dat_.+")) {
                 .data()
             } else {

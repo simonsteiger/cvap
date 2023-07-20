@@ -51,13 +51,22 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id, .data, stash = NULL, x = "lan", y = "outcome", group = NULL, text = "Title", format = "decimal", timeline = FALSE) {
+server <- function(id,
+                   .data,
+                   stash = NULL,
+                   x = "lan",
+                   y = "outcome",
+                   group = NULL,
+                   text = "Title",
+                   format = "decimal",
+                   timeline = FALSE) {
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
 
         time_vars <- c("visit_group", "timestamp")
 
         out <- sh$reactive({
+            # Assert that group isn't NULL and there is data to work with
             if (!is.null(group) && nrow(.data()) > 0 && !all(is.na(.data()[[y]]))) {
                 .data() %>%
                     dp$mutate(
@@ -76,8 +85,9 @@ server <- function(id, .data, stash = NULL, x = "lan", y = "outcome", group = NU
             }
         })
 
+        # Create echarts barplot
         res_interactive <- sh$reactive({
-            limit_upper <- max(out()[[y]], na.rm = TRUE)
+            limit_upper <- max(out()[[y]], na.rm = TRUE) # get limits for value axis
 
             out <- out() %>%
                 e4r$e_charts_(x, timeline = timeline) %>%
@@ -91,7 +101,8 @@ server <- function(id, .data, stash = NULL, x = "lan", y = "outcome", group = NU
                 ) %>%
                 e4r$e_y_axis_(max = limit_upper) %>%
                 e4r$e_x_axis_(x, axisLabel = list(fontFamily = "Roboto")) %>%
-                e4r$e_tooltip(textStyle = list(fontFamily = "Roboto")) %>% # TODO JS formatter needs to be adjusted to grab correct values
+                # TODO JS formatter needs to be adjusted to grab correct values
+                e4r$e_tooltip(textStyle = list(fontFamily = "Roboto")) %>%
                 e4r$e_theme_custom("app/static/echarts_theme.json")
 
             if (!is.null(format)) {
@@ -102,13 +113,14 @@ server <- function(id, .data, stash = NULL, x = "lan", y = "outcome", group = NU
                 out %>%
                     e4r$e_flip_coords()
             }
-            # Flip coords only at end to avoid confusion with axis flip and target axis for formatter
+            # Flip coords last to avoid confusion with axis flip and target axis for formatter
         })
 
+        # Create ggplot barplot for download as pdf (echarts offers only poor resolution)
         res_export <- sh$reactive({
             scale_y <- gg$scale_y_continuous(
                 name = NULL,
-                labels = srqauto$guess_label_num("y", out()[[y]])
+                labels = srqauto$guess_label_num("y", out()[[y]]) # IMPORT srqauto
             )
 
             gg$ggplot(out(), gg$aes(.data[[x]], .data[[y]])) +
