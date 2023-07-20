@@ -126,7 +126,8 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                         list(
                             text = paste0(text, ", ", x),
                             subtext = paste0("Data uttagen: ", lub$today()),
-                            textStyle = list(color = "#4161ab", fontWeight = "bolder")
+                            textStyle = list(fontFamily = "Commissioner"),
+                            subtextStyle = list(fontFamily = "Roboto")
                         )
                     })
                 } else {
@@ -135,7 +136,8 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                     title <- list(
                         text = text,
                         subtext = paste0("Data uttagen: ", lub$today()),
-                        textStyle = list(color = "#4161ab", fontWeight = "bolder")
+                        textStyle = list(fontFamily = "Commissioner"),
+                        subtextStyle = list(fontFamily = "Roboto")
                     )
                 }
 
@@ -147,17 +149,41 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                     e4r$e_charts_(x, timeline = if (!is.null(group)) TRUE else FALSE) %>%
                     e4r$e_map_register("Sweden", geo$json) %>%
                     e4r$e_map_(y, map = "Sweden", nameProperty = "NAME_1") %>%
-                    e4r$e_tooltip(formatter = ase$format_list[[format]]()) %>%
-                    e4r$e_visual_map_(min = min(out[[y]]), max = max(out[[y]]), color = palette) %>%
+                    e4r$e_tooltip(
+                        formatter = ase$format_list[[format]](),
+                        textStyle = list(fontFamily = "Roboto")
+                    ) %>%
+                    e4r$e_visual_map_(
+                        min = min(out[[y]]),
+                        max = max(out[[y]]),
+                        color = palette,
+                        textStyle = list(fontFamily = "Roboto")
+                    ) %>%
                     e4r$e_theme_custom("app/static/echarts_theme.json")
 
                 if (!is.null(group)) {
                     basic %>%
-                        e4r$e_timeline_opts(autoPlay = FALSE) %>%
+                        e4r$e_timeline_opts(
+                            autoPlay = FALSE,
+                            #label = list(fontFamily = "Roboto", color = "#E0E6F1"),
+                            #controlStyle = list(color = "red"),
+                            # progress = list(
+                            #     label = list(fontFamily = "Roboto", color = "#4161ab")
+                            # ),
+                            # emphasis = list(
+                            #     #checkpointStyle = list(color = "red"),
+                            #     label = list(color = "black", fontFamily = "Roboto") # make this weak blue
+                            # )
+                        ) %>%
                         e4r$e_timeline_serie(title = title)
                 } else {
                     basic %>%
-                        e4r$e_title(text = text, paste0("Data uttagen: ", lub$today()))
+                        e4r$e_title(
+                            text = text,
+                            paste0("Data uttagen: ", lub$today()),
+                            textStyle = list(fontFamily = "Comissioner"),
+                            subtextStyle = list(fontFamily = "Roboto")
+                        )
                 }
             }
         })

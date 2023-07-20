@@ -126,7 +126,7 @@
     "map": {
         "itemStyle": {
             "areaColor": "#eee",
-            "borderColor": "#444",
+            "borderColor": "#fff",
             "borderWidth": 0.5
         },
         "label": {
@@ -134,9 +134,9 @@
         },
         "emphasis": {
             "itemStyle": {
-                "areaColor": "rgba(255,215,0,0.8)",
+                "areaColor": "#f8b859",
                 "borderColor": "#444",
-                "borderWidth": 1
+                "borderWidth": 1.25
             },
             "label": {
                 "color": "rgb(100,0,0)"
@@ -336,7 +336,7 @@
             "width": "2"
         },
         "itemStyle": {
-            "color": "rgba(65,97,171,0.71)",
+            "color": "#a4b1d7",
             "borderWidth": "1"
         },
         "controlStyle": {
@@ -345,15 +345,16 @@
             "borderWidth": "1"
         },
         "checkpointStyle": {
-            "color": "#316bf3",
+            "color": "#4161ab",
             "borderColor": "#ffffff"
         },
         "label": {
-            "color": "#4161ab"
+            "color": "#a4b1d7",
+            "fontFamily": "Roboto"
         },
         "emphasis": {
             "itemStyle": {
-                "color": "#ffffff"
+                "color": "#2b4071"
             },
             "controlStyle": {
                 "color": "#4161ab",
@@ -361,7 +362,20 @@
                 "borderWidth": "1"
             },
             "label": {
-                "color": "#4161ab"
+                "color": "#2b4071",
+                "fontFamily": "Roboto"
+            }
+        },
+        "progress": {
+            "lineStyle": {
+                "color": "#7c98da"
+            },
+            "label": {
+                "color": "#4161ab",
+                "fontFamily": "Roboto"
+            },
+            "itemStyle": {
+                "color": "#7c98da"
             }
         }
     },

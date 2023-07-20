@@ -83,9 +83,15 @@ server <- function(id, .data, stash = NULL, x = "lan", y = "outcome", group = NU
                 e4r$e_charts_(x, timeline = timeline) %>%
                 e4r$e_bar_(y) %>%
                 e4r$e_legend(bottom = 0, show = !timeline) %>%
-                e4r$e_title(text, paste0("Data uttagen: ", lub$today())) %>%
-                e4r$e_y_axis(max = limit_upper) %>%
-                e4r$e_tooltip() %>% # TODO JS formatter needs to be adjusted to grab correct values
+                e4r$e_title(
+                    text,
+                    paste0("Data uttagen: ", lub$today()),
+                    textStyle = list(fontFamily = "Commissioner"),
+                    subtextStyle = list(fontFamily = "Roboto")
+                ) %>%
+                e4r$e_y_axis_(max = limit_upper) %>%
+                e4r$e_x_axis_(x, axisLabel = list(fontFamily = "Roboto")) %>%
+                e4r$e_tooltip(textStyle = list(fontFamily = "Roboto")) %>% # TODO JS formatter needs to be adjusted to grab correct values
                 e4r$e_theme_custom("app/static/echarts_theme.json")
 
             if (!is.null(format)) {

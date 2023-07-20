@@ -21,7 +21,15 @@ format_percent <- function() {
 }
 
 #' @export
+format_year <- function() {
+    hw$JS("
+        {yyyy}
+    ")
+}
+
+#' @export
 format_list <- list(
     decimal = format_decimal,
-    percent = format_percent
+    percent = format_percent,
+    year = format_year
 )
