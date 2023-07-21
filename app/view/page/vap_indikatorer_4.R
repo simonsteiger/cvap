@@ -62,7 +62,7 @@ ui <- function(id, data) {
                     map$ui(ns("output")),
                     aui$card(
                         header = sh$div(class = "py-card-header", "Sammanfattning"),
-                        body = "Sample text."
+                        body = sh$textOutput(ns("text"))
                     ),
                     table$ui(ns("output"))
                 )
@@ -72,7 +72,7 @@ ui <- function(id, data) {
 }
 
 #' @export
-server <- function(id, access_page, data, geo) {
+server <- function(id, access_page, data, geo, summary) {
     sh$moduleServer(id, function(input, output, session) {
         ase$obs_return(input)
 
@@ -133,8 +133,6 @@ server <- function(id, access_page, data, geo) {
             format = "percent"
         )
 
-        output$overview <- sh$renderUI(out_icons())
-
         map$server(
             id = "output",
             .data = sum_warn,
@@ -144,5 +142,9 @@ server <- function(id, access_page, data, geo) {
             text = title,
             format = "percent"
         )
+
+        output$overview <- sh$renderUI(out_icons())
+
+        output$text <- sh$renderText(summary)
     })
 }

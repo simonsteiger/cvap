@@ -95,6 +95,13 @@ icon_outcome <- function(input, ...) {
     )
 }
 
+icon_lan <- function(input) {
+    sh$div(
+        class = "d-flex flex-row align-items-center gap-3",
+        sh$icon("map-location-dot"), paste0(length(input), " län")
+    )
+}
+
 icon_lan_modal <- function(input, ...) {
     dots <- rl$list2(...)
     cond_one <- length(unlist(input)) > 1
@@ -150,7 +157,7 @@ iconostasis <- list(
     ordinerat = icon_date, # could the issue arise with several date icons?
     ongoing = icon_date,
     year = icon_date,
-    lan = icon_lan_modal,
+    lan = icon_lan, # can switch to modal if need be
     dxcat = icon_dxcat,
     start = icon_start,
     prep_typ = icon_prep_typ,

@@ -24,6 +24,7 @@ box::use(
   swissknife / sklang[`%//%`],
   aui = app / logic / aux_ui,
   app / logic / theme,
+  app / logic / data / summaries,
   app / view / page / home,
   app / view / page / vap_indikatorer_1,
   app / view / page / vap_indikatorer_2,
@@ -176,77 +177,88 @@ server <- function(id) {
       "vap_indikatorer_1",
       access_page = input$vap_indikatorer_1,
       data = list_df$vap_indikatorer_1,
-      geo = list(json = geo_json, sf = geo_sf)
+      geo = list(json = geo_json, sf = geo_sf),
+      summary = summaries$indikatorer_1
     )
 
     vap_indikatorer_2$server(
       "vap_indikatorer_2",
       access_page = input$vap_indikatorer_2,
       data = list_df$vap_indikatorer_2,
-      geo = list(json = geo_json, sf = geo_sf)
+      geo = list(json = geo_json, sf = geo_sf),
+      summary = summaries$indikatorer_2
     )
 
     vap_indikatorer_3$server(
       "vap_indikatorer_3",
       access_page = input$vap_indikatorer_3,
       data = list_df$vap_indikatorer_3,
-      geo = list(json = geo_json, sf = geo_sf)
+      geo = list(json = geo_json, sf = geo_sf),
+      summary = summaries$indikatorer_3
     )
 
     vap_indikatorer_4$server(
       "vap_indikatorer_4",
       access_page = input$vap_indikatorer_4,
       data = list_df$vap_indikatorer_4,
-      geo = list(json = geo_json, sf = geo_sf)
+      geo = list(json = geo_json, sf = geo_sf),
+      summary = summaries$indikatorer_4
     )
 
     vap_behandling_1$server(
       "vap_behandling_1",
       access_page = input$vap_behandling_1,
       data = list_df$vap_behandling_1,
-      geo = list(json = geo_json, sf = geo_sf)
+      geo = list(json = geo_json, sf = geo_sf),
+      summary = summaries$behandling_1
     )
 
     vap_behandling_2$server(
       "vap_behandling_2",
       access_page = input$vap_behandling_2,
       data = list_df$vap_behandling_2,
-      geo = list(json = geo_json, sf = geo_sf)
+      geo = list(json = geo_json, sf = geo_sf),
+      summary = summaries$behandling_2
     )
 
     vap_behandling_3$server(
       "vap_behandling_3",
       access_page = input$vap_behandling_3,
       data = list_df$vap_behandling_3,
-      geo = list(json = geo_json, sf = geo_sf)
+      geo = list(json = geo_json, sf = geo_sf),
+      summary = summaries$behandling_3
     )
 
     vap_behandling_4$server(
       "vap_behandling_4",
       access_page = input$vap_behandling_4,
       data = list_df$vap_behandling_4,
-      geo = list(json = geo_json, sf = geo_sf)
+      geo = list(json = geo_json, sf = geo_sf),
+      summary = summaries$behandling_4
     )
 
     vap_inklusionsmatt_1$server(
       "vap_inklusionsmatt_1",
       access_page = input$vap_inklusionsmatt_1,
       data = list_df$vap_inklusionsmatt_1,
-      geo = list(json = geo_json, sf = geo_sf)
+      geo = list(json = geo_json, sf = geo_sf),
+      summary = summaries$inklusionsmatt_1
     )
 
     vap_kvalitetssakring_1$server(
       "vap_kvalitetssakring_1",
       access_page = input$vap_kvalitetssakring_1,
       data = list_df$vap_kvalitetssakring_1,
-      geo = list(json = geo_json, sf = geo_sf)
+      geo = list(json = geo_json, sf = geo_sf),
+      summary = summaries$kvalitetssakring_1
     )
 
     vap_kvalitetssakring_2$server(
       "vap_kvalitetssakring_2",
       access_page = input$vap_kvalitetssakring_2,
       data = list_df$vap_kvalitetssakring_2,
-      geo = list(json = geo_json, sf = geo_sf)
+      geo = list(json = geo_json, sf = geo_sf),
+      summary = summaries$kvalitetssakring_2
     )
   })
 }

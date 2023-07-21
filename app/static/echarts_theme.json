@@ -134,8 +134,8 @@
         },
         "emphasis": {
             "itemStyle": {
-                "areaColor": "#f8b859",
-                "borderColor": "#444",
+                "areaColor": "#fff985",
+                "borderColor": "#f59b14",
                 "borderWidth": 1
             },
             "label": {
