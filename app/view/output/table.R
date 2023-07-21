@@ -8,6 +8,7 @@ box::use(
 )
 
 box::use(
+    swissknife / sklang[`%//%`],
     aui = app / logic / aux_ui,
     ase = app / logic / aux_server,
 )
@@ -17,15 +18,23 @@ translate <- function(chr_vec, ...) {
 
     pr$map_chr(chr_vec, \(chr) {
         switch(chr,
-            "inkluderad" = "Inklusions",
-            "ordinerat" = "Ordinations",
+            "lan" = "Lan",
+            "inkluderad" = "Inklusion",
+            "ordinerat" = "Ordination",
             "ongoing_timestamp" = "Pågående vid",
+            "visit_group" = "Tidpunkt",
             "dxcat" = "Diagnos kategori",
             "patientens_globala" = "Allmän hälsa",
             "haq" = "HAQ",
             "smarta" = "Smärta",
             "das28_low" = "Låg DAS28",
             "cdai_low" = "Låg CDAI",
+            "per100k" = "Antal per 100_000",
+            "nonmissing" = "Data tillgänglig",
+            "missing" = "Data saknas",
+            "population" = "Population",
+            "year" = "År",
+            "timestamp" = "Månader efter sjukdomsdebut", # Adjust this for tidig RA
             chr
         )
     })
@@ -62,12 +71,24 @@ server <- function(id, .data, stash = NULL, arrange = NULL) {
             if (nrow(.data()) > 0 && all(is.na(.data()$outcome))) ase$error_no_data(session)
             sh$req(nrow(.data()) > 0 && !all(is.na(.data()$outcome)))
 
-            rtbl$reactable(
-                .data() %>%
-                    dp$arrange(dp$across(arrange)) %>%
+            out <- sh$reactive({
+
+            })
+
+            # Here say "if data contains dxcat == Tidig RA, then make timestamp '... i veckor"
+            rtbl$reactable({
+                temp <- dp$arrange(.data(), dp$across(arrange))
+
+                # if dxcat is Tidig RA, custom rename - always FALSE if dxcat doesn't exist
+                # convert from tibble to data.frame to avoid "uninitialised column" warning
+                if (all(as.data.frame(.data())$dxcat %in% "Tidig RA" %//% FALSE)) {
+                    temp <- dp$rename(temp, `Veckor efter sjukdomsdebut` = timestamp)
+                }
+
+                temp %>%
                     dp$rename(!!stash()$outcome := outcome) %>%
                     dp$rename_with(translate)
-            )
+            })
         })
     })
 }

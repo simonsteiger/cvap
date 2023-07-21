@@ -80,7 +80,7 @@ server <- function(id, access_page, data, geo, summary) {
         ase$obs_return(input)
 
         out_stash <- sh$bindEvent(
-            stash$server("input", title, "???"),
+            stash$server("input", title, "Andel som får diagnos inom tidsfönstret"),
             list(input$go_input, access_page)
         )
 
@@ -104,7 +104,7 @@ server <- function(id, access_page, data, geo, summary) {
                 pre_sift,
                 .fn = mean,
                 .var = "visit_group",
-                .by = c("lan", "timestamp"),
+                .by = c("lan", "timestamp", "dxcat"), # keep dxcat for table
                 na.rm = TRUE
             ),
             list(input$go_input, access_page)

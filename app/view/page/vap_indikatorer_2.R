@@ -80,7 +80,7 @@ server <- function(id, access_page, data, geo, summary) {
         ase$obs_return(input)
 
         out_stash <- sh$bindEvent(
-            stash$server("input", title, "???"),
+            stash$server("input", title, "Antal pågående behandlingar per 100 000 invånare"),
             list(input$go_input, access_page)
         )
 
