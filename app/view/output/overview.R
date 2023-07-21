@@ -33,10 +33,8 @@ server <- function(id) {
                 inputs_with_icons,
                 \(name) {
                     if (name == ut$tail(inputs_with_icons, 1)) {
-
                         ase$iconostasis[[name]](input[[name]], id = id)
                     } else {
-
                         sh$tagList(ase$iconostasis[[name]](input[[name]]), sh$hr())
                     }
                 }
