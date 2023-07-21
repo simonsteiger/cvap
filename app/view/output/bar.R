@@ -103,7 +103,8 @@ server <- function(id,
                 e4r$e_x_axis_(x, axisLabel = list(fontFamily = "Roboto")) %>%
                 # TODO JS formatter needs to be adjusted to grab correct values
                 e4r$e_tooltip(textStyle = list(fontFamily = "Roboto")) %>%
-                e4r$e_theme_custom("app/static/echarts_theme.json")
+                e4r$e_theme_custom("app/static/echarts_theme.json") %>%
+                e4r$e_mark_line(data = list(type = "average", name = "AVG")) # EXPERIMENTAL
 
             if (!is.null(format)) {
                 out %>%

@@ -10,6 +10,15 @@ box::use(
     ase = app / logic / aux_server,
 )
 
+# Helper to get all lans with nonmissing values below `n`
+extract_lans_below <- function(.data, n) {
+    .data %>%
+        dp$filter(nonmissing < n) %>%
+        dp$pull(lan) %>%
+        unique() %>%
+        `[`(., !. %in% "Riket") # never mark Riket as low samplesize
+}
+
 #' @export
 ui <- function(id) {
     ns <- sh$NS(id)
@@ -23,11 +32,8 @@ server <- function(id, .data) {
 
         small_lans <- sh$reactive({
             sh$req(nrow(.data()) > 0)
-
             .data() %>%
-                dp$filter(nonmissing < 10) %>%
-                dp$pull(lan) %>%
-                unique()
+                extract_lans_below(10)
         })
 
         last_input_small <- sh$eventReactive(small_lans(), {
@@ -36,11 +42,8 @@ server <- function(id, .data) {
 
         crit_lans <- sh$reactive({
             sh$req(nrow(.data()) > 0)
-
             .data() %>%
-                dp$filter(nonmissing < 5) %>%
-                dp$pull(lan) %>%
-                unique()
+                extract_lans_below(5)
         })
 
         # Create samplesize icons
