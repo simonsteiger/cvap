@@ -92,7 +92,7 @@ server <- function(id, access_page, data, geo, summary) {
             list(input$go_input, access_page)
         )
 
-        sieve <- sift$server("input", sh$reactive(data))
+        sieve <- sift$server("input", sh$reactive(data), "visit_group")
 
         pre_sift <- sh$reactive(data[sieve(), ])
 

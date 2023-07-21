@@ -84,7 +84,7 @@ server <- function(id, access_page, data, geo, summary) {
             shj$toggleState("go_input", cnd)
         })
 
-        sieve <- sift$server("input", sh$reactive(data))
+        sieve <- sift$server("input", sh$reactive(data), "lan")
 
         pre_sift <- sh$reactive(data[sieve(), ])
 

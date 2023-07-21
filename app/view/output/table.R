@@ -71,10 +71,6 @@ server <- function(id, .data, stash = NULL, arrange = NULL) {
             if (nrow(.data()) > 0 && all(is.na(.data()$outcome))) ase$error_no_data(session)
             sh$req(nrow(.data()) > 0 && !all(is.na(.data()$outcome)))
 
-            out <- sh$reactive({
-
-            })
-
             # Here say "if data contains dxcat == Tidig RA, then make timestamp '... i veckor"
             rtbl$reactable({
                 temp <- dp$arrange(.data(), dp$across(arrange))

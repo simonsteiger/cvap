@@ -65,7 +65,9 @@ server <- function(id, .data, .fn, .var = "outcome", .by, riket = TRUE, ...) {
                     missing = sum(is.na(.data[[outcome()]])),
                     nonmissing = sum(!is.na(.data[[outcome()]])),
                     .by = ts$all_of(.by)
-                )
+                ) %>%
+                # If a län has no data for a subgroup, result will be NaN and break the plot
+                dp$mutate(outcome = ifelse(is.nan(outcome), 0, outcome))
         })
 
         digits <- sh$reactive({

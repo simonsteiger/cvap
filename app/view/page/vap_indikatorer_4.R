@@ -55,7 +55,8 @@ ui <- function(id, data) {
                         ns("go_input"), ns("overview"),
                         inputs,
                         modal_summary = sh$htmlOutput(sh$NS(ns("input"), "n_cases"))
-                    )
+                    ),
+                    warning$ui(ns("warning"))
                 ),
                 main = sh$tagList(
                     bar$ui(ns("output")),
@@ -119,7 +120,7 @@ server <- function(id, access_page, data, geo, summary) {
 
         table$server(
             "output",
-            sum_sort,
+            sum_sort, # sum_sort
             stash = out_stash,
             arrange = c("lan", "visit_group")
         )

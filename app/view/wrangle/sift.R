@@ -4,6 +4,7 @@ box::use(
     shw = shinyWidgets,
     shf = shinyFeedback,
     magrittr[`%>%`],
+    rl = rlang[`%||%`],
 )
 
 box::use(
@@ -19,7 +20,7 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id, data) {
+server <- function(id, data, .var = NULL) {
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(data))
 
@@ -61,7 +62,11 @@ server <- function(id, data) {
         n_cases <- sh$reactive({
             # check rows of data frame unless lan is NULL
             # hack necessary because sift_vars skips NULL inputs
-            n <- if (!is.null(input$lan)) nrow(data()[sieve(), ]) else 0
+            if (!is.null(input$lan)) {
+                n <- sum(!is.na(data()[[.var %||% input$outcome]][sieve()]))
+            } else {
+                n <- 0
+            }
 
             sh$tags$button(
                 type = "button",
@@ -71,7 +76,7 @@ server <- function(id, data) {
                     class = "d-flex flex-row align-items-center gap-2",
                     if (n == 0) sh$icon("users-slash") else sh$icon("users"),
                     if (n == 0) "Ingen data, anpassa urval" else paste0("Antal observationer: ", n)
-                    )
+                )
             )
         })
 
