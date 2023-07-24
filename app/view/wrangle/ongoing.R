@@ -6,7 +6,6 @@ box::use(
 )
 
 box::use(
-    srqlib / srqdict,
     srqlib / srqprep,
 )
 
