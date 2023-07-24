@@ -11,13 +11,34 @@ box::use(
 
 box::use(
     ase = app / logic / aux_server,
+    swissknife / sklang[`%//%`],
 )
+
+vali_date <- function(input) {
+    options <- c("inkluderad", "ordinerat", "ongoing")
+
+    present_date <- sh$reactive(
+        options[options %in% names(input)]
+    )
+
+    cnd <- all(pr$map(input[[present_date]], lub$is.Date))
+
+    sh$req(cnd, cancelOutput = TRUE)
+
+    shf$feedbackDanger(
+        present_date,
+        cnd,
+        "Ogiltig datum."
+    )
+}
+
 
 #' @export
 ui <- function(id) {
     ns <- sh$NS(id)
     sh$tagList(
         sh$textOutput(ns("no_lan")), # output of warning when no lan selected
+        sh$textOutput(ns("no_date")), # output of warning when no lan selected
     )
 }
 
@@ -48,7 +69,7 @@ server <- function(id, data, .var = NULL) {
             }
         })
 
-        # Send a warning to user if no läns selected
+        # Send a feedback to user if no läns selected
         no_lan <- sh$reactive(
             shf$feedbackDanger(
                 "lan",
@@ -58,15 +79,31 @@ server <- function(id, data, .var = NULL) {
             )
         )
 
-        # Create bool filter vector
-        sieve <- ase$sift_vars(data, input)
+        # Filtering if date input is OK
+        out <- sh$reactive({
+            options <- c("inkluderad", "ordinerat", "ongoing")
 
-        # Basic filter with sieve vector
-        out <- sh$reactive(
+            present_date <- options[options %in% names(input)]
+
+            if (length(present_date) > 0) { # present_date can't be char(0)
+                print(present_date)
+                cnd <- all(pr$map_lgl(input[[present_date]], lub$is.Date))
+
+                no_lan <- shf$feedbackDanger(
+                    present_date,
+                    !cnd,
+                    "Ogiltig datum."
+                )
+
+                sh$req(cnd, cancelOutput = TRUE)
+            }
+
+            sieve <- ase$sift_vars(data, input)
+
             data()[sieve(), ] %>%
                 ase$maybe_lookback(input, .var) %>%
                 ase$maybe_ongoing(input)
-        )
+        })
 
         # check rows of data frame unless lan is NULL (NULL means no filter in sift_vars)
         # if not NULL, count
@@ -91,6 +128,8 @@ server <- function(id, data, .var = NULL) {
         })
 
         output$no_lan <- sh$renderText(no_lan())
+
+        output$no_text <- sh$renderText(no_text())
 
         output$n_cases <- sh$renderUI(n_cases())
 
