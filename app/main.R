@@ -221,13 +221,13 @@ server <- function(id) {
       summary = summaries$behandling_2
     )
 
-    #vap_behandling_3$server(
-    #  "vap_behandling_3",
-    #  access_page = input$vap_behandling_3,
-    #  data = list_df$vap_behandling_3,
-    #  geo = list(json = geo_json, sf = geo_sf),
-    #  summary = summaries$behandling_3
-    #)
+    vap_behandling_3$server(
+      "vap_behandling_3",
+      access_page = input$vap_behandling_3,
+      data = list_df$vap_behandling_3,
+      geo = list(json = geo_json, sf = geo_sf),
+      summary = summaries$behandling_3
+    )
 
     vap_behandling_4$server(
       "vap_behandling_4",

@@ -3,6 +3,8 @@ box::use(
     pr = purrr,
     shw = shinyWidgets,
     shf = shinyFeedback,
+    dp = dplyr,
+    lub = lubridate,
     magrittr[`%>%`],
     rl = rlang[`%||%`],
 )
@@ -12,6 +14,7 @@ box::use(
     app / view / wrangle / lookback,
     app / view / wrangle / ongoing,
     srqlib / srqprep,
+    srqlib / srqdict,
 )
 
 #' @export
@@ -68,8 +71,16 @@ server <- function(id, data, .var = NULL) {
         # If there is a lookback filter, apply that to sieved data
         dat_lookback <- sh$reactive({
             if (!is.null(input$lookback)) {
-                res <- lookback$server(id, dat_basic, .var = .var %||% input$outcome)
-                res() # lookback returns a reactive, but we want to store its value
+                dat_basic() %>%
+                    dp$rename(outcome = .data[[.var %||% input$outcome]]) %>%
+                    # separately get rid of missing outcome values to avoid picking NA outcomes
+                    dp$filter(!is.na(outcome)) %>%
+                    dp$filter(
+                        !!srqdict$fil_ongoing(input$ongoing),
+                        datum >= input$ongoing - as.numeric(input$lookback) * lub$dyears(1)
+                    ) %>%
+                    dp$arrange(patientkod, dp$desc(datum)) %>%
+                    dp$distinct(patientkod, .keep_all = TRUE)
             } else {
                 dat_basic()
             }
@@ -78,7 +89,6 @@ server <- function(id, data, .var = NULL) {
         # If there is an ongoing filter, apply that to sieved data
         dat_ongoing <- sh$reactive({
             if (!is.null(input$ongoing)) {
-                print(input$ongoing)
                 srqprep$prep_ongoing(
                     dat_lookback(),
                     .start = min(input$ongoing),
@@ -95,9 +105,10 @@ server <- function(id, data, .var = NULL) {
         # Rename to reflect the fact that data cleaning is finished
         out <- dat_ongoing
 
+        # check rows of data frame unless lan is NULL (NULL means no filter in sift_vars)
+        # if not NULL, count
+        # else, 0
         n_cases <- sh$reactive({
-            # check rows of data frame unless lan is NULL
-            # hack necessary because sift_vars skips NULL inputs
             if (!is.null(input$lan)) {
                 n <- sum(!is.na(out()[[.var %||% input$outcome]]))
             } else {
