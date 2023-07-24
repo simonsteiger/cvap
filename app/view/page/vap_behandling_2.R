@@ -85,7 +85,7 @@ server <- function(id, access_page, data, geo, summary) {
         )
 
         sh$observe({
-            cnd <- nrow(pre_ongoing()) > 0 & !is.null(out_stash()$input$lan)
+            cnd <- nrow(sifted()) > 0 & !is.null(out_stash()$input$lan)
             shj$toggleState("go_input", cnd)
         })
 
@@ -94,14 +94,12 @@ server <- function(id, access_page, data, geo, summary) {
             list(input$go_input, access_page)
          )
 
-        sieve <- sift$server("input", sh$reactive(data), "patientkod")
-
-        pre_ongoing <- ongoing$server("input", sh$reactive(data[sieve(), ]))
+        sifted <- sift$server("input", sh$reactive(data), "patientkod")
 
         sum_synopsis <- sh$eventReactive(list(input$go_input, access_page), {
             res <- squash$server(
                 "summary",
-                pre_ongoing,
+                sifted,
                 .fn = dp$n,
                 .by = c("lan", "ongoing_timestamp", "population")
             )

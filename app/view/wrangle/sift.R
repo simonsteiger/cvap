@@ -8,7 +8,10 @@ box::use(
 )
 
 box::use(
-    ase = app / logic / aux_server
+    ase = app / logic / aux_server,
+    app / view / wrangle / lookback,
+    app / view / wrangle / ongoing,
+    srqlib / srqprep,
 )
 
 #' @export
@@ -59,11 +62,44 @@ server <- function(id, data, .var = NULL) {
         # Create bool filter vector
         sieve <- ase$sift_vars(data, input)
 
+        # Basic filter with sieve vector
+        dat_basic <- sh$reactive(data()[sieve(), ])
+
+        # If there is a lookback filter, apply that to sieved data
+        dat_lookback <- sh$reactive({
+            if (!is.null(input$lookback)) {
+                res <- lookback$server(id, dat_basic, .var = .var %||% input$outcome)
+                res() # lookback returns a reactive, but we want to store its value
+            } else {
+                dat_basic()
+            }
+        })
+
+        # If there is an ongoing filter, apply that to sieved data
+        dat_ongoing <- sh$reactive({
+            if (!is.null(input$ongoing)) {
+                print(input$ongoing)
+                srqprep$prep_ongoing(
+                    dat_lookback(),
+                    .start = min(input$ongoing),
+                    .end = max(input$ongoing),
+                    .start_var = ordinerat,
+                    .end_var = utsatt,
+                    .new_name = "ongoing_timestamp"
+                )
+            } else {
+                dat_lookback()
+            }
+        })
+
+        # Rename to reflect the fact that data cleaning is finished
+        out <- dat_ongoing
+
         n_cases <- sh$reactive({
             # check rows of data frame unless lan is NULL
             # hack necessary because sift_vars skips NULL inputs
             if (!is.null(input$lan)) {
-                n <- sum(!is.na(data()[[.var %||% input$outcome]][sieve()]))
+                n <- sum(!is.na(out()[[.var %||% input$outcome]]))
             } else {
                 n <- 0
             }
@@ -84,6 +120,6 @@ server <- function(id, data, .var = NULL) {
 
         output$n_cases <- sh$renderUI(n_cases())
 
-        sieve
+        out
     })
 }
