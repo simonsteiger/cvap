@@ -17,6 +17,12 @@ sift_cols <- sift$sift_cols
 sift_vars <- sift$sift_vars
 
 #' @export
+maybe_lookback <- sift$maybe_lookback
+
+#' @export
+maybe_ongoing <- sift$maybe_ongoing
+
+#' @export
 create_subtitle <- spells$create_subtitle
 
 #' @export

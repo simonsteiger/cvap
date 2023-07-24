@@ -98,10 +98,9 @@ server <- function(id, access_page, data, geo, summary) {
 
         sum_synopsis <- sh$bindEvent(
             synopsis$server(
-                "summary",
+                "input", # has input$outcome that must be visible
                 sifted,
                 .fn = mean,
-                .var = "outcome",
                 .by = "lan",
                 na.rm = TRUE
             ),
