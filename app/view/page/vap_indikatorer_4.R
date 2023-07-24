@@ -83,7 +83,7 @@ server <- function(id, access_page, data, geo, summary) {
         )
 
         sh$observe({
-            cnd <- nrow(pre_sift()) > 0 & !is.null(out_stash()$input$lan)
+            cnd <- nrow(sifted()) > 0 & !is.null(out_stash()$input$lan)
             shj$toggleState("go_input", cnd)
         })
 
@@ -92,14 +92,12 @@ server <- function(id, access_page, data, geo, summary) {
             list(input$go_input, access_page)
         )
 
-        sieve <- sift$server("input", sh$reactive(data))
-
-        pre_sift <- sh$reactive(data[sieve(), ])
+        sifted <- sift$server("input", sh$reactive(data))
 
         sum_synopsis <- sh$bindEvent(
             synopsis$server(
                 "input",
-                pre_sift,
+                sifted,
                 .fn = mean,
                 .by = c("lan", "visit_group"),
                 na.rm = TRUE

@@ -3,6 +3,14 @@ box::use(
     str = stringr,
     lub = lubridate,
     pr = purrr,
+    dp = dplyr,
+    rl = rlang[`%||%`],
+    magrittr[`%>%`],
+)
+
+box::use(
+    srqlib / srqprep,
+    srqlib / srqdict,
 )
 
 #' @export
@@ -53,3 +61,40 @@ sift_vars <- function(data, input, skip = NULL) {
         pr$reduce(each_var, `&`)
     })
 }
+
+#' @export
+#' Helper function to filter for ongoing cases if input$ongoing exists
+#' and if we are not also setting lookback window (has its own ongoing filter)
+maybe_ongoing <- function(.data, input) {
+    if (is.null(input$ongoing) || !is.null(input$lookback)) {
+        return(.data)
+    } else {
+        srqprep$prep_ongoing(
+            .data,
+            .start = min(input$ongoing),
+            .end = max(input$ongoing),
+            .start_var = ordinerat,
+            .end_var = utsatt,
+            .new_name = "ongoing_timestamp"
+        )
+    }
+}
+
+#' @export
+#' Helper function to set lookback window if input$lookback exists
+maybe_lookback <- function(.data, input, .var) {
+    if (is.null(input$lookback)) {
+        return(.data)
+    } else {
+        .data %>%
+            # separately get rid of missing outcome values to avoid picking NA outcomes
+            dp$filter(!is.na(.data[[input$outcome %||% .var]])) %>%
+            dp$filter(
+                !!srqdict$fil_ongoing(input$ongoing),
+                datum >= input$ongoing - as.numeric(input$lookback) * lub$dyears(1)
+            ) %>%
+            dp$arrange(patientkod, dp$desc(datum)) %>%
+            dp$distinct(patientkod, .keep_all = TRUE)
+    }
+}
+

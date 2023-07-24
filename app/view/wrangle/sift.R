@@ -3,12 +3,14 @@ box::use(
     pr = purrr,
     shw = shinyWidgets,
     shf = shinyFeedback,
+    dp = dplyr,
+    lub = lubridate,
     magrittr[`%>%`],
     rl = rlang[`%||%`],
 )
 
 box::use(
-    ase = app / logic / aux_server
+    ase = app / logic / aux_server,
 )
 
 #' @export
@@ -59,11 +61,19 @@ server <- function(id, data, .var = NULL) {
         # Create bool filter vector
         sieve <- ase$sift_vars(data, input)
 
+        # Basic filter with sieve vector
+        out <- sh$reactive(
+            data()[sieve(), ] %>%
+                ase$maybe_lookback(input, .var) %>%
+                ase$maybe_ongoing(input)
+        )
+
+        # check rows of data frame unless lan is NULL (NULL means no filter in sift_vars)
+        # if not NULL, count
+        # else, 0
         n_cases <- sh$reactive({
-            # check rows of data frame unless lan is NULL
-            # hack necessary because sift_vars skips NULL inputs
             if (!is.null(input$lan)) {
-                n <- sum(!is.na(data()[[.var %||% input$outcome]][sieve()]))
+                n <- sum(!is.na(out()[[input$outcome %||% .var]]))
             } else {
                 n <- 0
             }
@@ -84,6 +94,6 @@ server <- function(id, data, .var = NULL) {
 
         output$n_cases <- sh$renderUI(n_cases())
 
-        sieve
+        out
     })
 }
