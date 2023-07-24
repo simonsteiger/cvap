@@ -148,10 +148,10 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                     e4r$e_charts_(x, timeline = if (!is.null(group)) TRUE else FALSE) %>%
                     e4r$e_map_register("Sweden", geo$json) %>%
                     e4r$e_map_(y, map = "Sweden", nameProperty = "NAME_1") %>%
-                    e4r$e_tooltip(
-                        formatter = ase$format_list[[format]](),
-                        textStyle = list(fontFamily = "Roboto")
-                    ) %>%
+                    #e4r$e_tooltip(
+                    #    formatter = ase$format_list[[format]](),
+                    #    textStyle = list(fontFamily = "Roboto")
+                    #) %>%
                     e4r$e_visual_map_(
                         min = min(out[[y]]),
                         max = max(out[[y]]),

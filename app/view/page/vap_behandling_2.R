@@ -94,7 +94,7 @@ server <- function(id, access_page, data, geo, summary) {
             list(input$go_input, access_page)
          )
 
-        sieve <- sift$server("input", sh$reactive(data))
+        sieve <- sift$server("input", sh$reactive(data), "patientkod")
 
         pre_ongoing <- ongoing$server("input", sh$reactive(data[sieve(), ]))
 
@@ -123,7 +123,7 @@ server <- function(id, access_page, data, geo, summary) {
 
         sum_sort <- sort$server(
             "output",
-            sum_synopsis, # Once synopsis can be turned off, we may want %||% sum_squash here
+            sum_synopsis,
             group = "ongoing_timestamp"
         )
 
