@@ -29,8 +29,6 @@ inp_daterange <- function(id, label, start = lub$ymd("2020-01-01"), end = lub$ym
             label = label,
             start = start,
             end = end,
-            min = lub$ymd("1999-01-01"),
-            max = lub$today(),
             format = "yyyy-mm-dd",
             startview = "year",
             language = "sv",
