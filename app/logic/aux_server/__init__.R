@@ -5,6 +5,7 @@ box::use(
     app / logic / aux_server / icons,
     app / logic / aux_server / errors,
     app / logic / aux_server / formatters,
+    app / logic / aux_server / checks,
 )
 
 #' @export
@@ -39,3 +40,6 @@ format_percent <- formatters$format_percent
 
 #' @export
 format_list <- formatters$format_list
+
+#' @export
+vali_date <- checks$vali_date

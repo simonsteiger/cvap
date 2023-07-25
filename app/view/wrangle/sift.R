@@ -3,10 +3,12 @@ box::use(
     pr = purrr,
     shw = shinyWidgets,
     shf = shinyFeedback,
+    shj = shinyjs,
     dp = dplyr,
     lub = lubridate,
     magrittr[`%>%`],
     rl = rlang[`%||%`],
+    str = stringr,
 )
 
 box::use(
@@ -62,17 +64,30 @@ server <- function(id, data, .var = NULL) {
         sieve <- ase$sift_vars(data, input)
 
         # Basic filter with sieve vector
-        out <- sh$reactive(
-            data()[sieve(), ] %>%
-                ase$maybe_lookback(input, .var) %>%
-                ase$maybe_ongoing(input)
-        )
+        out <- sh$reactive({
+            if (!ase$vali_date(input)$inrange %||% FALSE) {
+                dp$filter(data(), FALSE) # return empty tibble
+            } else {
+                data()[sieve(), ] %>%
+                    ase$maybe_lookback(input, .var) %>%
+                    ase$maybe_ongoing(input)
+            }
+        })
 
         # check rows of data frame unless lan is NULL (NULL means no filter in sift_vars)
         # if not NULL, count
         # else, 0
         n_cases <- sh$reactive({
-            if (!is.null(input$lan)) {
+            check_date <- ase$vali_date(input)
+
+            shf$feedbackDanger(
+                check_date$var,
+                !check_date$inrange,
+                "Välj två olika datum mellan 1999 och idag.",
+                icon = NULL
+            )
+
+            if (!is.null(input$lan) && nrow(out()) > 0) {
                 n <- sum(!is.na(out()[[input$outcome %||% .var]]))
             } else {
                 n <- 0

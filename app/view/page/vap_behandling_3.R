@@ -85,8 +85,9 @@ server <- function(id, access_page, data, geo, summary) {
         )
 
         sh$observe({
-            cnd <- nrow(sifted()) > 0 & !is.null(out_stash()$input$lan)
-            shj$toggleState("go_input", cnd)
+            check_nrow <- nrow(sifted()) > 0
+            check_lan <- !is.null(out_stash()$input$lan)
+            shj$toggleState("go_input", check_nrow & check_lan)
         })
 
         out_icons <- sh$bindEvent(
