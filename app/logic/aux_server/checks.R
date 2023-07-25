@@ -4,7 +4,7 @@ box::use(
 )
 
 box::use(
-    swissknife / sklang[`%//%`],
+    swissknife / sklang[`%//%`, `%na?%`],
 )
 
 #' @export
@@ -19,7 +19,8 @@ vali_date <- function(input) {
     check1 <- all(pr$map_lgl(input[[var]], lub$is.Date))
 
     check2 <- if (check1) {
-        min(input[[var]]) >= lub$ymd("1999-01-01") & max(input[[var]]) <= lub$today()
+        prelim <- min(input[[var]]) >= lub$ymd("1999-01-01") & max(input[[var]]) <= lub$today()
+        prelim %na?% FALSE
     } else {
         FALSE
     }
