@@ -28,6 +28,7 @@ box::use(
     app / view / output / map,
     app / view / output / overview,
     app / view / output / stash,
+    app / view / output / warning,
 )
 
 title <- aui$navbox_data$tag[[2]][[3]]
@@ -58,7 +59,8 @@ ui <- function(id, data) {
                         ns("go_input"), ns("overview"),
                         inputs,
                         modal_summary = sh$htmlOutput(sh$NS(ns("input"), "n_cases"))
-                    )
+                    ),
+                    warning$ui(ns("warning"))
                 ),
                 main = sh$tagList(
                     bar$ui(ns("output")),
@@ -85,9 +87,7 @@ server <- function(id, access_page, data, geo, summary) {
         )
 
         sh$observe({
-            check_nrow <- nrow(sifted()) > 0
-            check_lan <- !is.null(out_stash()$input$lan)
-            shj$toggleState("go_input", check_nrow & check_lan)
+            shj$toggleState("go_input", nrow(sifted()) > 0)
         })
 
         out_icons <- sh$bindEvent(
@@ -108,9 +108,14 @@ server <- function(id, access_page, data, geo, summary) {
             list(input$go_input, access_page)
         )
 
+        sum_warn <- warning$server(
+            "warning",
+            sum_synopsis
+        )
+
         sum_sort <- sort$server(
             "output",
-            sum_synopsis
+            sum_warn
         )
 
         table$server(
@@ -131,7 +136,7 @@ server <- function(id, access_page, data, geo, summary) {
 
         map$server(
             id = "output",
-            .data = sum_synopsis,
+            .data = sum_warn,
             geo = geo,
             stash = out_stash,
             text = title,

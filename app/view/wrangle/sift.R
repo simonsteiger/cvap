@@ -65,8 +65,7 @@ server <- function(id, data, .var = NULL) {
 
         # Basic filter with sieve vector
         out <- sh$reactive({
-            print(ase$vali_date(input)$inrange)
-            if (!ase$vali_date(input)$inrange) {
+            if (!ase$vali_date(input)$inrange || is.null(input$lan)) {
                 dp$filter(data(), FALSE) # return empty tibble
             } else {
                 data()[sieve(), ] %>%
