@@ -169,7 +169,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                         e4r$e_title(
                             text = text,
                             paste0("Data uttagen: ", lub$today()),
-                            textStyle = list(fontFamily = "Comissioner"),
+                            textStyle = list(fontFamily = "Commissioner"),
                             subtextStyle = list(fontFamily = "Roboto")
                         )
                 }
