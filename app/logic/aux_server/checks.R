@@ -18,8 +18,11 @@ vali_date <- function(input) {
 
     check1 <- all(pr$map_lgl(input[[var]], lub$is.Date))
 
-    check2 <- if (check1) {
+    check2 <- if (check1 && length(input[[var]]) == 2) {
         prelim <- min(input[[var]]) >= lub$ymd("1999-01-01") & max(input[[var]]) <= lub$today()
+        prelim %na?% FALSE
+    } else if (check1 && length(input[[var]]) == 1) {
+        prelim <- input[[var]] >= lub$ymd("1999-01-01") & input[[var]] <= lub$today()
         prelim %na?% FALSE
     } else {
         FALSE
