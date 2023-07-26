@@ -47,7 +47,7 @@ ui <- function(id, data) {
             aui$row(
                 class_row = "row m-4 d-flex justify-content-center align-items-center",
                 left = sh$div(aui$btn_return(ns("return"))),
-                center = aui$head(text = title)
+                center = sh$div(class = "fs-1 h-font text-center", title)
             ),
             aui$row_sidebar(
                 sidebar = sh$div(

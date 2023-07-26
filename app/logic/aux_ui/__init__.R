@@ -6,7 +6,6 @@ box::use(
     app / logic / aux_ui / static / card,
     app / logic / aux_ui / static / layout_column_wrap,
     app / logic / aux_ui / static / container_fluid,
-    app / logic / aux_ui / static / head,
     app / logic / aux_ui / static / rows,
     app / logic / aux_ui / static / sidebars,
     app / logic / aux_ui / static / navboxes,
@@ -37,9 +36,6 @@ layout_column_wrap <- layout_column_wrap$layout_column_wrap
 
 #' @export
 container_fluid <- container_fluid$container_fluid
-
-#' @export
-head <- head$head
 
 #' @export
 sidebar <- sidebars$sidebar
