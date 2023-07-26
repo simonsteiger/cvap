@@ -21,7 +21,7 @@ ui <- function(id, data) {
                     sh$div(
                         class = "d-flex flex-column justify-content-center align-items-center gap-3",
                         sh$tags$img(src = "static/logo_wide.png", width = "420px"),
-                        sh$h1(class = "fs-1 h-font", "Visualiserings- och Analysplattform")
+                        sh$div(class = "fs-1 h-font", "Visualiserings- och Analysplattform")
                     ),
                     NULL
                 )
@@ -38,7 +38,7 @@ ui <- function(id, data) {
                 content = list(
                     NULL,
                     sh$div(
-                        class = "m-3 d-flex flex-row justify-content-center align-items-center",
+                        class = "m-2 d-flex flex-row justify-content-center align-items-center",
                         sh$tags$a(
                             href = "https://www.github.com/simonsteiger/cvap",
                             class = "btn btn-secondary hover",
