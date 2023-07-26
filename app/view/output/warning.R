@@ -3,6 +3,7 @@ box::use(
     dp = dplyr,
     sh = shiny,
     rl = rlang[`%||%`],
+    pr = purrr,
 )
 
 box::use(
@@ -51,51 +52,51 @@ server <- function(id, .data) {
         })
 
         n_deleted <- sh$reactive({
+            # Get the names of läns not already included in small and crit
             remaining <- extract_lans(.data(), nonmissing > 10) %>%
                 `[`(., !. %in% crit_lans() & !. %in% small_lans())
 
-            # print(paste0(crit_lans(), small_lans(), remaining, collapse = "; "))
-
-            21 %>%
-                `-`(., length(crit_lans())) %>%
-                `-`(., length(small_lans())) %>%
-                `-`(., length(remaining))
+            # Check if crit / small / remaining cover all 21 läns
+            # The difference between 21 and their sum is the number of läns deleted in synopsis
+            # (grouping in synopsis will delete läns with no records for given set of filters)
+            21 - pr$reduce(c(length(crit_lans()), length(small_lans()), length(remaining)), `+`)
         })
 
         # Create samplesize icons
         icons <- sh$reactive({
+            # Get number of entries in small_lans()
+            # Check if that number is > 0
             exists_small <- length(small_lans()) > 0
+
+            # Get number of entries in crit_lans()
+            # Add that to the number of already deleted lans
+            # Check if that sum is > 0
             exists_crit <- length(crit_lans()) %>% sum(., n_deleted()) > 0
+
             sh$div(
-                {
-                    if (exists_small) {
-                        ase$iconostasis$samplesmall(
-                            session$ns("exclude_low_n"),
-                            small_lans(),
-                            last_input_small()
-                        )
-                    }
+                if (exists_small) {
+                    ase$iconostasis$samplesmall(
+                        session$ns("exclude_low_n"),
+                        small_lans(),
+                        last_input_small()
+                    )
                 },
-                { # if there is an entry for small AND one for crit OR n_deleted, draw hr
-                    if (exists_small && exists_crit) {
-                        sh$tags$hr()
-                    }
+                if (exists_small && exists_crit) {
+                    sh$tags$hr()
                 },
-                { # Only make crit_lan icon if there are critically small lans
-                    if (exists_crit) {
-                        sh$tagList(
-                            ase$iconostasis$samplecrit(
-                                c(crit_lans(), rep("synopsis-deleted", n_deleted()))
-                            )
+                if (exists_crit) {
+                    sh$tagList(
+                        ase$iconostasis$samplecrit(
+                            c(crit_lans(), rep("synopsis-deleted", n_deleted()))
                         )
-                    }
+                    )
                 }
             )
         })
 
         output$sidebar <- sh$renderUI({
-            # If there's any small, crit, or deleted lans, create warning box
-            if (length(c(small_lans(), crit_lans(), n_deleted())) > 0) {
+            # If any icons were created, display them
+            if (!is.null(unlist(icons()))) {
                 aui$sidebar(
                     header = sh$div(class = "py-card-header", "Varningar"),
                     body = icons()
