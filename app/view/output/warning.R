@@ -63,10 +63,12 @@ server <- function(id, .data) {
         })
 
         # Create samplesize icons
-        icons <- sh$reactive(
+        icons <- sh$reactive({
+            exists_small <- length(small_lans()) > 0
+            exists_crit <- length(crit_lans()) %>% sum(., n_deleted()) > 0
             sh$div(
                 {
-                    if (length(small_lans()) > 0) {
+                    if (exists_small) {
                         ase$iconostasis$samplesmall(
                             session$ns("exclude_low_n"),
                             small_lans(),
@@ -75,12 +77,12 @@ server <- function(id, .data) {
                     }
                 },
                 { # if there is an entry for small AND one for crit OR n_deleted, draw hr
-                    if (length(small_lans()) > 0 & length(c(crit_lans(), n_deleted())) > 0) {
+                    if (exists_small && exists_crit) {
                         sh$tags$hr()
                     }
                 },
                 { # Only make crit_lan icon if there are critically small lans
-                    if (length(c(crit_lans(), n_deleted())) > 0) {
+                    if (exists_crit) {
                         sh$tagList(
                             ase$iconostasis$samplecrit(
                                 c(crit_lans(), rep("synopsis-deleted", n_deleted()))
@@ -89,7 +91,7 @@ server <- function(id, .data) {
                     }
                 }
             )
-        )
+        })
 
         output$sidebar <- sh$renderUI({
             # If there's any small, crit, or deleted lans, create warning box
