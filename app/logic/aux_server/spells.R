@@ -12,6 +12,9 @@ box::use(
     srqlib / srqcolor,
 )
 
+# This module collects functions for translating the filter input to summary text
+# on the downloadable plots
+
 #' @export
 spell_kon <- function(x) {
     x %||% return(NULL)

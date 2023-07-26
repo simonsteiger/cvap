@@ -4,6 +4,7 @@ box::use(
 )
 
 #' @export
+#' Default wrapper of shinyWidgets' prettyRadioButtons with presets
 inp_radio <- function(id, label, choices, selected = NULL) {
     sh$div(
         class = "mb-4 mx-1",
@@ -22,6 +23,7 @@ inp_radio <- function(id, label, choices, selected = NULL) {
 }
 
 #' @export
+#' Preset radio for sex
 inp_radio_sex <- function(id) {
     inp_radio(
         id = id,
@@ -32,6 +34,7 @@ inp_radio_sex <- function(id) {
 }
 
 #' @export
+#' Preset radio for lookback time window
 inp_radio_lookback <- function(id) {
     inp_radio(
         id = id,
@@ -45,6 +48,7 @@ inp_radio_lookback <- function(id) {
 }
 
 #' @export
+#' Preset radio for outcome
 inp_radio_outcome <- function(id, choices) {
     inp_radio(
         id = id,
@@ -54,12 +58,15 @@ inp_radio_outcome <- function(id, choices) {
 }
 
 #' @export
+#' Gather potential options for outcome measures in a list
+#' Just for convenience when passing them in the UI later
 choices <- list(
     das28_cdai = c("DAS28 < 3.2" = "das28_low", "CDAI <= 10" = "cdai_low"),
     glob_haq_smarta = c("Allmän hälsa" = "patientens_globala", "HAQ" = "haq", "Smärta" = "smarta")
 )
 
 #' @export
+#' Preset radio for preparat typ
 inp_radio_prep_typ <- function(id) {
     inp_radio(
         id = id,
@@ -70,6 +77,7 @@ inp_radio_prep_typ <- function(id) {
 }
 
 #' @export
+#' Preset radio for start variable
 inp_radio_start <- function(id) {
     inp_radio(
         id = id,
@@ -83,6 +91,7 @@ inp_radio_start <- function(id) {
 }
 
 #' @export
+#' Preset radio for dxcat
 inp_radio_dxcat <- function(id, choices) {
     inp_radio(
         id = id,

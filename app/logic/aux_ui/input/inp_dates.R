@@ -4,6 +4,7 @@ box::use(
 )
 
 #' @export
+#' Wrapper with presets for single date input
 inp_date <- function(id, label, value = lub$today()) {
     sh$div(
         class = "mb-4 mx-1",
@@ -21,6 +22,7 @@ inp_date <- function(id, label, value = lub$today()) {
 }
 
 #' @export
+#' Wrapper with presets for date range input
 inp_daterange <- function(id, label, start = lub$ymd("2020-01-01"), end = lub$ymd("2021-12-31")) {
     sh$div(
         class = "mb-4 mx-1",

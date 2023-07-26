@@ -10,6 +10,8 @@ box::use(
     aui = app / logic / aux_ui,
 )
 
+# This module collects several functions which create overview icons from user inputs
+
 icon_kon <- function(input, ...) {
     sh$div(
         class = "d-flex flex-row align-items-center gap-3",

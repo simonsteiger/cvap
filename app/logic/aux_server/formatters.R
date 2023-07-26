@@ -3,6 +3,8 @@ box::use(
 )
 
 #' @export
+#' wraps a JavaScript function which accesses name and value parameters and formats them
+#' value is expected to be Län
 format_decimal <- function() {
     hw$JS("
             function(params){
@@ -12,6 +14,8 @@ format_decimal <- function() {
 }
 
 #' @export
+#' wraps a JavaScript function which accesses name and value parameters and formats them
+#' value is expected to be Län
 format_percent <- function() {
     hw$JS("
             function(params){
@@ -28,6 +32,7 @@ format_year <- function() {
 }
 
 #' @export
+#' wraps the previously defined formatters so they can be subsetted based on function args
 format_list <- list(
     decimal = format_decimal,
     percent = format_percent,

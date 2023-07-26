@@ -47,10 +47,11 @@ sift_cols <- function(col, val, var, skip) {
 }
 
 #' @export
+#' Loops over all column names in data which have matched inputs
+#' Creates bool vectors for each as per sift_cols
+#' And combines them into a single one with iterative `&` concatenation
 sift_vars <- function(data, input, skip = NULL) {
     stopifnot(sh$is.reactive(data))
-
-    # TODO add error if user selects no lans
 
     vars <- sh$reactive(colnames(data()))
 
@@ -58,6 +59,9 @@ sift_vars <- function(data, input, skip = NULL) {
         each_var <-
             pr$map(vars(), \(v) sift_cols(data()[[v]], input[[v]], v, skip))
 
+        # Apply `&` iteratively to pairs of bool vectors in each_var
+        # until there is only one bool vector left
+        # This vector will extract those rows where all filter conditions where TRUE
         pr$reduce(each_var, `&`)
     })
 }

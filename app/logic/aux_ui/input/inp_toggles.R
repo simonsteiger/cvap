@@ -3,6 +3,7 @@ box::use(
 )
 
 #' @export
+#' Custom toggle switch
 inp_toggle <- function(id, label, value = FALSE, class = NULL) {
     if (!is.null(class)) {
         class <- paste("form-check form-switch", class, " ")

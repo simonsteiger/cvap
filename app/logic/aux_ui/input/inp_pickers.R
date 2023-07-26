@@ -5,6 +5,7 @@ box::use(
 )
 
 #' @export
+#' Default wrapper of shinyWidgets' pickerInput with presets
 inp_picker <- function(id, label, choices, multiple = TRUE, sort = TRUE, options = list()) {
     sh$div(
         class = "mb-4 mx-1",
@@ -20,6 +21,7 @@ inp_picker <- function(id, label, choices, multiple = TRUE, sort = TRUE, options
 }
 
 #' @export
+#' Preset picker for läns
 inp_picker_lan <- function(id, choices) {
     inp_picker(
         id,
@@ -30,6 +32,7 @@ inp_picker_lan <- function(id, choices) {
 }
 
 #' @export
+#' Preset picker for dxcat
 inp_picker_dxcat <- function(id, choices) {
     inp_picker(
         id,
@@ -40,6 +43,7 @@ inp_picker_dxcat <- function(id, choices) {
 }
 
 #' @export
+#' Preset picker for outcome
 inp_picker_outcome <- function(id, choices) {
     inp_picker(
         id,
@@ -50,6 +54,7 @@ inp_picker_outcome <- function(id, choices) {
 }
 
 #' @export
+#' Hmm, is this in use?
 inp_picker_timestamp <- function(id, choices, unit = NULL) {
     inp_picker(
         id,

@@ -3,6 +3,7 @@ box::use(
 )
 
 #' @export
+#' Default wrapper of sliderInput with presets
 inp_slider <- function(id, label, min, max, value) {
   stopifnot(length(value) == 2)
   stopifnot(is.numeric(c(min, max)))
@@ -20,6 +21,7 @@ inp_slider <- function(id, label, min, max, value) {
 }
 
 #' @export
+#' age sliderInput with preset label, min, max and range
 inp_slider_age <- function(id) {
   inp_slider(
       id = id,
