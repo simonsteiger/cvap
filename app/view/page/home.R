@@ -2,6 +2,8 @@ box::use(
     sh = shiny,
     pr = purrr,
     rt = shiny.router,
+    bsl = bslib,
+    bsi = bsicons,
 )
 
 box::use(
@@ -12,12 +14,16 @@ box::use(
 ui <- function(id, data) {
     sh$tagList(
         aui$container_fluid(
-            aui$row(
-                colwidths = c(2, 8, 2),
-                center = sh$div(
-                    class = "d-flex flex-column justify-content-center align-items-center gap-3",
-                    sh$tags$img(class = "pt-3", src = "static/SRQ_langlogga.png", width = "420px"),
-                    sh$h1(class = "fs-1 h-font", "Visualiserings- och Analysplattform")
+            aui$row2(
+                colwidths = list(3, 6, 3),
+                content = list(
+                    NULL,
+                    sh$div(
+                        class = "d-flex flex-column justify-content-center align-items-center gap-3",
+                        sh$tags$img(src = "static/SRQ_langlogga.png", width = "420px"),
+                        sh$h1(class = "fs-1 h-font", "Visualiserings- och Analysplattform")
+                    ),
+                    NULL
                 )
             ),
             aui$row(
@@ -26,14 +32,47 @@ ui <- function(id, data) {
                     class = "d-flex flex-wrap align-items-stretch justify-content-center",
                     !!!aui$navbox_map(id, data)
                 )
-            ) # ,
-            # aui$row(
-            #    colwidths = c(2, 8, 2),
-            #    center = sh$div(
-            #        class = "h3 d-flex justify-content-center",
-            #        sh$tags$img(src = "static/SRQ_langlogga.png", width = "40%")
-            #    )
-            # )
+            ),
+            aui$row2(
+                colwidths = list(3, 6, 3),
+                content = list(
+                    NULL,
+                    sh$div(
+                        class = "m-3 d-flex flex-row justify-content-center align-items-center",
+                        sh$tags$a(
+                            href = "https://www.github.com/simonsteiger/cvap",
+                            class = "btn btn-secondary hover",
+                            target = "_blank",
+                            sh$div(
+                                class = "d-flex flex-row align-items-center gap-3",
+                                sh$icon(class = "fs-2", "github"),
+                                "Se källkod"
+                            )
+                        )#,
+                        #sh$tags$button(
+                        #    type = "button",
+                        #    style = "pointer-events: none;",
+                        #    class = "btn btn-transparent",
+                        #    sh$div(
+                        #        class = "d-flex flex-row align-items-center gap-3",
+                        #        sh$icon(class = "fs-3 c-success", "arrow-up"),
+                        #        "Patienter + 10 354"
+                        #    )
+                        #),
+                        #sh$tags$button(
+                        #    type = "button",
+                        #    style = "pointer-events: none;",
+                        #    class = "btn btn-transparent",
+                        #    sh$div(
+                        #        class = "d-flex flex-row align-items-center gap-3",
+                        #        sh$icon(class = "fs-3 c-danger", "arrow-down"),
+                        #        "Besök -100 549"
+                        #    )
+                        #)
+                    ),
+                    NULL
+                )
+            )
         )
     )
 }

@@ -54,6 +54,9 @@ row_sidebar <- rows$row_sidebar
 row <- rows$row
 
 #' @export
+row2 <- rows$row2
+
+#' @export
 navbox <- navboxes$navbox
 
 #' @export

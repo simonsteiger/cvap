@@ -12,7 +12,7 @@ light <- bsl$bs_theme(
   primary = "#f8b859",
   secondary = "#e8e9f3",
   success = "#a8e069",
-  info = "#e8e9f3",
+  info = "#ffffff",
   warning = "#f8b859",
   danger = "#c9281d",
   base_font = bsl$font_collection(
