@@ -26,11 +26,15 @@ ui <- function(id, data) {
                     NULL
                 )
             ),
-            aui$row(
+            aui$row2(
                 colwidths = c(0, 12, 0),
-                center = sh$div(
-                    class = "d-flex flex-wrap align-items-stretch justify-content-center",
-                    !!!aui$navbox_map(id, data)
+                content = list(
+                    NULL,
+                    sh$div(
+                        class = "d-flex flex-wrap align-items-stretch justify-content-center",
+                        !!!aui$navbox_map(id, data)
+                    ),
+                    NULL
                 )
             ),
             aui$row2(
@@ -48,8 +52,8 @@ ui <- function(id, data) {
                                 sh$icon(class = "fs-2", "github"),
                                 "Se källkod"
                             )
-                        )#,
-                        #sh$tags$button(
+                        ) # ,
+                        # sh$tags$button(
                         #    type = "button",
                         #    style = "pointer-events: none;",
                         #    class = "btn btn-transparent",
@@ -58,8 +62,8 @@ ui <- function(id, data) {
                         #        sh$icon(class = "fs-3 c-success", "arrow-up"),
                         #        "Patienter + 10 354"
                         #    )
-                        #),
-                        #sh$tags$button(
+                        # ),
+                        # sh$tags$button(
                         #    type = "button",
                         #    style = "pointer-events: none;",
                         #    class = "btn btn-transparent",
@@ -68,7 +72,7 @@ ui <- function(id, data) {
                         #        sh$icon(class = "fs-3 c-danger", "arrow-down"),
                         #        "Besök -100 549"
                         #    )
-                        #)
+                        # )
                     ),
                     NULL
                 )

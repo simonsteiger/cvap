@@ -5,6 +5,7 @@ box::use(
     ts = tidyselect,
     str = stringr,
     fct = forcats,
+    lub = lubridate,
     magrittr[`%>%`],
 )
 
@@ -24,7 +25,8 @@ coverage <- list_df$coverage %>%
     dp$mutate(
         lan = ifelse(lan == "Örebro", "Orebro", lan),
         year = lub$ymd(paste(str$str_remove(year, "Y_"), "12", "31", sep = "-")),
-        outcome = ifelse(is.na(outcome), 0, outcome)
+        outcome = ifelse(is.na(outcome), 0, outcome / 100)
+        # we want percent as decimals at this point
     ) %>%
     dp$select(-Kod)
 

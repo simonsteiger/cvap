@@ -79,7 +79,10 @@ server <- function(id, access_page, data, geo, summary) {
             shj$toggleState("go_input", nrow(sifted()) > 0)
         })
 
-        sifted <- sift$server("input", sh$reactive(data), "lan")
+        sifted <- sh$bindEvent(
+            sift$server("input", sh$reactive(data), "lan"),
+            list(input$go_input, access_page)
+        )
 
         out_stash <- sh$bindEvent(
             stash$server("input", title, "Täckningsgrad RA"),
