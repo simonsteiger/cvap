@@ -47,11 +47,7 @@ ui <- function(id, data) {
 
     sh$tagList(
         aui$container_fluid(
-            aui$row(
-                class_row = "row m-4 d-flex justify-content-center align-items-center",
-                left = sh$div(aui$btn_return(ns("return"))),
-                center = sh$div(class = "fs-1 h-font text-center", title)
-            ),
+            aui$head(ns("return"), title = title),
             aui$row_sidebar(
                 sidebar = aui$sidebar_filter(
                     ns("go_input"), ns("overview"),
