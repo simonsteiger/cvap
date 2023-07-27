@@ -34,7 +34,7 @@ row <- function(left = NULL,
 row2 <- function(content = list(), class = NULL, colwidths = list()) {
     stopifnot(length(content) == length(colwidths))
     stopifnot(is.numeric(unlist(colwidths)))
-    stopifnot(sum(unlist(colwidths)) == 12) # TODO check if all number pairs are 12
+    stopifnot(sum(unlist(colwidths)) == 12)
 
     out <- pr$map(seq_along(content), \(i) {
         sh$div(

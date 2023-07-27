@@ -21,7 +21,7 @@ ui <- function(id, data) {
                     sh$div(
                         class = "d-flex flex-column justify-content-center align-items-center gap-3",
                         sh$tags$img(src = "static/logo_wide.png", width = "420px"),
-                        sh$div(class = "fs-1 h-font", "Visualiserings- och Analysplattform")
+                        sh$div(class = "fs-1 h-font text-center", "Visualiserings- och Analysplattform")
                     ),
                     NULL
                 )

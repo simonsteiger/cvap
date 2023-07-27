@@ -6,6 +6,7 @@ box::use(
     shj = shinyjs,
     dp = dplyr,
     lub = lubridate,
+    ts = tidyselect,
     magrittr[`%>%`],
     rl = rlang[`%||%`],
     str = stringr,
@@ -87,8 +88,19 @@ server <- function(id, data, .var = NULL) {
                 icon = NULL
             )
 
+            # Calculate sample size while excluding samples from lans with < 5 ppl
+            # This is prone to inaccuracy where lan data is further grouped in synopsis
+            # e.g. into Behandlingsstart and Uppföljning
+            # => total n per lan > 5, but < 5 in subgroups
             if (!is.null(input$lan) && nrow(out()) > 0) {
-                n <- sum(!is.na(out()[[input$outcome %||% .var]]))
+                n <- out() %>%
+                    dp$summarise(
+                        nonmissing = sum(!is.na(.data[[input$outcome %||% .var]])),
+                        .by = lan
+                    ) %>%
+                    dp$filter(nonmissing > 5) %>%
+                    dp$pull(nonmissing) %>%
+                    sum()
             } else {
                 n <- 0
             }
