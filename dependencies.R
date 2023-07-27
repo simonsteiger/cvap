@@ -18,6 +18,7 @@ library(ggtext)
 library(shinyFeedback)
 library(shinyjs)
 library(waiter)
+library(palmerpenguins)
 
 # sk dependencies
 library(box)

@@ -46,11 +46,22 @@ sift_cols <- function(col, val, var, skip) {
     }
 }
 
+# For testing purposes only, currently convoluted solution as I don't
+# understand how to test server$sift
+# For the tests to be correct, apply any changes you make to the "real" sift_vars here too
+test_sift_vars <- function(data, input, skip = NULL) {
+  vars <- colnames(data)
+  each_var <- pr$map(vars, \(v) ase$sift_cols(data[[v]], input[[v]], v, skip))
+  pr$reduce(each_var, `&`)
+}
+
 #' @export
 #' Loops over all column names in data which have matched inputs
 #' Creates bool vectors for each as per sift_cols
 #' And combines them into a single one with iterative `&` concatenation
-sift_vars <- function(data, input, skip = NULL) {
+sift_vars <- function(data, input, skip = NULL, test = FALSE) {
+    if (test) return(test_sift_vars(data, input, skip))
+
     stopifnot(sh$is.reactive(data))
 
     vars <- sh$reactive(colnames(data()))
