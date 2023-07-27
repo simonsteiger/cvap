@@ -39,11 +39,11 @@ tt$test_that("vali_date captures nothing if there is no target", {
 
 # check_samplesize
 tt$test_that("check_samplesize returns TRUE if there are more than 5 entries for any lan", {
-  df <- data.frame(lan = c(rep("lan1", 6), rep("lan2", 3), rep("lan3"), 12))
+  df <- data.frame(lan = c(rep("lan1", 6), rep("lan2", 3), rep("lan3", 12)))
   tt$expect_true(ase$check_samplesize(df))
 })
 
 tt$test_that("check_samplesize returns FALSE if there are less than 5 entries for all lan", {
-  df <- data.frame(lan = rep("example-lan", 6))
-  tt$expect_true(ase$check_samplesize(df))
+  df <- data.frame(lan = c(rep("lan1", 2), rep("lan2", 1), rep("lan3", 4)))
+  tt$expect_false(ase$check_samplesize(df))
 })

@@ -8,6 +8,7 @@ box::use(
 
 box::use(
     aui = app / logic / aux_ui,
+    srqlib / srqdict,
 )
 
 # This module collects several functions which create overview icons from user inputs
@@ -61,7 +62,8 @@ icon_start <- function(input, ...) {
     translated <- switch(input,
         "min_inkl_diag" = "inklusion eller diagnos",
         "diagnosdatum1" = "diagnos",
-        "inkluderad" = "inklusion"
+        "inkluderad" = "inklusion",
+        stop("Unknown input")
     )
     sh$div(
         class = "d-flex flex-row align-items-center gap-3",
@@ -73,7 +75,8 @@ icon_prep_typ <- function(input, ...) {
     translated <- switch(input,
         "bioprep" = "bDMARD",
         "csdmard" = "csDMARD",
-        "bDMARD / csDMARD"
+        "bDMARD / csDMARD",
+        stop("Unknown input")
     )
     sh$div(
         class = "d-flex flex-row align-items-center gap-3",
@@ -89,7 +92,8 @@ icon_outcome <- function(input, ...) {
         "haq" = "HAQ",
         "smarta" = "Smärta",
         "per100k" = "Antal per 100 000",
-        "n" = "Total antal"
+        "n" = "Total antal",
+        stop("Unknown input")
     )
     sh$div(
         class = "d-flex flex-row align-items-center gap-3",

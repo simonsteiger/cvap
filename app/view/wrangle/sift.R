@@ -30,6 +30,7 @@ server <- function(id, data, .var = NULL) {
         stopifnot(sh$is.reactive(data))
 
         # This observer only exists if there are timestamp and dxcat inputs
+        # Sets timestamp choices for dxcat on inklusionsmatt_1
         sh$observeEvent(input$dxcat, {
             if (!is.null(input$timestamp) && !is.null(input$dxcat)) {
                 choices <-
