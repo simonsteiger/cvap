@@ -43,3 +43,6 @@ format_list <- formatters$format_list
 
 #' @export
 vali_date <- checks$vali_date
+
+#' @export
+check_samplesize <- checks$check_samplesize

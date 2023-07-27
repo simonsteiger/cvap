@@ -63,32 +63,36 @@ ui <- function(id, data) {
 #' @export
 server <- function(id, access_page, data, geo, summary) {
     sh$moduleServer(id, function(input, output, session) {
+        # Return to home page if return button is clicked
         ase$obs_return(input)
 
+        # Record inputs for later use in plotting and table
+        # This bridges space between input and output namespaces in an... OK way?
+        out_stash <- sh$bindEvent(
+            stash$server("input", title, "Täckningsgrad RA"),
+            list(input$go_input, access_page)
+        )
+
+        # Create icons for input summary on main VAP page
+        # This is only updated whenever a page is accessed or "go_input" is clicked
         out_icons <- sh$bindEvent(
             overview$server("input"),
             list(input$go_input, access_page)
         )
 
-        out_stash <- sh$bindEvent(
-            stash$server("input", title, "Täckningsgrad RA"),
-            list(input$go_input, access_page)
-        )
-
+        # The assertion used in the other VAPs is not useful here
+        # Input data frame consists of summarised data
+        # The check necessary here is only whether there are any rows,
+        # as each row represents a län already
         sh$observe({
             shj$toggleState("go_input", nrow(sifted()) > 0)
         })
 
-        sifted <- sh$bindEvent(
-            sift$server("input", sh$reactive(data), "lan"),
-            list(input$go_input, access_page)
-        )
+        # Create filtered data
+        sifted <- sift$server("input", sh$reactive(data), "lan")
 
-        out_stash <- sh$bindEvent(
-            stash$server("input", title, "Täckningsgrad RA"),
-            list(input$go_input, access_page)
-        )
-
+        # Within läns, sort data by `group`
+        # Triggered by "go_input" and accessing the page
         sum_sort <- sh$bindEvent(
             sort$server(
                 "output",
@@ -98,6 +102,7 @@ server <- function(id, access_page, data, geo, summary) {
             list(input$go_input, access_page)
         )
 
+        # Create table output
         table$server(
             "output",
             sum_sort,
@@ -105,6 +110,7 @@ server <- function(id, access_page, data, geo, summary) {
             arrange = c("lan", "year")
         )
 
+        # Create barplot output
         bar$server(
             "output",
             sum_sort,
@@ -115,6 +121,7 @@ server <- function(id, access_page, data, geo, summary) {
             format = "percent"
         )
 
+        # Create map output
         map$server(
             id = "output",
             .data = sifted,
@@ -125,8 +132,10 @@ server <- function(id, access_page, data, geo, summary) {
             format = "percent"
         )
 
+        # Create overview panel
         output$overview <- sh$renderUI(out_icons())
 
+        # Create summary text output
         output$text <- sh$renderText(summary)
     })
 }

@@ -25,7 +25,7 @@ server <- function(id, title, .var = NULL) {
             list(
                 title = title,
                 subtitle = subtitle(),
-                outcome = input$outcome %||% .var,
+                outcome = input$outcome %||% .var, # either input dependent or manually specified
                 input = input
             )
         })

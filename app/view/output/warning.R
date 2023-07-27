@@ -37,7 +37,7 @@ server <- function(id, .data) {
         small_lans <- sh$reactive({
             sh$req(nrow(.data()) > 0)
             .data() %>%
-                extract_lans(nonmissing %>% dp$between(5, 10))
+                extract_lans(nonmissing %>% dp$between(5, 9))
         })
 
         last_input_small <- sh$eventReactive(small_lans(), {
@@ -53,7 +53,7 @@ server <- function(id, .data) {
 
         n_deleted <- sh$reactive({
             # Get the names of läns not already included in small and crit
-            remaining <- extract_lans(.data(), nonmissing > 10) %>%
+            remaining <- extract_lans(.data(), nonmissing > 9) %>%
                 `[`(., !. %in% crit_lans() & !. %in% small_lans())
 
             # Check if crit / small / remaining cover all 21 läns
@@ -109,11 +109,11 @@ server <- function(id, .data) {
         sh$reactive({
             if (input$exclude_low_n %||% FALSE) {
                 .data() %>%
-                    dp$filter(!lan %in% crit_lans()) %>%
-                    dp$filter(!lan %in% small_lans())
+                    dp$filter(nonmissing >= 10 | lan == "Riket")
+                    # Not sure if we should allow deleting Riket at this stage
             } else {
                 .data() %>%
-                    dp$filter(!lan %in% crit_lans())
+                    dp$filter(nonmissing >= 5)
             }
         })
     })

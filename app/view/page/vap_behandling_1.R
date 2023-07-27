@@ -71,24 +71,34 @@ ui <- function(id, data) {
 #' @export
 server <- function(id, access_page, data, geo, summary) {
     sh$moduleServer(id, function(input, output, session) {
+        # Return to home page if return button is clicked
         ase$obs_return(input)
 
+        # Record inputs for later use in plotting and table
+        # This bridges space between input and output namespaces in an... OK way?
         out_stash <- sh$bindEvent(
             stash$server("input", title, "Antal pågående behandlingar"),
             list(input$go_input, access_page)
         )
 
+        # Assert that there are läns with at least 5 records (including Riket)
+        # Otherwise, disable "go_input" button
         sh$observe({
-            shj$toggleState("go_input", nrow(sifted()) > 0)
+            shj$toggleState("go_input", ase$check_samplesize(sifted()))
         })
 
+        # Create icons for input summary on main VAP page
+        # This is only updated whenever a page is accessed or "go_input" is clicked
         out_icons <- sh$bindEvent(
             overview$server("input"),
             list(input$go_input, access_page)
         )
 
+        # Create filtered data
         sifted <- sift$server("input", sh$reactive(data), "patientkod")
 
+        # Perform a column-independent operation to summarise data, such as dp$n
+        # Triggered by "go_input" and accessing the page
         sum_squash <- sh$bindEvent(
             squash$server(
                 "summary",
@@ -99,12 +109,14 @@ server <- function(id, access_page, data, geo, summary) {
             list(input$go_input, access_page)
         )
 
+        # Within läns, sort data by `group`
         sum_sort <- sort$server(
             "output",
             sum_squash,
             group = "dxcat"
         )
 
+        # Create table output
         table$server(
             "output",
             sum_sort,
@@ -112,6 +124,7 @@ server <- function(id, access_page, data, geo, summary) {
             arrange = c("lan", "dxcat")
         )
 
+        # Create barplot output
         bar$server(
             "output",
             sum_sort,
@@ -120,6 +133,7 @@ server <- function(id, access_page, data, geo, summary) {
             text = title
         )
 
+        # Create map output
         map$server(
             id = "output",
             .data = sum_squash,
@@ -129,8 +143,10 @@ server <- function(id, access_page, data, geo, summary) {
             text = title
         )
 
+        # Create overview panel
         output$overview <- sh$renderUI(out_icons())
 
+        # Create summary text output
         output$text <- sh$renderText(summary)
     })
 }
