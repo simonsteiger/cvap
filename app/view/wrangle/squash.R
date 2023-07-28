@@ -12,12 +12,6 @@ box::use(
 )
 
 #' @export
-ui <- function(id) {
-    ns <- sh$NS(id)
-    sh$tagList()
-}
-
-#' @export
 #' Summary module which reshapes the data frame
 #' in other words, does a summary and not a mutate operation
 server <- function(id, .data, .fn, .by, ...) {

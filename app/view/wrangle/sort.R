@@ -9,7 +9,7 @@ box::use(
 )
 
 box::use(
-    srqlib / srqprep,
+    app / logic / srqlib / srqprep,
 )
 
 #' @export

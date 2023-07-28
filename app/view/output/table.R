@@ -8,7 +8,7 @@ box::use(
 )
 
 box::use(
-    swissknife / sklang[`%//%`],
+    app / logic / swissknife / sklang[`%//%`],
     aui = app / logic / aux_ui,
     ase = app / logic / aux_server,
 )

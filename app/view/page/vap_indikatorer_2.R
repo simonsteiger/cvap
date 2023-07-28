@@ -1,16 +1,6 @@
 box::use(
-    stats,
-    magrittr[`%>%`],
     sh = shiny,
-    bsl = bslib,
-    bsi = bsicons,
     dp = dplyr,
-    rtbl = reactable,
-    e4r = echarts4r,
-    em = echarts4r.maps,
-    sw = shinyWidgets,
-    ht = htmltools,
-    rl = rlang,
     shj = shinyjs,
 )
 

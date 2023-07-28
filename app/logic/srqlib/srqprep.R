@@ -6,6 +6,7 @@ box::use(
     pr = purrr,
     fct = forcats,
     tdr = tidyr,
+    ts = tidyselect,
     magrittr[`%>%`],
 )
 
@@ -179,4 +180,25 @@ prep_line <- function(.data, id_col = "id") {
             line = seq_along(.data[[id_col]]),
             .by = c(patientkod)
         )
+}
+
+#' @export
+prep_riket <- function(.data, .var, .fn, .by, ...) {
+    var <- rl$enquo(.var)
+    by <- rl$enquo(.by)
+    dots <- rl$list2(...)
+
+    # I run into an LHS error if .var is unquoted below
+    # => it becomes a call after enquo
+    # check if var is a call, if so, make it a character again
+    if (is.call(var)) var <- .var
+
+    riket <- .data %>%
+        dp$summarise(
+            lan = "Riket",
+            !!.var := .fn(.data[[var]], !!!dots),
+            .by = ts$all_of(.by)
+        )
+
+    dp$bind_rows(.data, riket)
 }
