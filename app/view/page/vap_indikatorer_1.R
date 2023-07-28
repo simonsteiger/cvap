@@ -9,7 +9,8 @@ box::use(
     app / view / wrangle / sift,
     app / view / wrangle / synopsis,
     app / view / wrangle / sort,
-    app / view / output / table,
+    txt = app / view / output / text,
+    tbl = app / view / output / table,
     app / view / output / bar,
     app / view / output / map,
     app / view / output / overview,
@@ -42,11 +43,8 @@ ui <- function(id, data) {
                 main = sh$tagList(
                     bar$ui(ns("output")),
                     map$ui(ns("output")),
-                    aui$card(
-                        header = sh$div(class = "py-card-header", "Sammanfattning"),
-                        body = sh$textOutput(ns("text"))
-                    ),
-                    table$ui(ns("output"))
+                    txt$ui(ns("output")),
+                    tbl$ui(ns("output"))
                 )
             )
         )
@@ -110,7 +108,7 @@ server <- function(id, access_page, data, geo, summary) {
         )
 
         # Create table output
-        table$server(
+        tbl$server(
             "output",
             sum_synopsis,
             stash = out_stash,
@@ -138,10 +136,10 @@ server <- function(id, access_page, data, geo, summary) {
             format = "percent"
         )
 
+        # Create text output
+        txt$server("output", summary)
+
         # Create overview panel
         output$overview <- sh$renderUI(out_icons())
-
-        # Create summary text output
-        output$text <- sh$renderText(summary)
     })
 }
