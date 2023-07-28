@@ -8,10 +8,6 @@ box::use(
     magrittr[`%>%`],
 )
 
-box::use(
-    srqlib / srqcolor,
-)
-
 # This module collects functions for translating the filter input to summary text
 # on the downloadable plots
 

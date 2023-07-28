@@ -14,17 +14,10 @@ box::use(
 )
 
 box::use(
-    srqlib / srqcolor,
+    app / logic / srqlib / srqcolor,
     app / logic / theme,
     aui = app / logic / aux_ui,
     ase = app / logic / aux_server,
-)
-
-palette <- c(
-    "#32575c",
-    "#4f9e63",
-    "#9fd685",
-    "#c6d9bd"
 )
 
 #' @export
@@ -148,6 +141,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                     e4r$e_charts_(x, timeline = if (!is.null(group)) TRUE else FALSE) %>%
                     e4r$e_map_register("Sweden", geo$json) %>%
                     e4r$e_map_(y, map = "Sweden", nameProperty = "NAME_1") %>%
+                    # Tooltip would need to be properly formatted for both map and timeline
                     #e4r$e_tooltip(
                     #    formatter = ase$format_list[[format]](),
                     #    textStyle = list(fontFamily = "Roboto")
@@ -155,7 +149,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                     e4r$e_visual_map_(
                         min = min(out[[y]]),
                         max = max(out[[y]]),
-                        color = palette,
+                        color = srqcolor$pal_list$abyss %>% srqcolor$reverse(),
                         textStyle = list(fontFamily = "Roboto")
                     ) %>%
                     e4r$e_theme_custom("app/static/echarts_theme.json")

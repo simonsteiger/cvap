@@ -11,8 +11,8 @@ box::use(
 
 box::use(
     app / logic / aux_server / checks,
-    srqlib / srqprep,
-    srqlib / srqdict,
+    app / logic / srqlib / srqprep,
+    app / logic / srqlib / srqdict,
 )
 
 #' @export

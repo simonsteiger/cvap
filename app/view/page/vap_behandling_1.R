@@ -1,21 +1,10 @@
 box::use(
-    stats,
-    magrittr[`%>%`],
     sh = shiny,
-    bsl = bslib,
-    bsi = bsicons,
     dp = dplyr,
-    rtbl = reactable,
-    e4r = echarts4r,
-    em = echarts4r.maps,
-    sw = shinyWidgets,
-    ht = htmltools,
-    rl = rlang,
     shj = shinyjs,
 )
 
 box::use(
-    swissknife / skwrangle[`%per100k%`], # IMPORT skwrangle
     aui = app / logic / aux_ui,
     ase = app / logic / aux_server,
     app / view / wrangle / sift,

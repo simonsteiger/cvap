@@ -16,16 +16,8 @@ box::use(
 
 box::use(
     ase = app / logic / aux_server,
-    srqlib / srqprep,
+    app / logic / srqlib / srqprep,
 )
-
-#' @export
-ui <- function(id, ...) {
-    ns <- sh$NS(id)
-    sh$tagList(
-        ...
-    )
-}
 
 #' @export
 server <- function(id, .data, .fn, .var = "outcome", .by, riket = TRUE, ...) {

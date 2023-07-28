@@ -9,7 +9,7 @@ box::use(
 
 box::use(
     aui = app / logic / aux_ui,
-    srqlib / srqdict,
+    app / logic / srqlib / srqdict,
 )
 
 # This module collects several functions which create overview icons from user inputs

@@ -9,7 +9,7 @@ box::use(
 box::use(
     aui = app / logic / aux_ui,
     ase = app / logic / aux_server,
-    swissknife / sklang[`%//%`],
+    app / logic / swissknife / sklang[`%//%`],
 )
 
 # Helper to get all lans with nonmissing values below `n`
