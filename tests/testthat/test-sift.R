@@ -8,6 +8,7 @@ box::use(
 )
 
 box::use(
+  ase = app / logic / aux_server,
   app / view / wrangle / sift,
 )
 
@@ -20,14 +21,14 @@ tt$test_that("sift_vars requires data as reactive", {
 tt$test_that("sift_vars subsets numeric ranges correctly", {
   input <- list(year = c(2007, 2009), body_mass_g = c(3700, 4400))
   ref <- dp$filter(penguins, year >= 2007 & year <= 2009, body_mass_g >= 3700 & body_mass_g <= 4400)
-  sieve <- test_sift_vars(penguins, input)
+  sieve <- ase$sift_vars(penguins, input, test = TRUE)
   tt$expect_equal(ref, penguins[sieve, ])
 })
 
 tt$test_that("sift_vars subsets strings correctly", {
   input <- list(species = c("Adelie", "Gentoo"), island = "Biscoe")
   ref <- dp$filter(penguins, species %in% c("Adelie", "Gentoo") & island %in% "Biscoe")
-  sieve <- test_sift_vars(penguins, input)
+  sieve <- ase$sift_vars(penguins, input, test = TRUE)
   tt$expect_equal(ref, penguins[sieve, ])
 })
 
@@ -36,6 +37,25 @@ tt$test_that("sift_vars subsets strings correctly", {
 tt$test_that("sift_vars doesn't filter `skip`ed variables", {
   input <- list(species = c("Adelie", "Gentoo"), island = "Biscoe")
   ref <- dp$filter(penguins, species %in% c("Adelie", "Gentoo"))
-  sieve <- test_sift_vars(penguins, input, skip = "island")
+  sieve <- ase$sift_vars(penguins, input, skip = "island", test = TRUE)
   tt$expect_equal(ref, penguins[sieve, ])
+})
+
+tt$test_that("count_nonmissing_above_cutoff adds values above cutoff", {
+  input <- list(outcome = "carb", lan = "not-null")
+  alt_cars <- dp$rename(mtcars, lan = cyl)
+  ref <- dp$count(alt_cars)[["n"]]
+  tt$expect_equal(ref, ase$count_nonmissing_above_cutoff(alt_cars, input, NULL))
+})
+
+tt$test_that("count_nonmissing_above_cutoff excludes values below cutoff", {
+  input <- list(outcome = "cyl", lan = "not-null")
+  alt_cars <- dp$rename(mtcars, lan = carb)
+  ref <- dp$count(alt_cars, lan) %>% dp$filter(n > 4) %>% dp$pull(n) %>% sum()
+  tt$expect_equal(ref, ase$count_nonmissing_above_cutoff(alt_cars, input, NULL))
+})
+
+tt$test_that("count_nonmissing_above_cutoff returns 0 if input$lan is NULL", {
+  input <- list(outcome = "cyl", lan = NULL)
+  tt$expect_equal(0, ase$count_nonmissing_above_cutoff(mtcars, input, NULL))
 })

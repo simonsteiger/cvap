@@ -53,7 +53,7 @@ sift_cols <- function(col, val, var, skip) {
 # For the tests to be correct, apply any changes you make to the "real" sift_vars here too
 test_sift_vars <- function(data, input, skip = NULL) {
     vars <- colnames(data)
-    each_var <- pr$map(vars, \(v) ase$sift_cols(data[[v]], input[[v]], v, skip))
+    each_var <- pr$map(vars, \(v) sift_cols(data[[v]], input[[v]], v, skip))
     pr$reduce(each_var, `&`)
 }
 
@@ -124,7 +124,7 @@ maybe_lookback <- function(.data, input, .var) {
 #' => total n per lan > 5, but < 5 in subgroups
 count_nonmissing_above_cutoff <- function(.data, input, .var) {
     if (!is.null(input$lan) && nrow(.data) > 0) {
-        n <- .data %>%
+        .data %>%
             dp$summarise(
                 nonmissing = sum(!is.na(.data[[input$outcome %||% .var]])),
                 .by = lan
@@ -133,7 +133,7 @@ count_nonmissing_above_cutoff <- function(.data, input, .var) {
             dp$pull(nonmissing) %>%
             sum()
     } else {
-        n <- 0
+        0
     }
 }
 
