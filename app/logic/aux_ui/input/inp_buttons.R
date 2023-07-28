@@ -4,6 +4,26 @@ box::use(
 )
 
 #' @export
+btn_return <- function(id) {
+    sh$actionButton(
+        id,
+        label = "Tillbaka",
+        icon = sh$icon("angles-left"),
+        class = "hover"
+    )
+}
+
+#' @export
+#' Download the object with `id` as CSV
+btn_download_csv <- function(id) {
+    sh$tags$button(
+        class = "btn btn-secondary hover",
+        sh$icon("download"), "Download",
+        onclick = paste0("Reactable.downloadDataCSV('", ns("table"), "')")
+    )
+}
+
+#' @export
 btn_modal <- function(id, label, modal_title, footer_confirm = NULL, footer_dismiss = NULL, ..., modal_summary = NULL) {
     dots <- rl$list2(...)
 

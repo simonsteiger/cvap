@@ -14,5 +14,5 @@ tt$test_that("iconostasis creates correct number of icons for valid input", {
 
 tt$test_that("iconostasis errors when an input name has no matching icon function", {
   input <- list(kon = "Man", outcome = "n", lan = c("a", "b", "c"), unknown = c(1, 2, 3))
-  tt$expect_error(length(pr$map2(names(input), input, \(x, y) iconostasis[[x]](y))))
+  tt$expect_error(length(pr$map2(names(input), input, \(x, y) ase$iconostasis[[x]](y))))
 })

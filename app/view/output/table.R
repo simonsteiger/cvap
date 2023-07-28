@@ -57,7 +57,11 @@ ui <- function(id) {
                 "Infotext om tabell"
             )
         ),
-        body = rtbl$reactableOutput(ns("table"))
+        body = rtbl$reactableOutput(ns("table")),
+        footer = sh$div(
+            class = "d-flex flex-row align-items-center justify-content-start",
+            sh$tags$button(class = "btn btn-secondary hover", sh$icon("download"), "Download", onclick = paste0("Reactable.downloadDataCSV('", ns("table"), "')"))
+        )
     )
 }
 

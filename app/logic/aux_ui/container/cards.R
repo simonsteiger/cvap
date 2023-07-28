@@ -5,8 +5,20 @@ box::use(
 )
 
 box::use(
-    app / logic / aux_ui / static / btn_modal[...]
+    app / logic / aux_ui / input / inp_buttons[btn_modal]
 )
+
+#' @export
+#' A vanilla card container for VAPs
+card <- function(header = NULL, body = NULL, footer = NULL) {
+    bsl$card(
+        bsl$card_header(header),
+        bsl$card_body(body),
+        bsl$card_footer(footer),
+        min_height = 650,
+        full_screen = TRUE
+    )
+}
 
 #' @export
 sidebar <- function(header = NULL, body = NULL, ...) {

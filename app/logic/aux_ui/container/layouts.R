@@ -2,7 +2,20 @@ box::use(
     sh = shiny,
     rl = rlang[`%||%`],
     pr = purrr,
+    ht = htmltools,
 )
+
+box::use(
+    app / logic / aux_ui / input / inp_buttons[btn_return],
+)
+
+#' @export
+container_fluid <- function(...) {
+    sh$div(
+        class = "container-fluid",
+        ...
+    )
+}
 
 #' @export
 row <- function(left = NULL,
@@ -79,5 +92,28 @@ row_sidebar <- function(sidebar, main) {
                 )
             )
         )
+    )
+}
+
+#' @export
+head <- function(id, title) {
+    row2(
+        class = "row py-4 m-4 d-flex justify-content-center align-items-center",
+        colwidths = list(2, 8, 2),
+        content = list(
+            sh$div(btn_return(id)),
+            sh$div(class = "fs-1 h-font text-center", title),
+            sh$div(class = "justify-content-end", sh$img(src = "static/logo_wide.png", width = "100%"))
+        )
+    )
+}
+
+#' @export
+layout_column_wrap <- function(..., grid_template_columns = "1fr 1fr") {
+    bsl$layout_column_wrap(
+        class = "my-3",
+        width = NULL, height = 650,
+        style = ht$css(grid_template_columns = grid_template_columns),
+        ...
     )
 }

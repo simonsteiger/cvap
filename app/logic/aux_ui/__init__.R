@@ -1,15 +1,8 @@
 box::use(
-    app / logic / aux_ui / static / btn_return,
-    app / logic / aux_ui / static / btn_dropdown,
-    app / logic / aux_ui / static / btn_modal,
-    app / logic / aux_ui / static / btn_popover,
-    app / logic / aux_ui / static / card,
-    app / logic / aux_ui / static / layout_column_wrap,
-    app / logic / aux_ui / static / container_fluid,
-    app / logic / aux_ui / static / heads,
-    app / logic / aux_ui / static / rows,
-    app / logic / aux_ui / static / sidebars,
-    app / logic / aux_ui / static / navboxes,
+    app / logic / aux_ui / container / cards,
+    app / logic / aux_ui / container / layouts,
+    app / logic / aux_ui / container / navboxes,
+    app / logic / aux_ui / input / inp_buttons,
     app / logic / aux_ui / input / inp_dates,
     app / logic / aux_ui / input / inp_sliders,
     app / logic / aux_ui / input / inp_toggles,
@@ -18,43 +11,40 @@ box::use(
 )
 
 #' @export
-btn_return <- btn_return$btn_return
+btn_return <- inp_buttons$btn_return
 
 #' @export
-btn_dropdown <- btn_dropdown$btn_dropdown
+btn_modal <- inp_buttons$btn_modal
 
 #' @export
-btn_modal <- btn_modal$btn_modal
+btn_download_csv <- inp_buttons$btn_download_csv
 
 #' @export
-btn_popover <- btn_popover$btn_popover
+card <- cards$card
 
 #' @export
-card <- card$card
+head <- layouts$head
 
 #' @export
-head <- heads$head
+layout_column_wrap <- layouts$layout_column_wrap
 
 #' @export
-layout_column_wrap <- layout_column_wrap$layout_column_wrap
+container_fluid <- layouts$container_fluid
 
 #' @export
-container_fluid <- container_fluid$container_fluid
+sidebar <- cards$sidebar
 
 #' @export
-sidebar <- sidebars$sidebar
+sidebar_filter <- cards$sidebar_filter
 
 #' @export
-sidebar_filter <- sidebars$sidebar_filter
+row_sidebar <- layouts$row_sidebar
 
 #' @export
-row_sidebar <- rows$row_sidebar
+row <- layouts$row
 
 #' @export
-row <- rows$row
-
-#' @export
-row2 <- rows$row2
+row2 <- layouts$row2
 
 #' @export
 navbox <- navboxes$navbox
