@@ -14,8 +14,8 @@ box::use(
     ase = app / logic / aux_server,
     aui = app / logic / aux_ui,
     app / logic / theme,
-    srqlib / srqcolor,
-    srqlib / srqauto,
+    app / logic / srqlib / srqcolor,
+    app / logic / srqlib / srqauto,
 )
 
 #' @export
@@ -105,8 +105,9 @@ server <- function(id,
                 # TODO JS formatter needs to be adjusted to grab correct values
                 e4r$e_tooltip(textStyle = list(fontFamily = "Roboto")) %>%
                 e4r$e_aria(enabled = input$decal, decal = list(show = TRUE)) %>% # decal patterns
-                e4r$e_theme_custom("app/static/echarts_theme.json") %>%
-                e4r$e_mark_line(data = list(type = "average", name = "AVG")) # EXPERIMENTAL
+                e4r$e_theme_custom("app/static/echarts_theme.json") #%>%
+                # e4r$e_mark_line(data = list(type = "average", name = "AVG")) # EXPERIMENTAL
+                # Instead figure out the necessary JS to make "Riket" bold
 
             if (!is.null(format)) {
                 out %>%
@@ -123,7 +124,7 @@ server <- function(id,
         res_export <- sh$reactive({
             scale_y <- gg$scale_y_continuous(
                 name = NULL,
-                labels = srqauto$guess_label_num("y", out()[[y]]) # IMPORT srqauto
+                labels = srqauto$guess_label_num("y", out()[[y]])
             )
 
             gg$ggplot(out(), gg$aes(.data[[x]], .data[[y]])) +

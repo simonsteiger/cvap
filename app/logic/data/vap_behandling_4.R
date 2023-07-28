@@ -10,9 +10,9 @@ box::use(
 )
 
 box::use(
-    ski = swissknife / skinit, # dl data from server in deployment
-    srqlib / srqdict, # include in project for deployment?
-    srqlib / srqprep, # include in project for deployment?
+    ski = app / logic / swissknife / skinit,
+    app / logic / srqlib / srqdict,
+    app / logic / srqlib / srqprep,
 )
 
 # here goes data base download later

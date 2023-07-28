@@ -10,7 +10,7 @@ box::use(
 )
 
 box::use(
-    ski = swissknife / skinit, # dl data from server in deployment
+    ski = app / logic / swissknife / skinit,
 )
 
 # here goes data base download later

@@ -6,7 +6,7 @@ box::use(
 )
 
 box::use(
-    swissknife / sklang[`%//%`, `%na?%`],
+    app / logic / swissknife / sklang[`%//%`, `%na?%`],
 )
 
 #' @export

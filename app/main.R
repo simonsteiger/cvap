@@ -20,8 +20,8 @@ box::use(
 )
 
 box::use(
-  ski = swissknife / skinit,
-  swissknife / sklang[`%//%`],
+  ski = app / logic / swissknife / skinit,
+  app / logic / swissknife / sklang[`%//%`],
   aui = app / logic / aux_ui,
   app / logic / theme,
   app / logic / data / summaries,

@@ -7,10 +7,9 @@ box::use(
 )
 
 box::use(
-    ski = swissknife / skinit,
-    srqlib / srqprep,
-    srqlib / srqdate,
-    srqlib / srqdict,
+    ski = app / logic / swissknife / skinit,
+    app / logic / srqlib / srqprep,
+    app / logic / srqlib / srqdict,
 )
 
 ski$read_dir("/Users/simonsteiger/Desktop/data/fst/")
@@ -28,7 +27,7 @@ out <- pr$map(c("min_inkl_diag", "diagnosdatum1", "inkluderad"), \(t) {
     out %>%
         dp$mutate(start = factor(t)) %>%
         srqprep$prep_dynamic_groups(
-            .start = srqdate$no_limit,
+            .start = lub$ymd("1999-01-01"),
             .end = lub$today(),
             .start_var = "symtomdebut_1",
             .end_var = t,

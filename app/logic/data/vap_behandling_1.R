@@ -9,7 +9,7 @@ box::use(
 box::use(
     srqlib / srqdict,
     srqlib / srqprep,
-    ski = swissknife / skinit,
+    ski = app / logic / swissknife / skinit,
 )
 
 ski$read_dir("/Users/simonsteiger/Desktop/data/fst/")

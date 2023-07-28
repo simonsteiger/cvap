@@ -7,7 +7,7 @@ box::use(
 )
 
 box::use(
-    ski = swissknife / skinit,
+    ski = app / logic / swissknife / skinit,
 )
 
 ski$read_dir("/Users/simonsteiger/Desktop/data/fst/")
