@@ -13,7 +13,7 @@ box::use(
 #' Validate if the date input is a valid date
 vali_date <- function(input) {
     # These are the candidates for date inputs
-    options <- c("inkluderad", "ordinerat", "ongoing")
+    options <- c("inkluderad", "ordinerat", "ongoing", "year") # year is for `coverage` only
 
     var <- `%//%`( # Check if length of first arg is 0, if TRUE, return second arg
         options[options %in% names(input)],

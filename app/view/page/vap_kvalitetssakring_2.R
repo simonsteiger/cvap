@@ -36,16 +36,13 @@ ui <- function(id, data) {
     inputs <- sh$tagList(
         aui$inp_daterange(sh$NS(ns("input"), "year"), "Välj tidsfönster"),
         aui$inp_picker_lan(sh$NS(ns("input"), "lan"), unique(data$lan)),
-        sift$ui(ns("input")) # outputs error when no lan selected
     )
 
     sh$tagList(
         aui$container_fluid(
             aui$head(ns("return"), title = title),
             aui$row_sidebar(
-                sidebar = sh$div(
-                    aui$sidebar_filter(ns("go_input"), ns("overview"), inputs)
-                ),
+                sidebar = sift$ui(ns("input"), ns("go_input"), ns("overview"), inputs),
                 main = sh$tagList(
                     bar$ui(ns("output")),
                     map$ui(ns("output")),
@@ -89,7 +86,7 @@ server <- function(id, access_page, data, geo, summary) {
         })
 
         # Create filtered data
-        sifted <- sift$server("input", sh$reactive(data), "lan")
+        sifted <- sift$server("input", sh$reactive(data), "lan", button = FALSE)
 
         # Within läns, sort data by `group`
         # Triggered by "go_input" and accessing the page

@@ -4,6 +4,7 @@ box::use(
     dp = dplyr,
     rl = rlang,
     pr = purrr,
+    str = stringr,
 )
 
 box::use(
@@ -72,11 +73,11 @@ icon_start <- function(input, ...) {
 }
 
 icon_prep_typ <- function(input, ...) {
+    stopifnot(str$str_detect(input, "dmard|bioprep"))
     translated <- switch(input,
         "bioprep" = "bDMARD",
         "csdmard" = "csDMARD",
-        "bDMARD / csDMARD",
-        stop("Unknown input")
+        "bDMARD / csDMARD"
     )
     sh$div(
         class = "d-flex flex-row align-items-center gap-3",

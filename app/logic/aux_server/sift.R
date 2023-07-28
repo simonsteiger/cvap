@@ -4,11 +4,13 @@ box::use(
     lub = lubridate,
     pr = purrr,
     dp = dplyr,
+    shf = shinyFeedback,
     rl = rlang[`%||%`],
     magrittr[`%>%`],
 )
 
 box::use(
+    app / logic / aux_server / checks,
     srqlib / srqprep,
     srqlib / srqdict,
 )
@@ -50,9 +52,9 @@ sift_cols <- function(col, val, var, skip) {
 # understand how to test server$sift
 # For the tests to be correct, apply any changes you make to the "real" sift_vars here too
 test_sift_vars <- function(data, input, skip = NULL) {
-  vars <- colnames(data)
-  each_var <- pr$map(vars, \(v) ase$sift_cols(data[[v]], input[[v]], v, skip))
-  pr$reduce(each_var, `&`)
+    vars <- colnames(data)
+    each_var <- pr$map(vars, \(v) ase$sift_cols(data[[v]], input[[v]], v, skip))
+    pr$reduce(each_var, `&`)
 }
 
 #' @export
@@ -60,7 +62,9 @@ test_sift_vars <- function(data, input, skip = NULL) {
 #' Creates bool vectors for each as per sift_cols
 #' And combines them into a single one with iterative `&` concatenation
 sift_vars <- function(data, input, skip = NULL, test = FALSE) {
-    if (test) return(test_sift_vars(data, input, skip))
+    if (test) {
+        return(test_sift_vars(data, input, skip))
+    }
 
     stopifnot(sh$is.reactive(data))
 
@@ -113,3 +117,64 @@ maybe_lookback <- function(.data, input, .var) {
     }
 }
 
+#' @export
+#' Calculate sample size while excluding samples from lans with < 5 ppl
+#' This is prone to inaccuracy where lan data is further grouped in synopsis
+#' e.g. into Behandlingsstart and Uppföljning
+#' => total n per lan > 5, but < 5 in subgroups
+count_nonmissing_above_cutoff <- function(.data, input, .var) {
+    if (!is.null(input$lan) && nrow(.data) > 0) {
+        n <- .data %>%
+            dp$summarise(
+                nonmissing = sum(!is.na(.data[[input$outcome %||% .var]])),
+                .by = lan
+            ) %>%
+            dp$filter(nonmissing > 5) %>%
+            dp$pull(nonmissing) %>%
+            sum()
+    } else {
+        n <- 0
+    }
+}
+
+#' @export
+#' Counts remaining cases after filtering and displays result as a pseudo-button
+#' Also warns if invalid date selected and / or no lans selected
+sift_feedback <- function(.data, input, .var, button) {
+    stopifnot(!sh$is.reactive(.data)) # non reactive required
+
+    check_date <- checks$vali_date(input)
+
+    # Warn if dates invalid
+    shf$feedbackDanger(
+        check_date$var,
+        !check_date$inrange,
+        "Välj två olika datum mellan 1999 och idag.",
+        icon = NULL
+    )
+
+    # Warn if no lan selected
+    shf$feedbackDanger(
+        "lan",
+        is.null(input$lan),
+        "Välj minst ett län.",
+        session = session
+    )
+
+    n <- count_nonmissing_above_cutoff(.data, input, .var)
+
+    if (!button) {
+        return(NULL)
+    }
+
+    sh$tags$button(
+        type = "button",
+        style = "pointer-events: none;",
+        class = ifelse(n > 0, "btn btn-secondary", "btn btn-danger"),
+        sh$div(
+            class = "d-flex flex-row align-items-center gap-2",
+            if (n == 0) sh$icon("users-slash") else sh$icon("users"),
+            if (n == 0) "Ingen data, anpassa urval" else paste0("Antal observationer: ", n)
+        )
+    )
+}

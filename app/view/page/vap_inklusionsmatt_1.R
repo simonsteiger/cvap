@@ -41,7 +41,6 @@ ui <- function(id, data) {
         aui$inp_slider_age(sh$NS(ns("input"), "alder")),
         aui$inp_picker_timestamp(sh$NS(ns("input"), "timestamp"), levels(data$timestamp)),
         aui$inp_picker_lan(sh$NS(ns("input"), "lan"), unique(data$lan)),
-        sift$ui(ns("input")) # outputs error when no lan selected
     )
 
     sh$tagList(
@@ -49,11 +48,7 @@ ui <- function(id, data) {
             aui$head(ns("return"), title = title),
             aui$row_sidebar(
                 sidebar = sh$div(
-                    aui$sidebar_filter(
-                        ns("go_input"), ns("overview"),
-                        inputs,
-                        modal_summary = sh$htmlOutput(sh$NS(ns("input"), "n_cases"))
-                    ),
+                    sift$ui(ns("input"), ns("go_input"), ns("overview"), inputs),
                     warning$ui(ns("warning"))
                 ),
                 main = sh$tagList(

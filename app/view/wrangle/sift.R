@@ -13,19 +13,22 @@ box::use(
 )
 
 box::use(
+    aui = app / logic / aux_ui,
     ase = app / logic / aux_server,
 )
 
 #' @export
-ui <- function(id) {
+ui <- function(id, id_go_input, id_overview, inputs) {
     ns <- sh$NS(id)
-    sh$tagList(
-        sh$textOutput(ns("no_lan")), # output of warning when no lan selected
+    aui$sidebar_filter(
+        id_go_input, id_overview,
+        inputs,
+        modal_summary = sh$htmlOutput(ns("feedback"))
     )
 }
 
 #' @export
-server <- function(id, data, .var = NULL) {
+server <- function(id, data, .var = NULL, button = TRUE) {
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(data))
 
@@ -52,16 +55,6 @@ server <- function(id, data, .var = NULL) {
             }
         })
 
-        # Send a warning to user if no läns selected
-        no_lan <- sh$reactive(
-            shf$feedbackDanger(
-                "lan",
-                is.null(input$lan),
-                "Välj minst ett län.",
-                session = session
-            )
-        )
-
         # Create bool filter vector
         sieve <- ase$sift_vars(data, input)
 
@@ -76,51 +69,9 @@ server <- function(id, data, .var = NULL) {
             }
         })
 
-        # check rows of data frame unless lan is NULL (NULL means no filter in sift_vars)
-        # if not NULL, count
-        # else, 0
-        n_cases <- sh$reactive({
-            check_date <- ase$vali_date(input)
+        feedback <- sh$reactive(ase$sift_feedback(out(), input, .var, button))
 
-            shf$feedbackDanger(
-                check_date$var,
-                !check_date$inrange,
-                "Välj två olika datum mellan 1999 och idag.",
-                icon = NULL
-            )
-
-            # Calculate sample size while excluding samples from lans with < 5 ppl
-            # This is prone to inaccuracy where lan data is further grouped in synopsis
-            # e.g. into Behandlingsstart and Uppföljning
-            # => total n per lan > 5, but < 5 in subgroups
-            if (!is.null(input$lan) && nrow(out()) > 0) {
-                n <- out() %>%
-                    dp$summarise(
-                        nonmissing = sum(!is.na(.data[[input$outcome %||% .var]])),
-                        .by = lan
-                    ) %>%
-                    dp$filter(nonmissing > 5) %>%
-                    dp$pull(nonmissing) %>%
-                    sum()
-            } else {
-                n <- 0
-            }
-
-            sh$tags$button(
-                type = "button",
-                style = "pointer-events: none;",
-                class = ifelse(n > 0, "btn btn-secondary", "btn btn-danger"),
-                sh$div(
-                    class = "d-flex flex-row align-items-center gap-2",
-                    if (n == 0) sh$icon("users-slash") else sh$icon("users"),
-                    if (n == 0) "Ingen data, anpassa urval" else paste0("Antal observationer: ", n)
-                )
-            )
-        })
-
-        output$no_lan <- sh$renderText(no_lan())
-
-        output$n_cases <- sh$renderUI(n_cases())
+        output$feedback <- sh$renderUI(feedback())
 
         out
     })

@@ -24,6 +24,12 @@ maybe_lookback <- sift$maybe_lookback
 maybe_ongoing <- sift$maybe_ongoing
 
 #' @export
+count_nonmissing_above_cutoff <- sift$count_nonmissing_above_cutoff
+
+#' @export
+sift_feedback <- sift$sift_feedback
+
+#' @export
 create_subtitle <- spells$create_subtitle
 
 #' @export

@@ -8,14 +8,23 @@ box::use(
 )
 
 box::use(
-    srqlib / srqdict,
-    srqlib / srqprep,
+    app / logic / srqlib / srqdict,
+    app / logic / srqlib / srqprep,
 )
 
 #' @export
-ui <- function(id) {
-    ns <- sh$NS(id)
-    sh$tagList()
+lookback <- function(.data, input, .var = NULL) {
+    stopifnot(!sh$is.reactive(.data)) # no reactive input
+    .data %>%
+        dp$rename(outcome = .data[[.var %||% input$outcome]]) %>%
+        # separately get rid of missing outcome values to avoid picking NA outcomes
+        dp$filter(!is.na(outcome)) %>%
+        dp$filter(
+            !!srqdict$fil_ongoing(input$ongoing),
+            datum >= input$ongoing - as.numeric(input$lookback) * lub$dyears(1)
+        ) %>%
+        dp$arrange(patientkod, dp$desc(datum)) %>%
+        dp$distinct(patientkod, .keep_all = TRUE)
 }
 
 #' @export
@@ -24,16 +33,7 @@ server <- function(id, .data, .var = NULL) {
         stopifnot(sh$is.reactive(.data))
 
         sh$reactive({
-            .data() %>%
-                dp$rename(outcome = .data[[.var %||% input$outcome]]) %>%
-                # separately get rid of missing outcome values to avoid picking NA outcomes
-                dp$filter(!is.na(outcome)) %>%
-                dp$filter(
-                    !!srqdict$fil_ongoing(input$ongoing),
-                    datum >= input$ongoing - as.numeric(input$lookback) * lub$dyears(1)
-                ) %>%
-                dp$arrange(patientkod, dp$desc(datum)) %>%
-                dp$distinct(patientkod, .keep_all = TRUE)
+            lookback(.data(), input, .var)
         })
     })
 }

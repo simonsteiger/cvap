@@ -6,14 +6,8 @@ box::use(
 )
 
 box::use(
-    srqlib / srqprep,
+    app / logic / srqlib / srqprep,
 )
-
-#' @export
-ui <- function(id) {
-    ns <- sh$NS(id)
-    sh$tagList()
-}
 
 #' @export
 server <- function(id, .data) {
