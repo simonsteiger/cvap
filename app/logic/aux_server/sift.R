@@ -161,6 +161,14 @@ sift_feedback <- function(.data, input, .var, button) {
         session = session
     )
 
+    # Warn if no dxcat selected, currently does not prevent `go`
+    shf$feedbackDanger(
+        "dxcat",
+        is.null(input$dxcat),
+        "Välj minst en diagnos.",
+        session = session
+    )
+
     n <- count_nonmissing_above_cutoff(.data, input, .var)
 
     if (!button) {

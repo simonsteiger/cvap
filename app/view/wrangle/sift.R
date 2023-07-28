@@ -58,9 +58,17 @@ server <- function(id, data, .var = NULL, button = TRUE) {
         # Create bool filter vector
         sieve <- ase$sift_vars(data, input)
 
+        # Check if any of the existing inputs is NULL
+        # Iterate over input names, use these to index into input and check if each value is NULL
+        # Then collapse resulting bool vector into single bool with `|`
+        any_input_null <- sh$reactive({
+            null_inputs <- pr$map_lgl(names(input), \(x) is.null(input[[x]]))
+            pr$reduce(null_inputs, `|`)
+        })
+
         # Basic filter with sieve vector
         out <- sh$reactive({
-            if (!ase$vali_date(input)$inrange || is.null(input$lan)) {
+            if (!ase$vali_date(input)$inrange || any_input_null()) {
                 dp$filter(data(), FALSE) # return empty tibble
             } else {
                 data()[sieve(), ] %>%
