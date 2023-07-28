@@ -4,6 +4,7 @@ box::use(
     sh = shiny,
     rl = rlang[`%||%`],
     pr = purrr,
+    ht = htmltools,
 )
 
 box::use(
@@ -96,7 +97,7 @@ server <- function(id, .data) {
 
         output$sidebar <- sh$renderUI({
             # If any icons were created, display them
-            if (!is.null(unlist(icons()))) {
+            if (length(ht$tagQuery(icons())$find("i")$selectedTags()) > 0) {
                 aui$sidebar(
                     header = sh$div(class = "py-card-header", "Varningar"),
                     body = icons()
