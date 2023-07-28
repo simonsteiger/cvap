@@ -71,6 +71,7 @@ server <- function(id, data, .var = NULL, button = TRUE) {
 
         feedback <- sh$reactive(ase$sift_feedback(out(), input, .var, button))
 
+        # Create user feedback (warnings and case number summary)
         output$feedback <- sh$renderUI(feedback())
 
         out

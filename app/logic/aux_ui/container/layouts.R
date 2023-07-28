@@ -98,7 +98,7 @@ row_sidebar <- function(sidebar, main) {
 #' @export
 head <- function(id, title) {
     row2(
-        class = "row py-4 m-4 d-flex justify-content-center align-items-center",
+        class = "row py-4 m-4 d-flex justify-content-center align-items-center sticky-top bg-white",
         colwidths = list(2, 8, 2),
         content = list(
             sh$div(btn_return(id)),

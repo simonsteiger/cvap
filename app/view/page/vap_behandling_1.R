@@ -129,6 +129,7 @@ server <- function(id, access_page, data, geo, summary) {
         txt$server("output", summary)
 
         # Create overview panel
+        # This can't move into sift module because it should only be updated with `go`
         output$overview <- sh$renderUI(out_icons())
     })
 }
