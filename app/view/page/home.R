@@ -8,10 +8,12 @@ box::use(
 
 box::use(
     aui = app / logic / aux_ui,
+    ase = app / logic / aux_server,
 )
 
 #' @export
-ui <- function(id, data) {
+ui <- function(id, data, info) {
+    ns <- sh$NS(id)
     sh$tagList(
         aui$container_fluid(
             aui$row2(
@@ -42,7 +44,15 @@ ui <- function(id, data) {
                 content = list(
                     NULL,
                     sh$div(
-                        class = "m-2 d-flex flex-row justify-content-center align-items-center",
+                        class = "m-2 d-flex flex-row justify-content-center gap-4 align-items-center",
+                        aui$btn_modal(
+                            id = ns("summary_modal"),
+                            label = sh$div(class = "d-flex flex-row gap-1 align-items-center", sh$icon(class = "fs-2", "book-medical"), "ICD-10 kods"),
+                            modal_title = "Information om diagnoser",
+                            footer_confirm = NULL,
+                            footer_dismiss = "Tillbaka",
+                            ase$icd_compose(info$icds)
+                        ),
                         sh$tags$a(
                             href = "https://www.github.com/simonsteiger/cvap",
                             class = "btn btn-secondary hover",
