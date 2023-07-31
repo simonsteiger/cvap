@@ -143,19 +143,3 @@ icd_psa <- list(
         "M09.0 Juvenil artrit vid psoriasis (L40.5†)"
     )
 )
-
-icd_helper <- function(icd) {
-    pr$map(icd, \(x) sh$tags$ul(x))
-}
-
-icd_compose <- function(icd) {
-    switch(str$str_extract(icd$header, "(?<=\\()\\w+(?=\\))"), # get string in brackets
-        "RA" = sh$tagList(sh$tags$h6(icd$header), icd_helper(icd$codes)),
-        "AS" = sh$tagList(sh$tags$h6(icd$header), icd_helper(icd$codes)),
-        "SpA" = sh$tagList(sh$tags$h6(icd$header), icd_helper(icd$codes)),
-        "PsA" = sh$tagList(sh$tags$h6(icd$header), icd_helper(icd$codes)),
-        stop(paste0("Unknown header (diagnosis) to icd_compose()"))
-    )
-}
-
-pr$map(list(icd_ra, icd_as, icd_spa, icd_psa), \(x) icd_compose(x))

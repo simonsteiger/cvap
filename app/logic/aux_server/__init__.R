@@ -3,6 +3,7 @@ box::use(
     app / logic / aux_server / sift,
     app / logic / aux_server / spells,
     app / logic / aux_server / icons,
+    app / logic / aux_server / icds,
     app / logic / aux_server / errors,
     app / logic / aux_server / formatters,
     app / logic / aux_server / checks,
@@ -34,6 +35,9 @@ create_subtitle <- spells$create_subtitle
 
 #' @export
 iconostasis <- icons$iconostasis
+
+#' @export
+icd_compose <- icds$icd_compose
 
 #' @export
 error_no_data <- errors$error_no_data
