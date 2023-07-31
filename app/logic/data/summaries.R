@@ -1,3 +1,10 @@
+box::use(
+    sh = shiny,
+    pr = purrr,
+    str = stringr,
+    magrittr[`%>%`],
+)
+
 #' @export
 indikatorer_1 <-
     "Det förvalda diagrammet visar andel inkluderade individer, 18 år eller äldre vid inklusion, med tidig reumatoid artrit (<13 månader från symtomdebut/sjukdomsdebut till inklusion) som vid tidpunkt för inklusion/diagnos hade en sjukdomsduration på 20 veckor eller mindre, visat per län och för riket, för individer inkluderade under hela det föregående året.
@@ -84,3 +91,71 @@ Inklusionskriterier:
 - Under det aktuella året minst en gång ha hämtat ut ett förskrivet biologiskt eller syntetiskt DMARD (ATC-koder: L01XC02, L04AA24, L04AB01, L04AB02, L04AB04, L04AB05, L04AB06, L04AC03, L04AC07, L04AC14, A07EC01, L04AA13, L04AD01, L04AX01, L04AX03, M01CB01, M01CB03, P01BA01, P01BA02, L04AA29, L04AA37).
 Exklusionskriterium:
 - Någonsin haft registrerad diagnos: juvenil artrit, ankyloserande spondylit, psoriasisartrit, systemisk lupus erytematosus eller inflammatorisk spondylopati •(M08, M09, M45, L405, M070, M071, M073, M320, M321, M328, M329, M460, M468, M469)"
+
+#' @export
+icd_ra <- list(
+    header = "Reumatoid artrit (RA)",
+    codes = c(
+        "M05.3 Reumatoid artrit med engagemang av andra organ",
+        "M05.8L Erosiv reumatoid artrit, RF-positiv och ACPA-positiv",
+        "M05.8M Erosiv reumatoid artrit, RF-positiv och ACPA-negativ",
+        "M05.8N Erosiv reumatoid artrit, RF-positiv och ACPA ospecificerad",
+        "M05.9 Reumatoid artrit, seropositiv",
+        "M05.9L Reumatoid artrit, RF-positiv och ACPA-positiv",
+        "M05.9M Reumatoid artrit, RF-positiv och ACPA-negativ",
+        "M05.9N Reumatoid artrit, RF-positiv och ACPA ospecificerad",
+        "M06.0 Reumatoid artrit, seronegativ",
+        "M06.0L Reumatoid artrit, RF-negativ och ACPA-positiv",
+        "M06.0M Reumatoid artrit, RF-negativ och ACPA-negativ",
+        "M06.0N Reumatoid artrit, RF-negativ och ACPA ospecificerad",
+        "M06.8L Erosiv reumatoid artrit, RF-negativ och ACPA-positiv",
+        "M06.8M Erosiv reumatoid artrit, RF-negativ och ACPA-negativ",
+        "M06.8N Erosiv reumatoid artrit, RF-negativ och ACPA ospecificerad",
+        "M06.9 Reumatoid artrit UNS",
+        "M12.3 Palindrom reumatism"
+    )
+)
+
+#' @export
+icd_as <- list(
+    header = "Ankyloserande spondylit (AS)",
+    codes = "M45.9 Ankyloserande spondylit"
+)
+
+#' @export
+icd_spa <- list(
+    header = "Spondartrit (SpA)",
+    codes = c(
+        "M46.8 Spondylartrit",
+        "M46.9 Inflammatorisk spondylopati, ospecificerad",
+        "M08.1 Juvenil spondylit/spondylartrit"
+    )
+)
+
+#' @export
+icd_psa <- list(
+    header = "Psoriasisartrit (PsA)",
+    codes = c(
+        "M07.0 Psoriatisk artrit i distal interfalangealled (L40.5†)",
+        "M07.1 Arthritis mutilans (L40.5†)",
+        "M07.2 Spondylit vid psoriasis (L40.5†)",
+        "M07.3X Psoriasisartrit med annan eller ospecificerad lokalisation (L40.5†)",
+        "M09.0 Juvenil artrit vid psoriasis (L40.5†)"
+    )
+)
+
+icd_helper <- function(icd) {
+    pr$map(icd, \(x) sh$tags$ul(x))
+}
+
+icd_compose <- function(icd) {
+    switch(str$str_extract(icd$header, "(?<=\\()\\w+(?=\\))"), # get string in brackets
+        "RA" = sh$tagList(sh$tags$h6(icd$header), icd_helper(icd$codes)),
+        "AS" = sh$tagList(sh$tags$h6(icd$header), icd_helper(icd$codes)),
+        "SpA" = sh$tagList(sh$tags$h6(icd$header), icd_helper(icd$codes)),
+        "PsA" = sh$tagList(sh$tags$h6(icd$header), icd_helper(icd$codes)),
+        stop(paste0("Unknown header (diagnosis) to icd_compose()"))
+    )
+}
+
+pr$map(list(icd_ra, icd_as, icd_spa, icd_psa), \(x) icd_compose(x))

@@ -15,7 +15,7 @@ ui <- function(id, data) {
     sh$tagList(
         aui$container_fluid(
             aui$row2(
-                colwidths = list(3, 6, 3),
+                colwidths = list(0, 12, 0),
                 content = list(
                     NULL,
                     sh$div(
