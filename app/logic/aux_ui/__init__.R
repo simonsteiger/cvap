@@ -2,22 +2,22 @@ box::use(
     app / logic / aux_ui / container / cards,
     app / logic / aux_ui / container / layouts,
     app / logic / aux_ui / container / navboxes,
-    app / logic / aux_ui / input / inp_buttons,
-    app / logic / aux_ui / input / inp_dates,
-    app / logic / aux_ui / input / inp_sliders,
-    app / logic / aux_ui / input / inp_toggles,
-    app / logic / aux_ui / input / inp_pickers,
-    app / logic / aux_ui / input / inp_radios,
+    app / logic / aux_ui / input / buttons,
+    app / logic / aux_ui / input / dates,
+    app / logic / aux_ui / input / sliders,
+    app / logic / aux_ui / input / toggles,
+    app / logic / aux_ui / input / pickers,
+    app / logic / aux_ui / input / radios,
 )
 
 #' @export
-btn_return <- inp_buttons$btn_return
+btn_return <- buttons$btn_return
 
 #' @export
-btn_modal <- inp_buttons$btn_modal
+btn_modal <- buttons$btn_modal
 
 #' @export
-btn_download_csv <- inp_buttons$btn_download_csv
+btn_download_csv <- buttons$btn_download_csv
 
 #' @export
 card <- cards$card
@@ -56,43 +56,43 @@ navbox_data <- navboxes$navbox_data
 navbox_map <- navboxes$navbox_map
 
 #' @export
-inp_daterange <- inp_dates$inp_daterange
+inp_daterange <- dates$inp_daterange
 
 #' @export
-inp_date <- inp_dates$inp_date
+inp_date <- dates$inp_date
 
 #' @export
-inp_radio_sex <- inp_radios$inp_radio_sex
+inp_radio_sex <- radios$inp_radio_sex
 
 #' @export
-inp_slider_age <- inp_sliders$inp_slider_age
+inp_slider_age <- sliders$inp_slider_age
 
 #' @export
-inp_picker_lan <- inp_pickers$inp_picker_lan
+inp_picker_lan <- pickers$inp_picker_lan
 
 #' @export
-inp_picker_timestamp <- inp_pickers$inp_picker_timestamp
+inp_picker_timestamp <- pickers$inp_picker_timestamp
 
 #' @export
-inp_picker_dxcat <- inp_pickers$inp_picker_dxcat
+inp_picker_dxcat <- pickers$inp_picker_dxcat
 
 #' @export
-inp_radio_outcome <- inp_radios$inp_radio_outcome
+inp_radio_outcome <- radios$inp_radio_outcome
 
 #' @export
-inp_radio_lookback <- inp_radios$inp_radio_lookback
+inp_radio_lookback <- radios$inp_radio_lookback
 
 #' @export
-inp_radio_prep_typ <- inp_radios$inp_radio_prep_typ
+inp_radio_prep_typ <- radios$inp_radio_prep_typ
 
 #' @export
-inp_toggle <- inp_toggles$inp_toggle
+inp_toggle <- toggles$inp_toggle
 
 #' @export
-choices <- inp_radios$choices
+choices <- radios$choices
 
 #' @export
-inp_radio_start <- inp_radios$inp_radio_start
+inp_radio_start <- radios$inp_radio_start
 
 #' @export
-inp_radio_dxcat <- inp_radios$inp_radio_dxcat
+inp_radio_dxcat <- radios$inp_radio_dxcat

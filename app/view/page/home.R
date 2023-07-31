@@ -47,7 +47,7 @@ ui <- function(id, data, info) {
                         class = "m-2 d-flex flex-row justify-content-center gap-4 align-items-center",
                         aui$btn_modal(
                             id = ns("summary_modal"),
-                            label = sh$div(class = "d-flex flex-row gap-1 align-items-center", sh$icon(class = "fs-2", "book-medical"), "ICD-10 kods"),
+                            label = sh$div(class = "d-flex flex-row gap-1 align-items-center", sh$icon(class = "fs-2", "clipboard-list"), "ICD-10 kods"),
                             modal_title = "Information om diagnoser",
                             footer_confirm = NULL,
                             footer_dismiss = "Tillbaka",

@@ -1,6 +1,22 @@
 box::use(
     hw = htmlwidgets,
+    sh = shiny,
+    str = stringr,
+    pr = purrr,
+    bsl = bslib,
+    dp = dplyr,
+    rl = rlang[`%||%`],
+    lub = lubridate,
+    gl = glue,
+    magrittr[`%>%`],
 )
+
+box::use(
+    aui = app / logic / aux_ui,
+    app / logic / srqlib / srqdict,
+)
+
+# JavaScript formatters ----
 
 #' @export
 #' wraps a JavaScript function which accesses name and value parameters and formats them
@@ -38,3 +54,277 @@ format_list <- list(
     percent = format_percent,
     year = format_year
 )
+
+# ICD formatters ----
+
+icd_helper <- function(icd) {
+    pr$map(icd, \(x) sh$tags$li(x)) %>% sh$tags$ul()
+}
+
+#' @export
+icd_compose <- function(icd) {
+    switch(str$str_extract(icd$header, "(?<=\\()\\w+(?=\\))"), # get string in brackets
+        "RA" = sh$tagList(sh$tags$h5(icd$header), icd_helper(icd$codes)),
+        "AS" = sh$tagList(sh$tags$h5(icd$header), icd_helper(icd$codes)),
+        "SpA" = sh$tagList(sh$tags$h5(icd$header), icd_helper(icd$codes)),
+        "PsA" = sh$tagList(sh$tags$h5(icd$header), icd_helper(icd$codes)),
+        stop(paste0("Unknown header (diagnosis) to icd_compose()"))
+    )
+}
+
+# Icon formatters ----
+# This submodule collects several functions which create overview icons from user inputs
+
+icon_kon <- function(input, ...) {
+    sh$div(
+        class = "d-flex flex-row align-items-center gap-3",
+        switch(input,
+            "Kvinna" = sh$tagList(sh$icon("venus")),
+            "Man" = sh$tagList(sh$icon("mars")),
+            sh$tagList(sh$icon("venus-mars"))
+        ),
+        input
+    )
+}
+
+icon_alder <- function(input, ...) {
+    sh$div(
+        class = "d-flex flex-row align-items-center gap-3",
+        dp$case_when(
+            max(input) < 40 ~ sh$tagList(sh$icon("children")),
+            min(input) > 70 ~ sh$tagList(sh$icon("person-cane")),
+            .default = sh$tagList(sh$icon("people-group"))
+        ),
+        paste0(paste0(input, collapse = " till "), " år")
+    )
+}
+
+icon_date <- function(input, ...) {
+    sh$div(
+        class = "d-flex flex-row align-items-center gap-3",
+        sh$icon("calendar"), paste0(input, collapse = " till ")
+    )
+}
+
+icon_lan <- function(input, ...) {
+    sh$div(
+        class = "d-flex flex-row align-items-center gap-3",
+        sh$icon("map-location-dot"), paste0(input, collapse = ", ")
+    )
+}
+
+icon_dxcat <- function(input, ...) {
+    sh$div(
+        class = "d-flex flex-row align-items-center gap-3",
+        sh$icon("clipboard-list"), paste0(input, collapse = ", ")
+    )
+}
+
+icon_start <- function(input, ...) {
+    translated <- switch(input,
+        "min_inkl_diag" = "inklusion eller diagnos",
+        "diagnosdatum1" = "diagnos",
+        "inkluderad" = "inklusion",
+        stop("Unknown input")
+    )
+    sh$div(
+        class = "d-flex flex-row align-items-center gap-3",
+        sh$icon("clock-rotate-left"), paste("Sjukdomsdebut till", translated)
+    )
+}
+
+icon_prep_typ <- function(input, ...) {
+    stopifnot(str$str_detect(input, "dmard|bioprep"))
+    translated <- switch(input,
+        "bioprep" = "bDMARD",
+        "csdmard" = "csDMARD",
+        "bDMARD / csDMARD"
+    )
+    sh$div(
+        class = "d-flex flex-row align-items-center gap-3",
+        sh$icon("syringe"), translated
+    )
+}
+
+icon_outcome <- function(input, ...) {
+    translated <- switch(input,
+        "das28_low" = "DAS28 < 3.2",
+        "cdai_low" = "CDAI <= 10",
+        "patientens_globala" = "Allmän hälsa",
+        "haq" = "HAQ",
+        "smarta" = "Smärta",
+        "per100k" = "Antal per 100 000",
+        "n" = "Total antal",
+        stop("Unknown input")
+    )
+    sh$div(
+        class = "d-flex flex-row align-items-center gap-3",
+        sh$icon("square-root-variable"), translated # bullseye is good, too
+    )
+}
+
+icon_lan <- function(input) {
+    sh$div(
+        class = "d-flex flex-row align-items-center gap-3",
+        sh$icon("map-location-dot"), paste0(length(input), " län")
+    )
+}
+
+icon_lan_modal <- function(input, ...) {
+    dots <- rl$list2(...)
+    cond_one <- length(unlist(input)) > 1
+    cond_all <- length(unlist(input)) == 21 # TODO take care of RIKET for Täckningsgrad
+    res <- pr$map(input, \(x) sh$tags$li(x))
+
+    sh$tagList(
+        sh$div(
+            class = "d-flex justify-content-between align-items-center",
+            sh$div(
+                class = "d-flex flex-row align-items-center gap-3",
+                sh$icon("map-location-dot"),
+                paste0(
+                    if (cond_all) "Alla" else length(input),
+                    " län"
+                )
+            ),
+            aui$btn_modal(
+                id = dots$id,
+                label = sh$tagList(sh$icon("list-ul"), "Se lista"),
+                modal_title = if (cond_one) "Utvalda län" else "Utvalt län",
+                footer_confirm = NULL,
+                footer_dismiss = NULL,
+                sh$div(
+                    class = "m-2",
+                    bsl$layout_column_wrap(
+                        width = 1 / 3, height = 300,
+                        !!!res
+                    )
+                )
+            )
+        )
+    )
+}
+
+#' @export
+icon_samplesmall <- function(id, input, value) {
+    sh$div(
+        class = "d-flex flex-row justify-content-between align-items-center",
+        sh$div(
+            class = "d-flex flex-row align-items-center gap-3",
+            sh$tags$i(class = "fa fa-users-slash c-warning"),
+            paste0("Få data i ", length(input), " län")
+        ),
+        aui$inp_toggle(id = id, label = "Dölj", value = value)
+    )
+}
+
+#' @export
+icon_samplecrit <- function(input) {
+    sh$div(
+        class = "d-flex flex-row align-items-center gap-3",
+        sh$tags$i(class = "fa fa-users-slash c-danger"),
+            paste0("Otillräcklig data i ", length(input), " län")
+    )
+}
+
+#' @export
+iconostasis <- list(
+    kon = icon_kon,
+    alder = icon_alder,
+    inkluderad = icon_date,
+    ordinerat = icon_date, # could the issue arise with several date icons?
+    ongoing = icon_date,
+    year = icon_date,
+    lan = icon_lan, # can switch to modal if need be
+    dxcat = icon_dxcat,
+    start = icon_start,
+    prep_typ = icon_prep_typ,
+    outcome = icon_outcome,
+    samplesmall = icon_samplesmall,
+    samplecrit = icon_samplecrit
+)
+
+# Input-to-caption formatters ----
+
+# This submodule collects functions for translating the filter input to summary text
+# on the downloadable plots
+
+spell_kon <- function(x) {
+    x %||% return(NULL)
+
+    if (x == "Båda") {
+        "för båda kön"
+    } else if (x == "Man") {
+        "för män"
+    } else {
+        "för kvinnor"
+    }
+}
+
+spell_alder <- function(x) {
+    if (!is.null(x)) {
+        gl$glue("mellan {x[1]} och {x[2]} år")
+    } else {
+        NULL
+    }
+}
+
+spell_outcome <- function(x) {
+    dp$case_match(
+        x,
+        "das28_low" ~ "andelen patienter med DAS28 < 3.2",
+        "cdai_low" ~ "andelen patienter med CDAI <= 10",
+        "patientens_globala" ~ "medianvärde av allmän hälsa",
+        "haq" ~ "medianvärde av HAQ",
+        "smarta" ~ "medianvärde av smärta",
+        .default = tolower(x)
+    ) %>%
+        sh$tags$b()
+}
+
+spell_period <- function(x) {
+    date <- x$inkluderad %||% x$ordinerat %||% x$ongoing %||% return(NULL)
+
+    if (length(date) == 2) {
+        gl$glue("från {date[1]} till {date[2]}")
+    } else if (is.null(x$lookback)) { # assume that there is a lookback input
+        gl$glue("från {date}")
+    } else {
+        x$lookback %||% stop("Require input$lookback to generate period text")
+        gl$glue("från {date-lub$years(x$lookback)} till {date}")
+    }
+}
+
+spell_dxcat <- function(x) {
+    x %||% return(NULL)
+    x[x %in% "Annan"] <- "en diagnos inom kategori 'Annan'"
+    gl$glue("diagnosticerad med {paste0(x, collapse = ', ')}")
+}
+
+spell_prep_typ <- function(x) {
+    x %||% return(NULL)
+    x <- if (x == "Båda") "antingen csDMARD eller bDMARD"
+    gl$glue("och behandlad med {x}")
+}
+
+#' @export
+create_subtitle <- function(input, .var) {
+    paste0(
+        paste(
+            "Denna graf visa",
+            spell_outcome(input$outcome %||% .var),
+            spell_kon(input$kon),
+            spell_alder(input$alder),
+            spell_period(input), # can't use `[` to index reactive [pr$map_lgl(input, lub$is.Date)]
+            sep = " "
+        ), ".",
+        if (!is.null(input$dxcat) || !is.null(input$prep_typ)) {
+            paste0(paste(
+                " Alla personer är",
+                spell_dxcat(input$dxcat),
+                spell_prep_typ(input$prep_typ),
+                sep = " "
+            ), ".")
+        }
+    )
+}

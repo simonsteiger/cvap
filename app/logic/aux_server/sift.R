@@ -16,7 +16,7 @@ box::use(
 )
 
 #' @export
-#' ATTENTION does not work with by-item-selection of numeric vars
+#' REMINDER sift_cols() does not work with by-item-selection of numeric vars
 #' Numeric vars are always treated as ranges or cut-offs
 #' For by-item-selection, treat respective vars as factors or characters!
 sift_cols <- function(col, val, var, skip) {

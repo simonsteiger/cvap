@@ -1,16 +1,13 @@
 box::use(
-    app / logic / aux_server / obs_return,
+    app / logic / aux_server / observers,
     app / logic / aux_server / sift,
-    app / logic / aux_server / spells,
-    app / logic / aux_server / icons,
-    app / logic / aux_server / icds,
     app / logic / aux_server / errors,
     app / logic / aux_server / formatters,
     app / logic / aux_server / checks,
 )
 
 #' @export
-obs_return <- obs_return$obs_return
+obs_return <- observers$obs_return
 
 #' @export
 sift_cols <- sift$sift_cols
@@ -31,13 +28,13 @@ count_nonmissing_above_cutoff <- sift$count_nonmissing_above_cutoff
 sift_feedback <- sift$sift_feedback
 
 #' @export
-create_subtitle <- spells$create_subtitle
+create_subtitle <- formatters$create_subtitle
 
 #' @export
-iconostasis <- icons$iconostasis
+iconostasis <- formatters$iconostasis
 
 #' @export
-icd_compose <- icds$icd_compose
+icd_compose <- formatters$icd_compose
 
 #' @export
 error_no_data <- errors$error_no_data
