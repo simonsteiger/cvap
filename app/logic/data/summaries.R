@@ -116,13 +116,11 @@ icd_ra <- list(
     )
 )
 
-#' @export
 icd_as <- list(
     header = "Ankyloserande spondylit (AS)",
     codes = "M45.9 Ankyloserande spondylit"
 )
 
-#' @export
 icd_spa <- list(
     header = "Spondartrit (SpA)",
     codes = c(
@@ -132,7 +130,6 @@ icd_spa <- list(
     )
 )
 
-#' @export
 icd_psa <- list(
     header = "Psoriasisartrit (PsA)",
     codes = c(
@@ -143,3 +140,6 @@ icd_psa <- list(
         "M09.0 Juvenil artrit vid psoriasis (L40.5†)"
     )
 )
+
+#' @export
+icd_list <- list(icd_ra, icd_psa, icd_spa, icd_as)

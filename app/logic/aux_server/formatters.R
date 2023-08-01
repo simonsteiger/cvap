@@ -58,16 +58,16 @@ format_list <- list(
 # ICD formatters ----
 
 icd_helper <- function(icd) {
-    pr$map(icd, \(x) sh$tags$li(x)) %>% sh$tags$ul()
+    pr$map(icd, \(x) sh$tags$li(x)) %>% sh$tags$ul(class = "small")
 }
 
 #' @export
 icd_compose <- function(icd) {
     switch(str$str_extract(icd$header, "(?<=\\()\\w+(?=\\))"), # get string in brackets
-        "RA" = sh$tagList(sh$tags$h5(icd$header), icd_helper(icd$codes)),
-        "AS" = sh$tagList(sh$tags$h5(icd$header), icd_helper(icd$codes)),
-        "SpA" = sh$tagList(sh$tags$h5(icd$header), icd_helper(icd$codes)),
-        "PsA" = sh$tagList(sh$tags$h5(icd$header), icd_helper(icd$codes)),
+        "RA" = sh$tagList(sh$tags$h6(icd$header), icd_helper(icd$codes)),
+        "AS" = sh$tagList(sh$tags$h6(icd$header), icd_helper(icd$codes)),
+        "SpA" = sh$tagList(sh$tags$h6(icd$header), icd_helper(icd$codes)),
+        "PsA" = sh$tagList(sh$tags$h6(icd$header), icd_helper(icd$codes)),
         stop(paste0("Unknown header (diagnosis) to icd_compose()"))
     )
 }

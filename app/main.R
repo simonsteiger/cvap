@@ -83,7 +83,7 @@ ui <- function(id) {
         home$ui(
           ns("home"),
           aui$navbox_data,
-          info = list(icds = summaries$icd_ra)
+          info = list(icds = summaries$icd_list)
         )
       ),
       rt$route(

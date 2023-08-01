@@ -17,7 +17,7 @@ ui <- function(id, data, info) {
     sh$tagList(
         aui$container_fluid(
             aui$row2(
-                colwidths = list(0, 12, 0),
+                colwidths = list(1, 10, 1),
                 content = list(
                     NULL,
                     sh$div(
@@ -25,7 +25,16 @@ ui <- function(id, data, info) {
                         sh$tags$img(src = "static/logo_wide.png", width = "420px"),
                         sh$div(class = "fs-1 h-font text-center", "Visualiserings- och Analysplattform")
                     ),
-                    NULL
+                    sh$tags$a(
+                        href = "https://www.github.com/simonsteiger/cvap",
+                        class = "btn btn-secondary btn-white hover",
+                        target = "_blank",
+                        sh$div(
+                            class = "d-flex flex-row align-items-center gap-2 small",
+                            sh$icon(class = "fs-4", "github"),
+                            "Källkod"
+                        )
+                    )
                 )
             ),
             aui$row2(
@@ -40,51 +49,39 @@ ui <- function(id, data, info) {
                 )
             ),
             aui$row2(
-                colwidths = list(3, 6, 3),
+                class = "row m-4 pt-2",
+                colwidths = list(6, 6),
                 content = list(
-                    NULL,
                     sh$div(
-                        class = "m-2 d-flex flex-row justify-content-center gap-4 align-items-center",
+                        class = "d-flex flex-row align-items-center justify-content-end",
                         aui$btn_modal(
-                            id = ns("summary_modal"),
-                            label = sh$div(class = "d-flex flex-row gap-1 align-items-center", sh$icon(class = "fs-2", "clipboard-list"), "ICD-10 kods"),
+                            id = ns("modal_icd"),
+                            label = sh$div(
+                                class = "d-flex flex-row small align-items-center",
+                                "Om preparatgrupper"
+                            ),
                             modal_title = "Information om diagnoser",
                             footer_confirm = NULL,
                             footer_dismiss = "Tillbaka",
-                            ase$icd_compose(info$icds)
-                        ),
-                        sh$tags$a(
-                            href = "https://www.github.com/simonsteiger/cvap",
-                            class = "btn btn-secondary hover",
-                            target = "_blank",
-                            sh$div(
-                                class = "d-flex flex-row align-items-center gap-3",
-                                sh$icon(class = "fs-2", "github"),
-                                "Se källkod"
-                            )
-                        ) # ,
-                        # sh$tags$button(
-                        #    type = "button",
-                        #    style = "pointer-events: none;",
-                        #    class = "btn btn-transparent",
-                        #    sh$div(
-                        #        class = "d-flex flex-row align-items-center gap-3",
-                        #        sh$icon(class = "fs-3 c-success", "arrow-up"),
-                        #        "Patienter + 10 354"
-                        #    )
-                        # ),
-                        # sh$tags$button(
-                        #    type = "button",
-                        #    style = "pointer-events: none;",
-                        #    class = "btn btn-transparent",
-                        #    sh$div(
-                        #        class = "d-flex flex-row align-items-center gap-3",
-                        #        sh$icon(class = "fs-3 c-danger", "arrow-down"),
-                        #        "Besök -100 549"
-                        #    )
-                        # )
+                            class_toggle = "btn btn-secondary btn-white hover small",
+                            pr$map(info$icds, ase$icd_compose)
+                        )
                     ),
-                    NULL
+                    sh$div(
+                        class = "d-flex flex-row align-items-center justify-content-start",
+                        aui$btn_modal(
+                            id = ns("modal_icd"),
+                            label = sh$div(
+                                class = "d-flex flex-row small align-items-center",
+                                "Om diagnosgrupper"
+                            ),
+                            modal_title = "Information om diagnoser",
+                            footer_confirm = NULL,
+                            footer_dismiss = "Tillbaka",
+                            class_toggle = "btn btn-secondary btn-white hover small",
+                            pr$map(info$icds, ase$icd_compose)
+                        )
+                    )
                 )
             )
         )
@@ -108,3 +105,29 @@ server <- function(id, data) {
         pr$map(seq_len(nrow(data)), \(r) wrap_change_page(data[r, ]))
     })
 }
+
+
+# class = "d-flex justify-content-end align-items-center",
+#                         aui$btn_modal(
+#                             id = ns("modal_icd"),
+#                             label = sh$div(
+#                                 class = "d-flex flex-row small align-items-center",
+#                                 "Vilka diagnoser ingår i vilken diagnosgrupp?"
+#                             ),
+#                             modal_title = "Information om diagnoser",
+#                             footer_confirm = NULL,
+#                             footer_dismiss = "Tillbaka",
+#                             ase$icd_compose(info$icds)
+#                         )
+# class = "d-flex justify-content-start align-items-center",
+#                         aui$btn_modal(
+#                             id = ns("modal_drugs"),
+#                             label = sh$div(
+#                                 class = "d-flex flex-row small align-items-center",
+#                                 "Vilka preparater ingår i bDMARD och csDMARD?"
+#                             ),
+#                             modal_title = "Information om preparater",
+#                             footer_confirm = NULL,
+#                             footer_dismiss = "Tillbaka",
+#                             "Nothing here yet"
+#                         )
