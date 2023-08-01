@@ -59,6 +59,20 @@ syf$font_add_google("Fraunces", "Fraunces")
 syf$font_add_google("Commissioner", "Commissioner")
 sht$showtext_auto()
 
+# Get unique csDMARDs and bDMARDs for preparat info modal
+info_dmard <- pr$set_names(c("csdmard", "bioprep")) %>%
+  pr$map(\(type) {
+    drugs <- list_df$vap_behandling_4 %>%
+      dp$filter(prep_typ == type) %>%
+      dp$pull(preparat) %>%
+      unique()
+    sh$div(
+      sh$tags$h6(class = "text-center", type),
+      sh$tags$ul(class = "small", pr$map(drugs, sh$tags$li))
+    )
+  }) %>%
+  sh$div(class = "d-flex flex-row justify-content-evenly", .)
+
 #' @export
 ui <- function(id) {
   ns <- sh$NS(id)
@@ -83,7 +97,7 @@ ui <- function(id) {
         home$ui(
           ns("home"),
           aui$navbox_data,
-          info = list(icds = summaries$icd_list)
+          info = list(icds = summaries$icd_list, dmard = info_dmard)
         )
       ),
       rt$route(

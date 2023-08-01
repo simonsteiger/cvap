@@ -60,17 +60,17 @@ ui <- function(id, data, info) {
                                 class = "d-flex flex-row small align-items-center",
                                 "Om preparatgrupper"
                             ),
-                            modal_title = "Information om diagnoser",
+                            modal_title = "Information om preparatgrupper",
                             footer_confirm = NULL,
                             footer_dismiss = "Tillbaka",
                             class_toggle = "btn btn-secondary btn-white hover small",
-                            pr$map(info$icds, ase$icd_compose)
+                            info$dmard
                         )
                     ),
                     sh$div(
                         class = "d-flex flex-row align-items-center justify-content-start",
                         aui$btn_modal(
-                            id = ns("modal_icd"),
+                            id = ns("modal_dmard"),
                             label = sh$div(
                                 class = "d-flex flex-row small align-items-center",
                                 "Om diagnosgrupper"
