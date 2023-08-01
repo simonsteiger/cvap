@@ -5,7 +5,7 @@ box::use(
 )
 
 box::use(
-    app / logic / aux_ui / input / inp_buttons[btn_modal]
+    app / logic / aux_ui / input / buttons[btn_modal]
 )
 
 #' @export

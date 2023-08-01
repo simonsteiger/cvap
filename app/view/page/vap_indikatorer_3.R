@@ -97,7 +97,8 @@ server <- function(id, access_page, data, geo, summary) {
         # Check sum_synopsis for läns with insufficient data
         sum_warn <- warning$server(
             "warning",
-            sum_synopsis
+            sum_synopsis,
+            out_stash
         )
 
         # Within läns, sort data by `group`

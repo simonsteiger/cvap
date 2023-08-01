@@ -31,9 +31,10 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id, .data) {
+server <- function(id, .data, stash) {
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
+        stopifnot(sh$is.reactive(stash))
 
         small_lans <- sh$reactive({
             sh$req(nrow(.data()) > 0)
@@ -57,10 +58,15 @@ server <- function(id, .data) {
             remaining <- extract_lans(.data(), nonmissing > 9) %>%
                 `[`(., !. %in% crit_lans() & !. %in% small_lans())
 
+            # If many groups are selected, lans can be present in small and crit
+            # To get the number of synopsis-deleted lans, we want to count every lan only once
+            exclusive_small <- small_lans()[!small_lans() %in% crit_lans()]
+
             # Check if crit / small / remaining cover all 21 läns
             # The difference between 21 and their sum is the number of läns deleted in synopsis
             # (grouping in synopsis will delete läns with no records for given set of filters)
-            21 - pr$reduce(c(length(crit_lans()), length(small_lans()), length(remaining)), `+`)
+            n_post_synopsis <- length(crit_lans()) + length(exclusive_small) + length(remaining)
+            length(stash()$input$lan) - n_post_synopsis
         })
 
         # Create samplesize icons
