@@ -52,7 +52,7 @@ prep_ongoing <- function(.data,
     .end_var <- rl$enquo(.end_var)
     unit <- switch(.unit,
         "years" = lub$years,
-        cli$cli_abort("{unit} not supported. Currently supporting only 'year'.")
+        cli$cli_abort("{unit} not supported. Currently supporting only 'years'.")
     )
     diff <- lub$interval(.start, .end) / unit(1)
     steps <- unit(0:diff)
