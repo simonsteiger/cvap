@@ -137,8 +137,7 @@ tidy_helper <- function(x) {
 prep_dynamic_groups <- function(.data, .start, .end, .start_var, .end_var, ..., .new_name = "visit_group") {
     # Different version than the one in srqlib repo - this one is adated for use in functions
     # Have to reconcile both eventually
-    .start_var <- if (is.character(.start_var)) .start_var else rl$enquo(.start_var)
-    .end_var <- if (is.character(.start_var)) .start_var else rl$enquo(.start_var)
+    # I don't know yet how to do this aspect of tidy eval correctly
 
     dots <- rl$quos(...)
 

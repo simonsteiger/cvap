@@ -11,6 +11,7 @@ box::use(
     app / logic / swissknife / sklang[`%//%`],
     aui = app / logic / aux_ui,
     ase = app / logic / aux_server,
+    app / logic / data / summaries[info_table]
 )
 
 translate <- function(chr_vec, ...) {
@@ -54,7 +55,7 @@ ui <- function(id) {
                 footer_confirm = NULL,
                 footer_dismiss = NULL,
                 class_toggle = "btn btn-transparent",
-                "Infotext om tabell"
+                info_table
             )
         ),
         body = rtbl$reactableOutput(ns("table")),

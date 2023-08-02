@@ -143,3 +143,15 @@ icd_psa <- list(
 
 #' @export
 icd_list <- list(icd_ra, icd_psa, icd_spa, icd_as)
+
+#' @export
+info_bar <- "Hover över staplarna för att se exakta värden. Klicka på teckenförklaringen för att döja den grupp som klickades på. Klicka igen för att visa den dolda grupp.
+Du kan sortera länen alfabetiskt om du klicka på 'Alfabetisk ordning'. Klicka igen för att sortera efter värden. Du välja att visa staplarna med eller utan mönster om du klicka på 'Ökad tillgänglighet'; 
+mönstrarna gör det enklare för för färgblinda personer att skilja staplarna. Klicka på Download för att ladda ner pdf versionen av grafen som visas för närvarande."
+
+#' @export
+info_map <- "Kartan tar lite tid att ladda, därför måste du välja att visa den. Hover över län för att se namnet och värden på teckenförklaringen. 
+Hover över teckenförklaringen för att markera alla län nära den värden du hover över. Klicka på Download för att ladda ner pdf versionen av grafen som visas för närvarande."
+
+#' @export
+info_table <- "Klicka på Download för att ladda ner csv fil av tabellen som visas för närvarande."

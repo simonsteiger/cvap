@@ -16,6 +16,7 @@ box::use(
     app / logic / theme,
     app / logic / srqlib / srqcolor,
     app / logic / srqlib / srqauto,
+    app / logic / data / summaries[info_bar]
 )
 
 #' @export
@@ -34,7 +35,7 @@ ui <- function(id) {
                     footer_confirm = NULL,
                     footer_dismiss = NULL,
                     class_toggle = "btn btn-transparent",
-                    "Infotext om stapeldiagramm"
+                    info_bar
                 )
             ),
             sh$div(
