@@ -73,4 +73,4 @@ out <-
     ) %>%
     tdr$unnest(data)
 
-fst$write_fst(out, "app/logic/data/vap_indikatorer_3.fst")
+fst$write_fst(out, "app/logic/data/srq/vap_indikatorer_3.fst")

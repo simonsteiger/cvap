@@ -40,13 +40,14 @@ box::use(
 )
 
 # Read all data files in the data folder, and if there are none, list_df won't exist
-ski$read_dir("app/logic/data/")
+ski$read_dir("app/logic/data/srq/")
 
 # If there were no files to read, run the preprocessing scripts and try again
 if (!exists("list_df")) {
-  filenames <- list.files("app/logic/data/", pattern = "^vap_.+\\.R$")
-  pr$walk(paste0("app/logic/data/", filenames), source, .progress = c("Preprocessing datasets..."))
-  ski$read_dir("app/logic/data/")
+  path <- "app/logic/data/srq/"
+  filenames <- list.files(path, pattern = "^vap_.+\\.R$")
+  pr$walk(paste0(path, filenames), source, .progress = c("Preprocessing datasets..."))
+  ski$read_dir(path)
 }
 
 # Load the geo data

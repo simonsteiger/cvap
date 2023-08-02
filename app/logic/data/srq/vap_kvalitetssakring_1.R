@@ -69,4 +69,4 @@ res <- pr$map(unit_seq, \(t) {
 
 
 
-fst$write_fst(res, "app/logic/data/vap_kvalitetssakring_1.fst")
+fst$write_fst(res, "app/logic/data/srq/vap_kvalitetssakring_1.fst")

@@ -51,7 +51,9 @@ res <- out %>%
     tdr$nest(.by = ra_bool) %>%
     dp$mutate(
         data =
-            pr$pmap(create_l(data), \(data, fn, s1, t1) {
+        # TODO This nested loop is rough and should either be commented in great detail or rewritten
+        # Try commenting first, because this solution probably saves space and is better to overlook
+            pr$pmap(create_l(data), \(data, fn, s1, t1) { # Numbers = depth of loop 1=outer, 3=inner
                 pr$map2(s1, list(data), \(s2, d2) {
                     pr$map2(t1, list(d2), \(t2, d3) {
                         t_days <- fn(t2) / lub$ddays(1)
@@ -77,4 +79,4 @@ res <- out %>%
     dp$select(-c(ra_bool, diff)) %>%
     dp$mutate(dxcat = paste("Tidig", dxcat))
 
-fst$write_fst(res, "app/logic/data/vap_inklusionsmatt_1.fst")
+fst$write_fst(res, "app/logic/data/srq/vap_inklusionsmatt_1.fst")

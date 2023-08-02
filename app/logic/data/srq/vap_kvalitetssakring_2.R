@@ -30,4 +30,4 @@ coverage <- list_df$coverage %>%
     ) %>%
     dp$select(-Kod)
 
-fst$write_fst(coverage, "app/logic/data/vap_kvalitetssakring_2.fst")
+fst$write_fst(coverage, "app/logic/data/srq/vap_kvalitetssakring_2.fst")

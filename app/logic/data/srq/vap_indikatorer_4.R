@@ -88,4 +88,4 @@ out <-
     ) %>%
     dp$distinct(patientkod, visit_group, outcome, .keep_all = TRUE)
 
-fst$write_fst(out, "app/logic/data/vap_indikatorer_4.fst")
+fst$write_fst(out, "app/logic/data/srq/vap_indikatorer_4.fst")

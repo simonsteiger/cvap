@@ -13,17 +13,16 @@ box::use(
     ski = app / logic / swissknife / skinit,
     app / logic / srqlib / srqdict,
     app / logic / srqlib / srqprep,
+    ada = app / logic / data / aux_data,
 )
 
 # here goes data base download later
 ski$read_dir("/Users/simonsteiger/Desktop/data/fst/")
 
-# the data needs to go through the qrdf preprocessing, too
-
 list_df$basdata <- list_df$basdata %>%
     srqprep$prep_recode(diagnoskod_1, srqdict$rec_dxcat, .new_name = dxcat) %>%
     dp$mutate(lan = ifelse(lan == "Örebro", "Orebro", lan)) %>%
-    dp$select(patientkod, fodelsedag, dxcat, lan, tillhor)
+    dp$select(patientkod, fodelsedag, dxcat, lan, tillhor, avslutad)
 
 list_df$besoksdata <- list_df$besoksdata %>%
     dp$select(patientkod, datum, smarta, haq, patientens_globala) %>%
@@ -56,7 +55,8 @@ list_df$bas_terapi <-
         by = "patientkod",
         suffix = c("", ".dupl")
     ) %>%
-    dp$select(-ts$contains(c(".dupl", "skapad", "andrad")), -c("preparat_kod", "orsak", "ar"))
+    dp$select(-ts$contains(c(".dupl", "skapad", "andrad")), -c("preparat_kod", "orsak", "ar")) %>%
+    ada$set_utsatt()
 
 out <-
     dp$left_join(list_df$bas_terapi, list_df$besoksdata, by = "patientkod") %>%
@@ -99,4 +99,4 @@ out <-
     ) %>%
     dp$distinct(patientkod, visit_group, outcome, .keep_all = TRUE)
 
-fst$write_fst(out, "app/logic/data/vap_behandling_4.fst")
+fst$write_fst(out, "app/logic/data/srq/vap_behandling_4.fst")

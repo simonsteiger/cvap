@@ -10,15 +10,19 @@ box::use(
     ski = app / logic / swissknife / skinit,
     app / logic / srqlib / srqprep,
     app / logic / srqlib / srqdict,
+    ada = app / logic / data / aux_data,
 )
 
 ski$read_dir("/Users/simonsteiger/Desktop/data/fst/")
+
+# Chuck unnecessary variables
 
 bas_ter <- list_df$basdata %>%
     srqprep$prep_recode(diagnoskod_1, srqdict$rec_dxcat, .new_name = dxcat) %>%
     dp$mutate(lan = ifelse(lan == "Örebro", "Orebro", lan)) %>%
     dp$left_join(list_df$terapi, by = "patientkod", suffix = c("", ".dupl")) %>%
     dp$select(-ts$contains(".dupl")) %>%
+    ada$set_utsatt() %>%
     dp$mutate(
         prep_start = pmax(ordinerat, insatt, na.rm = TRUE), # QUESTION prep_start vs ordinerat
         alder = lub$interval(fodelsedag, ordinerat) / lub$dyears(1)
@@ -59,4 +63,4 @@ simplified_pop <-
 
 out <- dp$left_join(bas_ter, simplified_pop, by = "lan")
 
-fst$write_fst(out, "app/logic/data/vap_indikatorer_2.fst")
+fst$write_fst(out, "app/logic/data/srq/vap_indikatorer_2.fst")

@@ -14,6 +14,8 @@ box::use(
 
 ski$read_dir("/Users/simonsteiger/Desktop/data/fst/")
 
+# TODO chuck unnecessary variables
+
 out <- list_df$basdata %>%
 srqprep$prep_recode(diagnoskod_1, srqdict$rec_dxcat, .new_name = dxcat) %>%
     dp$filter(tidig_ra == 1 & dxcat == "RA") %>% # TODO check for dxcat == "RA" correct?
@@ -37,4 +39,4 @@ out <- pr$map(c("min_inkl_diag", "diagnosdatum1", "inkluderad"), \(t) {
 }) %>%
     pr$list_rbind()
 
-fst$write_fst(out, "app/logic/data/vap_indikatorer_1.fst")
+fst$write_fst(out, "app/logic/data/srq/vap_indikatorer_1.fst")

@@ -10,6 +10,7 @@ box::use(
     srqlib / srqdict,
     srqlib / srqprep,
     ski = app / logic / swissknife / skinit,
+    ada = app / logic / data / aux_data,
 )
 
 ski$read_dir("/Users/simonsteiger/Desktop/data/fst/")
@@ -21,6 +22,7 @@ bas_ter <- list_df$basdata %>%
     ) %>%
     dp$left_join(list_df$terapi, by = "patientkod", suffix = c("", ".dupl")) %>%
     dp$select(-ts$contains(".dupl")) %>%
+    ada$set_utsatt() %>%
     dp$mutate(
         prep_start = pmax(ordinerat, insatt, na.rm = TRUE), # QUESTION prep_start vs ordinerat?
         alder = lub$interval(fodelsedag, ordinerat) / lub$dyears(1)
@@ -62,4 +64,4 @@ simplified_pop <-
 
 out <- dp$left_join(bas_ter, simplified_pop, by = "lan")
 
-fst$write_fst(out, "app/logic/data/vap_behandling_2.fst")
+fst$write_fst(out, "app/logic/data/srq/vap_behandling_2.fst")

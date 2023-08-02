@@ -16,29 +16,29 @@ box::use(
 
 # Helper for filter_ongoing
 aux_filter_ongoing <- function(.data, t, .start_var, .end_var, .new_name) {
-        if (!rl$as_name(.start_var) %in% colnames(.data)) {
-            cli$cli_abort(
-                "{rl$as_name(.start_var)} is not a column in the data; please respecify .start_var'."
-            )
-        }
-        if (!rl$as_name(.end_var) %in% colnames(.data)) {
-            cli$cli_abort("{rl$as_name(.end_var)} is not a column in the data; please respecify '.end_var'.")
-        }
-        if (!lub$is.Date(.data[[rl$as_name(.start_var)]])) {
-            cli$cli_abort("{rl$as_name(.start_var)} must be of type {.cls Date}.")
-        }
-        if (!lub$is.Date(.data[[rl$as_name(.end_var)]])) {
-            cli$cli_abort("{rl$as_name(.end_var)} must be of type {.cls Date}.")
-        }
-        .data %>%
-            dp$filter(
-                .data[[.start_var]] < t,
-                is.na(.data[[.end_var]]) | .data[[.end_var]] > t
-            ) %>%
-            dp$mutate(
-                !!.new_name := t
-            )
+    if (!rl$as_name(.start_var) %in% colnames(.data)) {
+        cli$cli_abort(
+            "{rl$as_name(.start_var)} is not a column in the data; please respecify .start_var'."
+        )
     }
+    if (!rl$as_name(.end_var) %in% colnames(.data)) {
+        cli$cli_abort("{rl$as_name(.end_var)} is not a column in the data; please respecify '.end_var'.")
+    }
+    if (!lub$is.Date(.data[[rl$as_name(.start_var)]])) {
+        cli$cli_abort("{rl$as_name(.start_var)} must be of type {.cls Date}.")
+    }
+    if (!lub$is.Date(.data[[rl$as_name(.end_var)]])) {
+        cli$cli_abort("{rl$as_name(.end_var)} must be of type {.cls Date}.")
+    }
+    .data %>%
+        dp$filter(
+            .data[[.start_var]] < t,
+            is.na(.data[[.end_var]]) | .data[[.end_var]] > t
+        ) %>%
+        dp$mutate(
+            !!.new_name := t
+        )
+}
 
 #' @export
 prep_ongoing <- function(.data,
@@ -123,20 +123,22 @@ prep_recode <- function(.data, .var, dict, .default = NA, .new_name = NULL) {
 tidy_helper <- function(x) {
     if (is.character(rl$quo_get_expr(x))) {
         rl$quo_get_expr(x)
-        } else if (is.symbol(rl$quo_get_expr(x))) {
-            x
-        } else {
-            cli$cli_abort(c(
+    } else if (is.symbol(rl$quo_get_expr(x))) {
+        x
+    } else {
+        cli$cli_abort(c(
             "{x {x}} must be a {.cls character} or {.cls symbol}.",
             "x" = "But it is type {.cls {class(x)}}"
         ))
-        }
+    }
 }
 
 #' @export
 prep_dynamic_groups <- function(.data, .start, .end, .start_var, .end_var, ..., .new_name = "visit_group") {
-    .start_var <- rl$enquo(.start_var) %>% tidy_helper()
-    .end_var <- rl$enquo(.end_var) %>% tidy_helper()
+    # Different version than the one in srqlib repo - this one is adated for use in functions
+    # Have to reconcile both eventually
+    .start_var <- if (is.character(.start_var)) .start_var else rl$enquo(.start_var)
+    .end_var <- if (is.character(.start_var)) .start_var else rl$enquo(.start_var)
 
     dots <- rl$quos(...)
 
@@ -170,9 +172,9 @@ prep_line <- function(.data, id_col = "id") {
     found_cols <- req_cols %in% colnames(.data)
     if (!all(found_cols)) {
         cli$cli_abort(c(
-                  "Expecting columns named {.var {req_cols}}.",
+            "Expecting columns named {.var {req_cols}}.",
             "x" = "Missing column{?s} {.var {req_cols[!found_cols]}}."
-            ))
+        ))
     }
     .data %>%
         dp$arrange(patientkod, ordinerat, dp$desc(utsatt)) %>%
