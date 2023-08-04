@@ -126,7 +126,7 @@ count_nonmissing_above_cutoff <- function(.data, input, .var) {
     if (!is.null(input$lan) && nrow(.data) > 0) {
         .data %>%
             dp$summarise(
-                nonmissing = sum(!is.na(.data[[input$outcome %||% .var]])),
+                nonmissing = sum(!is.na(.data[[.var %||% input$outcome]])),
                 .by = lan
             ) %>%
             dp$filter(nonmissing > 5) %>%
