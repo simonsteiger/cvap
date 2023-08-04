@@ -69,3 +69,36 @@ tt$test_that("num sort sorts by group (`measure`) within lan", {
 
   tt$expect_equal(test, compare)
 })
+
+tt$test_that("num sort sorts NA to lowest (first) level", {
+  ref <- ref %>%
+    dp$mutate(outcome = ifelse(lan == "Kalmar" & measure == max(measure), NA, outcome))
+
+  test <- ref %>%
+    ase$sort_num("measure") %>%
+    dp$pull(lan) %>%
+    as.character() %>%
+    unique()
+
+  tt$expect_equal(test[1], "Kalmar") # Kalmar's NA on measure is equivalent to outcome == 0
+})
+
+# These go outside because testthat is unhappy with the warnings
+ref_fct_na_to_0 <- ref %>%
+  dp$mutate(
+    outcome = ifelse(lan == "Kalmar" & some_fct == get_target_level(., "some_fct"),
+      NA, some_fct
+    )
+  )
+
+test_fct_na_to_0 <- ref_fct_na_to_0 %>%
+  dp$summarise(outcome = sum(outcome), .by = c(lan, some_fct)) %>%
+  ase$sort_fct("some_fct") %>%
+  dp$pull(lan) %>%
+  as.character() %>%
+  unique()
+
+tt$test_that("fct sort sorts NA to lowest (first) level", {
+  tt$expect_equal(test_fct_na_to_0[1], "Kalmar")
+  # Kalmar's NA on measure is equivalent to outcome == 0
+})

@@ -11,7 +11,7 @@ box::use(
 )
 
 box::use(
-    app / logic / swissknife / sklang[`%//%`],
+    app / logic / swissknife / sklang[`%//%`, `%na?%`],
 )
 
 # Helper for filter_ongoing
@@ -83,15 +83,16 @@ prep_custom_order <- function(.data, .reorder, .by, ...) {
         dp$mutate(
             sort = pr$map_dbl(
                 .data[[.reorder]],
-                ~ .data[[.by]][!!!dots & .data[[.reorder]] == .x] %//% 0
-                # .x means doing everything within reorder (lan)
+                ~ .data[[.by]][!!!dots & .data[[.reorder]] == .x] %//% -Inf %na?% -Inf
+                # .x means doing everything within current level of reorder (lan)
+                # with the condition stored in `dots`
+                # finally, if the result of subsetting is logical(0) or NA, return -Inf
             ),
             !!.reorder := as.factor(.data[[.reorder]]),
-            y_na_zero = ifelse(is.na(sort), 0, sort),
-            !!.reorder := fct$fct_reorder(.data[[.reorder]], y_na_zero, .na_rm = FALSE)
+            !!.reorder := fct$fct_reorder(.data[[.reorder]], sort, .na_rm = FALSE)
         ) %>%
         dp$arrange(dp$across(.data[[.reorder]])) %>%
-        dp$select(-c(sort, y_na_zero))
+        dp$select(-sort)
 }
 
 #' @export
