@@ -1,6 +1,7 @@
 box::use(
     app / logic / aux_server / observers,
     app / logic / aux_server / sift,
+    app / logic / aux_server / sort,
     app / logic / aux_server / errors,
     app / logic / aux_server / formatters,
     app / logic / aux_server / checks,
@@ -20,6 +21,21 @@ maybe_lookback <- sift$maybe_lookback
 
 #' @export
 maybe_ongoing <- sift$maybe_ongoing
+
+#' @export
+sort_date <- sort$sort_date
+
+#' @export
+sort_fct <- sort$sort_fct
+
+#' @export
+sort_num <- sort$sort_num
+
+#' @export
+sort_alph <- sort$sort_alph
+
+#' @export
+sort_nogroup <- sort$sort_nogroup
 
 #' @export
 count_nonmissing_above_cutoff <- sift$count_nonmissing_above_cutoff
