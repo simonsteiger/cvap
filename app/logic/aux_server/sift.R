@@ -118,6 +118,17 @@ maybe_lookback <- function(.data, input, .var) {
 }
 
 #' @export
+#' Helper function to select entries within years in datecompare
+maybe_datecompare <- function(.data, input, run = FALSE) {
+    if (!run) {
+        .data
+    } else {
+        check_date <- checks$vali_date(input)
+        dp$filter(.data, lub$year(.data$ongoing_timestamp) %in% lub$year(input[[check_date$var]]))
+    }
+}
+
+#' @export
 #' Calculate sample size while excluding samples from lans with < 5 ppl
 #' This is prone to inaccuracy where lan data is further grouped in synopsis
 #' e.g. into Behandlingsstart and Uppföljning

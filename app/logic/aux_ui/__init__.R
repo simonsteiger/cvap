@@ -59,6 +59,9 @@ navbox_map <- navboxes$navbox_map
 inp_daterange <- dates$inp_daterange
 
 #' @export
+inp_datecompare <- dates$inp_datecompare
+
+#' @export
 inp_date <- dates$inp_date
 
 #' @export

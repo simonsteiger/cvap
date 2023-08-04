@@ -28,7 +28,7 @@ ui <- function(id, data) {
     ns <- sh$NS(id)
 
     inputs <- sh$tagList(
-        aui$inp_daterange(sh$NS(ns("input"), "ongoing"), "Välj tidsfönster för behandlingar"),
+        aui$inp_datecompare(sh$NS(ns("input"), "ongoing"), "Välj år du vill jämföra"),
         aui$inp_radio_outcome(sh$NS(ns("input"), "outcome"), c("Antal per 100 000" = "per100k", "Total antal" = "n")),
         aui$inp_radio_sex(sh$NS(ns("input"), "kon")),
         # aui$inp_slider_age(sh$NS(ns("input"), "alder")),
@@ -73,12 +73,12 @@ server <- function(id, access_page, data, geo, summary) {
         # Create icons for input summary on main VAP page
         # This is only updated whenever a page is accessed or "go_input" is clicked
         out_icons <- sh$bindEvent(
-            overview$server("input"),
+            overview$server("input", datecompare = TRUE),
             list(input$go_input, access_page)
         )
 
         # Create filtered data
-        sifted <- sift$server("input", sh$reactive(data), "patientkod")
+        sifted <- sift$server("input", sh$reactive(data), "patientkod", datecompare = TRUE)
 
         # User-input determines if two summarising steps or one
         # Step 1 is always a column-independent summary

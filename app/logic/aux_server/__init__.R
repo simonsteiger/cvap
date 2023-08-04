@@ -23,6 +23,9 @@ maybe_lookback <- sift$maybe_lookback
 maybe_ongoing <- sift$maybe_ongoing
 
 #' @export
+maybe_datecompare <- sift$maybe_datecompare
+
+#' @export
 sort_date <- sort$sort_date
 
 #' @export

@@ -21,10 +21,11 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id) {
+server <- function(id, datecompare = FALSE) {
     sh$moduleServer(id, function(input, output, session) {
         sh$reactive({
             inputs_with_icons <- names(input)[names(input) %in% names(ase$iconostasis)]
+            dot_inputs <- rl$list2(id = id, datecompare = datecompare)
 
             # Iterate over all input names that have a corresponding icon-function
             # If current name is last name, make icon only
@@ -33,9 +34,12 @@ server <- function(id) {
                 inputs_with_icons,
                 \(name) {
                     if (name == ut$tail(inputs_with_icons, 1)) {
-                        ase$iconostasis[[name]](input[[name]], id = id)
+                        ase$iconostasis[[name]](input[[name]], !!!dot_inputs)
                     } else {
-                        sh$tagList(ase$iconostasis[[name]](input[[name]]), sh$hr())
+                        sh$tagList(
+                            ase$iconostasis[[name]](input[[name]], !!!dot_inputs),
+                            sh$hr()
+                        )
                     }
                 }
             )

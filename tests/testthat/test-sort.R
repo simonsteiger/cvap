@@ -83,7 +83,7 @@ tt$test_that("num sort sorts NA to lowest (first) level", {
   tt$expect_equal(test[1], "Kalmar") # Kalmar's NA on measure is equivalent to outcome == 0
 })
 
-# These go outside because testthat is unhappy with the warnings
+# These next to pipelines go outside because testthat is unhappy with the warnings
 ref_fct_na_to_0 <- ref %>%
   dp$mutate(
     outcome = ifelse(lan == "Kalmar" & some_fct == get_target_level(., "some_fct"),

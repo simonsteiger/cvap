@@ -28,7 +28,7 @@ ui <- function(id, id_go_input, id_overview, inputs) {
 }
 
 #' @export
-server <- function(id, data, .var = NULL, button = TRUE) {
+server <- function(id, data, .var = NULL, button = TRUE, datecompare = FALSE) {
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(data))
 
@@ -73,7 +73,8 @@ server <- function(id, data, .var = NULL, button = TRUE) {
             } else {
                 data()[sieve(), ] %>%
                     ase$maybe_lookback(input, .var) %>%
-                    ase$maybe_ongoing(input)
+                    ase$maybe_ongoing(input) %>%
+                    ase$maybe_datecompare(input, datecompare)
             }
         })
 

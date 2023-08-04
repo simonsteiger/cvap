@@ -38,3 +38,21 @@ inp_daterange <- function(id, label, start = lub$ymd("2020-01-01"), end = lub$ym
         )
     )
 }
+
+#' @export
+#' Wrapper with presets for date range input
+inp_datecompare <- function(id, label, start = lub$ymd("2020-01-01"), end = lub$ymd("2021-12-31")) {
+    sh$div(
+        class = "mb-4 mx-1",
+        sh$dateRangeInput(
+            inputId = id,
+            label = label,
+            start = start,
+            end = end,
+            format = "yyyy",
+            startview = "year",
+            language = "sv",
+            separator = "jämfört med"
+        )
+    )
+}

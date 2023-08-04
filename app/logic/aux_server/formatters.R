@@ -100,10 +100,18 @@ icon_alder <- function(input, ...) {
 }
 
 icon_date <- function(input, ...) {
-    sh$div(
-        class = "d-flex flex-row align-items-center gap-3",
-        sh$icon("calendar"), paste0(input, collapse = " till ")
-    )
+    dots <- rl$list2(...)
+    if (dots$datecompare) {
+        sh$div(
+            class = "d-flex flex-row align-items-center gap-3",
+            sh$icon("calendar"), paste0(unique(lub$year(input)), collapse = " vs ")
+        )
+    } else {
+        sh$div(
+            class = "d-flex flex-row align-items-center gap-3",
+            sh$icon("calendar"), paste0(input, collapse = " till ")
+        )
+    }
 }
 
 icon_lan <- function(input, ...) {
@@ -163,7 +171,7 @@ icon_outcome <- function(input, ...) {
     )
 }
 
-icon_lan <- function(input) {
+icon_lan <- function(input, ...) {
     sh$div(
         class = "d-flex flex-row align-items-center gap-3",
         sh$icon("map-location-dot"), paste0(length(input), " län")
@@ -223,7 +231,7 @@ icon_samplecrit <- function(input) {
     sh$div(
         class = "d-flex flex-row align-items-center gap-3",
         sh$tags$i(class = "fa fa-users-slash c-danger"),
-            paste0("Otillräcklig data i ", length(input), " län")
+        paste0("Otillräcklig data i ", length(input), " län")
     )
 }
 
