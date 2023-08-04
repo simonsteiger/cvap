@@ -84,6 +84,7 @@ prep_custom_order <- function(.data, .reorder, .by, ...) {
             sort = pr$map_dbl(
                 .data[[.reorder]],
                 ~ .data[[.by]][!!!dots & .data[[.reorder]] == .x] %//% 0
+                # .x means doing everything within reorder (lan)
             ),
             !!.reorder := as.factor(.data[[.reorder]]),
             y_na_zero = ifelse(is.na(sort), 0, sort),

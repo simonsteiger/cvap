@@ -10,9 +10,19 @@ box::use(
     app / logic / srqlib / srqprep,
 )
 
+#' @export
 get_group <- function(.data, group) {
     colnames(.data) %>%
         `[`(., . %in% group)
+}
+
+#' @export
+get_target_level <- function(.data, group_var) {
+    .data[[group_var]] %>%
+        droplevels() %>%
+        fct$fct_reorder(-.data[["outcome"]]) %>%
+        levels() %>%
+        `[`(., 1)
 }
 
 #' @export
@@ -20,12 +30,7 @@ sort_fct <- function(.data, group) {
     stopifnot(!sh$is.reactive(.data))
     group_var <- get_group(.data, group)
 
-    target_level <-
-        .data[[group_var]] %>%
-        droplevels() %>%
-        fct$fct_reorder(-.data[["outcome"]]) %>%
-        levels() %>%
-        `[`(., 1)
+    target_level <- get_target_level(.data, group_var)
 
     srqprep$prep_custom_order(
         .data,
