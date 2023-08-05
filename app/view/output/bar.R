@@ -8,6 +8,7 @@ box::use(
     gg = ggplot2,
     pal = palettes,
     shj = shinyjs,
+    rl = rlang[`%||%`],
 )
 
 box::use(
@@ -106,9 +107,19 @@ server <- function(id,
                 # TODO JS formatter needs to be adjusted to grab correct values
                 e4r$e_tooltip(textStyle = list(fontFamily = "Roboto")) %>%
                 e4r$e_aria(enabled = input$decal, decal = list(show = TRUE)) %>% # decal patterns
-                e4r$e_theme_custom("app/static/echarts_theme.json") #%>%
-                # e4r$e_mark_line(data = list(type = "average", name = "AVG")) # EXPERIMENTAL
-                # Instead figure out the necessary JS to make "Riket" bold
+                e4r$e_theme_custom("app/static/echarts_theme.json") # %>%
+            # e4r$e_mark_line(data = list(type = "average", name = "AVG")) # EXPERIMENTAL
+            # Instead figure out the necessary JS to make "Riket" bold
+
+            if (input$malniva %||% FALSE) {
+                riket_val <- .data$outcome[.data$lan == "Riket"]
+                riket_lwr <- riket_val - riket_val * 0.25
+                riket_upr <- riket_val + riket_val * 0.25
+
+                out <- out %>%
+                    e4r$e_mark_line(data = list(xAxis = riket_lwr, title = "Riket -25%")) %>%
+                    e4r$e_mark_line(data = list(xAxis = riket_upr, title = "Riket +25%"))
+            }
 
             if (!is.null(format)) {
                 out %>%
