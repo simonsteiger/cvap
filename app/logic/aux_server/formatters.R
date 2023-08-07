@@ -48,11 +48,25 @@ format_year <- function() {
 }
 
 #' @export
+format_riket_bold <- function() {
+    hw$JS("
+        function (lan) {
+            if (lan == 'Riket') {
+                return `{b|${lan}}`;
+            } else {
+                return lan;
+            }
+        }
+      ")
+}
+
+#' @export
 #' wraps the previously defined formatters so they can be subsetted based on function args
 format_list <- list(
     decimal = format_decimal,
     percent = format_percent,
-    year = format_year
+    year = format_year,
+    riket = format_riket_bold
 )
 
 # ICD formatters ----

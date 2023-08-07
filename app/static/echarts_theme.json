@@ -178,7 +178,12 @@
         },
         "axisLabel": {
             "show": true,
-            "color": "#4161ab"
+            "color": "#4161ab",
+            "rich": {
+                "b": {
+                  "fontWeight": "bold"
+                }
+              }
         },
         "splitLine": {
             "show": false,

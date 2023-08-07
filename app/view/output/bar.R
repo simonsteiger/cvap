@@ -113,13 +113,18 @@ server <- function(id,
                     subtextStyle = list(fontFamily = "Roboto")
                 ) %>%
                 e4r$e_y_axis_(max = limit_upper) %>%
-                e4r$e_x_axis_(x, axisLabel = list(fontFamily = "Roboto")) %>%
+                e4r$e_x_axis_(
+                    x,
+                    formatter = ase$format_list[["riket"]](),
+                    axisLabel = list(
+                        fontFamily = "Roboto",
+                        rich = list(b = list(fontWeight = "bold"))
+                    )
+                ) %>%
                 # TODO JS formatter needs to be adjusted to grab correct values
                 e4r$e_tooltip(textStyle = list(fontFamily = "Roboto")) %>%
                 e4r$e_aria(enabled = input$decal, decal = list(show = TRUE)) %>% # decal patterns
-                e4r$e_theme_custom("app/static/echarts_theme.json") # %>%
-            # e4r$e_mark_line(data = list(type = "average", name = "AVG")) # EXPERIMENTAL
-            # Instead figure out the necessary JS to make "Riket" bold
+                e4r$e_theme_custom("app/static/echarts_theme.json")
 
             if (input$malniva %||% FALSE) {
                 riket_val <- .data()$outcome[.data()$lan == "Riket"]
