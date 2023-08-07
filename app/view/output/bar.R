@@ -15,9 +15,10 @@ box::use(
     ase = app / logic / aux_server,
     aui = app / logic / aux_ui,
     app / logic / theme,
+    app / logic / swissknife / sklang[`%//%`],
     app / logic / srqlib / srqcolor,
     app / logic / srqlib / srqauto,
-    app / logic / data / summaries[info_bar]
+    app / logic / data / summaries[info_bar],
 )
 
 #' @export
@@ -41,8 +42,9 @@ ui <- function(id) {
             ),
             sh$div(
                 class = "d-flex justify-content-between align-items-center gap-4",
-                aui$inp_toggle(ns("decal"), "Ökad tillgänglighet", value = TRUE),
-                aui$inp_toggle(ns("sort"), "Alfabetisk ordning")
+                aui$inp_toggle(ns("decal"), "Ökad Tillgänglighet", value = TRUE),
+                aui$inp_toggle(ns("sort"), "Alfabetisk ordning"),
+                sh$htmlOutput(ns("inp_malniva"))
             )
         ),
         body = e4r$echarts4rOutput(ns("bar")),
@@ -68,6 +70,14 @@ server <- function(id,
 
         time_vars <- c("visit_group", "timestamp")
 
+        output$inp_malniva <- sh$renderUI({
+            if ("Riket" %in% .data()$lan) {
+                aui$inp_toggle(session$ns("malniva"), "Visa målniva")
+            } else {
+                NULL
+            }
+        })
+
         out <- sh$reactive({
             # Assert that group isn't NULL and there is data to work with
             if (!is.null(group) && nrow(.data()) > 0 && !all(is.na(.data()[[y]]))) {
@@ -92,7 +102,7 @@ server <- function(id,
         res_interactive <- sh$reactive({
             limit_upper <- max(out()[[y]], na.rm = TRUE) # get limits for value axis
 
-            out <- out() %>%
+            out_basic <- out() %>%
                 e4r$e_charts_(x, timeline = timeline) %>%
                 e4r$e_bar_(y) %>%
                 e4r$e_legend(bottom = 0, show = !timeline) %>%
@@ -112,21 +122,33 @@ server <- function(id,
             # Instead figure out the necessary JS to make "Riket" bold
 
             if (input$malniva %||% FALSE) {
-                riket_val <- .data$outcome[.data$lan == "Riket"]
-                riket_lwr <- riket_val - riket_val * 0.25
-                riket_upr <- riket_val + riket_val * 0.25
+                riket_val <- .data()$outcome[.data()$lan == "Riket"]
+                riket_lwr <- (riket_val - riket_val * 0.25)
+                riket_upr <- (riket_val + riket_val * 0.25)
 
-                out <- out %>%
-                    e4r$e_mark_line(data = list(xAxis = riket_lwr, title = "Riket -25%")) %>%
-                    e4r$e_mark_line(data = list(xAxis = riket_upr, title = "Riket +25%"))
+                print(paste0(riket_lwr, riket_upr))
+
+                out_malniva <- out_basic %>%
+                    e4r$e_mark_line(
+                        data = list(xAxis = mean(riket_lwr)),
+                        title = "Riket -25%",
+                        itemStyle = list(color = "red")
+                    ) %>%
+                    e4r$e_mark_line(
+                        data = list(xAxis = mean(riket_upr)),
+                        title = "Riket +25%",
+                        itemStyle = list(color = "red")
+                    )
+            } else {
+                out_malniva <- out_basic
             }
 
             if (!is.null(format)) {
-                out %>%
+                out_malniva %>%
                     e4r$e_y_axis(formatter = e4r$e_axis_formatter(format)) %>%
                     e4r$e_flip_coords()
             } else {
-                out %>%
+                out_malniva %>%
                     e4r$e_flip_coords()
             }
             # Flip coords last to avoid confusion with axis flip and target axis for formatter

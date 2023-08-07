@@ -1,3 +1,7 @@
+# Clinicians' Visualisation and Analysis Platform (CVAP)
+
+The CVAP is an R Shiny app to make selected statistics and visualisations from the [Swedish Rheumatology Quality Register](www.srq.nu) accessible to clinicians and the wider public.
+
 # Running the app locally
 - First, install dependencies with `renv::restore()`
 - Adjust local directory to read SRQ data from *add global variable*
