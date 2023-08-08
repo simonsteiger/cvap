@@ -1,11 +1,16 @@
 box::use(
+    sh = shiny,
     gg = ggplot2,
     lub = lubridate,
     pal = palettes,
     dp = dplyr,
+    e4r = echarts4r,
+    magrittr[`%>%`],
+    rl = rlang[`%||%`],
 )
 
 box::use(
+    ase = app / logic / aux_server,
     app / logic / theme,
     app / logic / srqlib / srqcolor,
     app / logic / srqlib / srqauto,
@@ -28,8 +33,8 @@ plot_export_grouped <- function(.data, x, y, group, stash, scale_y) {
         gg$labs(
             x = NULL,
             y = NULL, # keep settings from scale_y
-            title = stash()$title,
-            subtitle = stash()$subtitle,
+            title = stash$title,
+            subtitle = stash$subtitle,
             caption = paste0("Data uttagen: ", lub$today(), "\nwww.srq.nu")
         ) +
         gg$theme_classic() +
@@ -52,8 +57,8 @@ plot_export_ungrouped <- function(.data, x, y, stash, scale_y) {
         gg$labs(
             x = NULL,
             y = NULL, # keep settings from scale_y
-            title = stash()$title,
-            subtitle = stash()$subtitle,
+            title = stash$title,
+            subtitle = stash$subtitle,
             caption = paste0("Data uttagen: ", lub$today(), "\nwww.srq.nu")
         ) +
         gg$theme_classic() +
@@ -62,6 +67,8 @@ plot_export_ungrouped <- function(.data, x, y, stash, scale_y) {
 
 #' @export
 plot_bar_export <- function(.data, x, y, group, timeline, stash) {
+    stopifnot(!sh$is.reactive(stash)) # must pass non-reactive
+
     scale_y <- gg$scale_y_continuous(
         name = NULL,
         labels = srqauto$guess_label_num("y", .data[[y]])
@@ -71,4 +78,72 @@ plot_bar_export <- function(.data, x, y, group, timeline, stash) {
     } else {
         plot_export_grouped(.data, x, y, group, stash, scale_y)
     }
+}
+
+plot_bar_interactive_core <- function(.data, input, x, y, timeline, limit_upper, text) {
+    .data %>%
+        e4r$e_charts_(x, timeline = timeline) %>%
+        e4r$e_bar_(y) %>%
+        e4r$e_legend(bottom = 0, show = !timeline) %>%
+        e4r$e_title(
+            text,
+            paste0("Data uttagen: ", lub$today()),
+            textStyle = list(fontFamily = "Commissioner"),
+            subtextStyle = list(fontFamily = "Roboto")
+        ) %>%
+        e4r$e_y_axis_(max = limit_upper) %>%
+        e4r$e_x_axis_(
+            x,
+            formatter = ase$format_list[["riket"]](),
+            axisLabel = list(
+                fontFamily = "Roboto",
+                rich = list(b = list(fontWeight = "bold"))
+            )
+        ) %>%
+        e4r$e_tooltip(textStyle = list(fontFamily = "Roboto")) %>%
+        e4r$e_aria(enabled = input$decal, decal = list(show = TRUE)) %>% # decal patterns
+        e4r$e_theme_custom("app/static/echarts_theme.json")
+}
+
+mark_malniva <- function(e, .data, input, y) {
+    if (input$malniva %||% FALSE) {
+        riket_val <- .data[[y]][.data[["lan"]] == "Riket"]
+        riket_lwr <- riket_val - riket_val * 0.25
+        riket_upr <- riket_val + riket_val * 0.25
+
+        e %>%
+            e4r$e_mark_line(
+                data = list(xAxis = mean(riket_lwr)),
+                title = "Riket -25%",
+                itemStyle = list(color = "red")
+            ) %>%
+            e4r$e_mark_line(
+                data = list(xAxis = mean(riket_upr)),
+                title = "Riket +25%",
+                itemStyle = list(color = "red")
+            )
+    } else {
+        e
+    }
+}
+
+format_y <- function(e, format) {
+    if (!is.null(format)) {
+        e %>%
+            e4r$e_y_axis(formatter = e4r$e_axis_formatter(format))
+    } else {
+        e
+    }
+}
+
+#' @export
+plot_bar_interactive <- function(.data, input, x, y, timeline, limit_upper, text, format) {
+    stopifnot(!sh$is.reactive(.data))
+
+    e <- plot_bar_interactive_core(.data, input, x, y, timeline, limit_upper, text)
+
+    e %>%
+        mark_malniva(.data, input, y) %>%
+        format_y(format) %>%
+        e4r$e_flip_coords()
 }

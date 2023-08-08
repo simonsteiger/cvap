@@ -98,66 +98,21 @@ server <- function(id, .data, stash, text, x = "lan", y = "outcome", group = NUL
         res_interactive <- sh$reactive({
             limit_upper <- max(out()[[outcome_long()]], na.rm = TRUE) # get limits for value axis
 
-            out_basic <- out() %>%
-                e4r$e_charts_(x, timeline = timeline) %>%
-                e4r$e_bar_(outcome_long()) %>%
-                e4r$e_legend(bottom = 0, show = !timeline) %>%
-                e4r$e_title(
-                    text,
-                    paste0("Data uttagen: ", lub$today()),
-                    textStyle = list(fontFamily = "Commissioner"),
-                    subtextStyle = list(fontFamily = "Roboto")
-                ) %>%
-                e4r$e_y_axis_(max = limit_upper) %>%
-                e4r$e_x_axis_(
-                    x,
-                    formatter = ase$format_list[["riket"]](),
-                    axisLabel = list(
-                        fontFamily = "Roboto",
-                        rich = list(b = list(fontWeight = "bold"))
-                    )
-                ) %>%
-                # TODO JS formatter needs to be adjusted to grab correct values
-                e4r$e_tooltip(textStyle = list(fontFamily = "Roboto")) %>%
-                e4r$e_aria(enabled = input$decal, decal = list(show = TRUE)) %>% # decal patterns
-                e4r$e_theme_custom("app/static/echarts_theme.json")
-
-            if (input$malniva %||% FALSE) {
-                riket_val <- .data()$outcome[.data()$lan == "Riket"]
-                riket_lwr <- (riket_val - riket_val * 0.25)
-                riket_upr <- (riket_val + riket_val * 0.25)
-
-                print(paste0(riket_lwr, riket_upr))
-
-                out_malniva <- out_basic %>%
-                    e4r$e_mark_line(
-                        data = list(xAxis = mean(riket_lwr)),
-                        title = "Riket -25%",
-                        itemStyle = list(color = "red")
-                    ) %>%
-                    e4r$e_mark_line(
-                        data = list(xAxis = mean(riket_upr)),
-                        title = "Riket +25%",
-                        itemStyle = list(color = "red")
-                    )
-            } else {
-                out_malniva <- out_basic
-            }
-
-            if (!is.null(format)) {
-                out_malniva %>%
-                    e4r$e_y_axis(formatter = e4r$e_axis_formatter(format)) %>%
-                    e4r$e_flip_coords()
-            } else {
-                out_malniva %>%
-                    e4r$e_flip_coords()
-            }
-            # Flip coords last to avoid confusion with axis flip and target axis for formatter
+            out_basic <- ase$plot_bar_interactive(
+                out(),
+                input,
+                x,
+                outcome_long(),
+                timeline,
+                limit_upper,
+                text,
+                format
+            )
         })
 
         # Create ggplot barplot for download as pdf (echarts offers only poor resolution)
         res_export <- sh$reactive({
-            ase$plot_bar_export(out(), x, outcome_long(), group, timeline, stash)
+            ase$plot_bar_export(out(), x, outcome_long(), group, timeline, stash())
         })
 
         output$bar <- e4r$renderEcharts4r({
