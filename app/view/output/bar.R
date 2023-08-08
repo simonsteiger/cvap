@@ -56,19 +56,9 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id,
-                   .data,
-                   stash = NULL,
-                   x = "lan",
-                   y = "outcome",
-                   group = NULL,
-                   text = "Title",
-                   format = "decimal",
-                   timeline = FALSE) {
+server <- function(id, .data, stash, text, x = "lan", y = "outcome", group = NULL, format = "decimal", timeline = FALSE) {
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
-
-        time_vars <- c("visit_group", "timestamp")
 
         output$inp_malniva <- sh$renderUI({
             if ("Riket" %in% .data()$lan) {
@@ -78,10 +68,15 @@ server <- function(id,
             }
         })
 
+        outcome_long <- sh$reactive(ase$translate_outcome(stash()$outcome))
+
+        # These variables imply chronological order and should be sorted differently
+        time_vars <- c("visit_group", "timestamp")
+
         out <- sh$reactive({
             # Assert that group isn't NULL and there is data to work with
             if (!is.null(group) && nrow(.data()) > 0 && !all(is.na(.data()[[y]]))) {
-                .data() %>%
+                dat_reorder <- .data() %>%
                     dp$mutate(
                         !!group := {
                             # Only sort by y if group does not imply chronological order
@@ -94,17 +89,18 @@ server <- function(id,
                     ) %>%
                     dp$group_by(.data[[group]])
             } else {
-                .data()
+                dat_reorder <- .data()
             }
+            dp$rename(dat_reorder, !!outcome_long() := outcome)
         })
 
         # Create echarts barplot
         res_interactive <- sh$reactive({
-            limit_upper <- max(out()[[y]], na.rm = TRUE) # get limits for value axis
+            limit_upper <- max(out()[[outcome_long()]], na.rm = TRUE) # get limits for value axis
 
             out_basic <- out() %>%
                 e4r$e_charts_(x, timeline = timeline) %>%
-                e4r$e_bar_(y) %>%
+                e4r$e_bar_(outcome_long()) %>%
                 e4r$e_legend(bottom = 0, show = !timeline) %>%
                 e4r$e_title(
                     text,
@@ -161,7 +157,7 @@ server <- function(id,
 
         # Create ggplot barplot for download as pdf (echarts offers only poor resolution)
         res_export <- sh$reactive({
-            ase$plot_bar_export(out(), x, y, group, timeline, stash)
+            ase$plot_bar_export(out(), x, outcome_long(), group, timeline, stash)
         })
 
         output$bar <- e4r$renderEcharts4r({

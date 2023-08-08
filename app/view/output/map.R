@@ -85,11 +85,12 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
             }
         })
 
-        # Create interactive map for in-app view
-        time_vars <- c("visit_group", "timestamp")
+        # These variables imply chronological order and should be sorted differently
+        time_vars <- c("visit_group", "timestamp") # used below in res_interactive
 
+        # Create interactive map for in-app view
         res_interactive <- sh$reactive({
-            if (isFALSE(input$load)) { # abort if load is FALSE
+            if (isFALSE(input$load)) { # no plot if load is FALSE
                 NULL
             } else { # else draw map
                 # Assert that group is not null and there is some data to plot
@@ -131,8 +132,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
 
                     title <- text
                 }
-
-                # Main assembly of echart
+                # Assemble echart
                 ase$plot_map_interactive(out, geo, x, y, group, title)
             }
         })

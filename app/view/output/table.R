@@ -3,8 +3,6 @@ box::use(
     sh = shiny,
     dp = dplyr,
     rtbl = reactable,
-    rl = rlang,
-    pr = purrr,
 )
 
 box::use(
@@ -13,33 +11,6 @@ box::use(
     ase = app / logic / aux_server,
     app / logic / data / summaries[info_table]
 )
-
-translate <- function(chr_vec, ...) {
-    dots <- rl$list2(...)
-
-    pr$map_chr(chr_vec, \(chr) {
-        switch(chr,
-            "lan" = "Lan",
-            "inkluderad" = "Inklusion",
-            "ordinerat" = "Ordination",
-            "ongoing_timestamp" = "Pågående vid",
-            "visit_group" = "Tidpunkt",
-            "dxcat" = "Diagnos kategori",
-            "patientens_globala" = "Allmän hälsa",
-            "haq" = "HAQ",
-            "smarta" = "Smärta",
-            "das28_low" = "Låg DAS28",
-            "cdai_low" = "Låg CDAI",
-            "per100k" = "Antal per 100_000",
-            "nonmissing" = "Data tillgänglig",
-            "missing" = "Data saknas",
-            "population" = "Population",
-            "year" = "År",
-            "timestamp" = "Månader efter sjukdomsdebut", # Adjust this for tidig RA
-            chr
-        )
-    })
-}
 
 #' @export
 ui <- function(id) {
@@ -88,7 +59,7 @@ server <- function(id, .data, stash = NULL, arrange = NULL) {
 
                 temp %>%
                     dp$rename(!!stash()$outcome := outcome) %>%
-                    dp$rename_with(translate)
+                    dp$rename_with(ase$translate_outcome)
             })
         })
     })

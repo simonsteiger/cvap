@@ -350,3 +350,31 @@ create_subtitle <- function(input, .var) {
         }
     )
 }
+
+#' @export
+translate_outcome <- function(chr_vec, ...) {
+    dots <- rl$list2(...)
+
+    pr$map_chr(chr_vec, \(chr) {
+        switch(chr,
+            "lan" = "Lan",
+            "inkluderad" = "Inklusion",
+            "ordinerat" = "Ordination",
+            "ongoing_timestamp" = "Pågående vid",
+            "visit_group" = "Tidpunkt",
+            "dxcat" = "Diagnos kategori",
+            "patientens_globala" = "Allmän hälsa",
+            "haq" = "HAQ",
+            "smarta" = "Smärta",
+            "das28_low" = "Låg DAS28",
+            "cdai_low" = "Låg CDAI",
+            "per100k" = "Antal per 100_000",
+            "nonmissing" = "Data tillgänglig",
+            "missing" = "Data saknas",
+            "population" = "Population",
+            "year" = "År",
+            "timestamp" = "Månader efter sjukdomsdebut", # Adjust this for tidig RA
+            chr
+        )
+    })
+}

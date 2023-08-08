@@ -70,6 +70,9 @@ format_percent <- formatters$format_percent
 format_list <- formatters$format_list
 
 #' @export
+translate_outcome <- formatters$translate_outcome
+
+#' @export
 vali_date <- checks$vali_date
 
 #' @export
