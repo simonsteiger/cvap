@@ -175,26 +175,9 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
         res_export <- sh$reactive({
             limits <- c(min(.data()[[y]], na.rm = TRUE), max(.data()[[y]], na.rm = TRUE))
 
-            geo$sf %>%
-                dp$left_join(.data(), dp$join_by("NAME_1" == "lan")) %>%
-                gg$ggplot() +
-                gg$geom_sf(gg$aes(fill = .data[[y]])) +
-                pal$scale_fill_palette_c(
-                    srqcolor$ramp(100, "abyss"),
-                    na.value = "#ededed",
-                    limits = limits,
-                    breaks = c(limits, mean(limits)),
-                ) +
-                gg$labs(
-                    x = NULL,
-                    y = NULL, # keep settings from scale_y
-                    title = stash()$title,
-                    subtitle = stash()$subtitle,
-                    caption = paste0("Data uttagen: ", lub$today(), "\nwww.srq.nu"),
-                ) +
-                gg$xlim(c(1, 33)) + # show more latitudes to give text more space
-                gg$theme_void() +
-                theme$ggexport
+            joined <- dp$left_join(geo$sf, .data(), dp$join_by("NAME_1" == "lan"))
+
+            ase$plot_map_export(joined, y, group, limits, stash)
         })
 
         output$map <- e4r$renderEcharts4r({
@@ -213,7 +196,9 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                 paste0(lub$today(), "_vapX_map", ".pdf")
             },
             content = function(file) {
-                gg$ggsave(file, res_export(), width = 5, height = 7)
+                width <- if (!is.null(group)) 10 else 5
+                height <- if (length(unique(.data()[[group]])) > 3) 9 else 7
+                gg$ggsave(file, res_export(), width = width, height = height)
             }
         )
     })

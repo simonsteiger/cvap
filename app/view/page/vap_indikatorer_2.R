@@ -5,7 +5,7 @@ box::use(
 )
 
 box::use(
-    swissknife / skwrangle[`%per100k%`], # IMPORT skwrangle
+    app / logic / swissknife / skwrangle[`%per100k%`],
     aui = app / logic / aux_ui,
     ase = app / logic / aux_server,
     app / view / wrangle / sift,

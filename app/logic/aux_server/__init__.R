@@ -1,10 +1,12 @@
 box::use(
-    app / logic / aux_server / observers,
-    app / logic / aux_server / sift,
-    app / logic / aux_server / sort,
-    app / logic / aux_server / errors,
-    app / logic / aux_server / formatters,
-    app / logic / aux_server / checks,
+    app / logic / aux_server / misc / observers,
+    app / logic / aux_server / misc / errors,
+    app / logic / aux_server / misc / checks,
+    app / logic / aux_server / wrangle / sift,
+    app / logic / aux_server / wrangle / sort,
+    app / logic / aux_server / output / formatters,
+    app / logic / aux_server / output / bars,
+    app / logic / aux_server / output / maps,
 )
 
 #' @export
@@ -72,3 +74,9 @@ vali_date <- checks$vali_date
 
 #' @export
 check_samplesize <- checks$check_samplesize
+
+#' @export
+plot_bar_export <- bars$plot_bar_export
+
+#' @export
+plot_map_export <- maps$plot_map_export

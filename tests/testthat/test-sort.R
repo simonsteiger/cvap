@@ -9,7 +9,7 @@ box::use(
 
 box::use(
   ase = app / logic / aux_server,
-  app / logic / aux_server / sort[get_target_level],
+  app / logic / aux_server / wrangle / sort[get_target_level],
 )
 
 ref <- read.csv("app/logic/data/test/sort.csv", sep = ";") %>%

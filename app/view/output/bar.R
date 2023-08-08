@@ -42,8 +42,8 @@ ui <- function(id) {
             ),
             sh$div(
                 class = "d-flex justify-content-between align-items-center gap-4",
-                aui$inp_toggle(ns("decal"), "Ökad Tillgänglighet", value = TRUE),
-                aui$inp_toggle(ns("sort"), "Alfabetisk ordning"),
+                aui$inp_toggle(ns("decal"), "Ökad Tillg.", value = TRUE),
+                aui$inp_toggle(ns("sort"), "Alfabetisk ordn."),
                 sh$htmlOutput(ns("inp_malniva"))
             )
         ),
@@ -72,7 +72,7 @@ server <- function(id,
 
         output$inp_malniva <- sh$renderUI({
             if ("Riket" %in% .data()$lan) {
-                aui$inp_toggle(session$ns("malniva"), "Visa målniva")
+                aui$inp_toggle(session$ns("malniva"), "Visa mål")
             } else {
                 NULL
             }
@@ -161,33 +161,7 @@ server <- function(id,
 
         # Create ggplot barplot for download as pdf (echarts offers only poor resolution)
         res_export <- sh$reactive({
-            scale_y <- gg$scale_y_continuous(
-                name = NULL,
-                labels = srqauto$guess_label_num("y", out()[[y]])
-            )
-
-            gg$ggplot(out(), gg$aes(.data[[x]], .data[[y]])) +
-                gg$geom_col(
-                    gg$aes(fill = as.factor(.data[[group]])),
-                    position = gg$position_dodge2(
-                        preserve = "single",
-                        padding = 0.2
-                    )
-                ) +
-                pal$scale_fill_palette_d(srqcolor$ramp(dp$n_distinct(out()[[group]]))) +
-                pal$scale_color_palette_d(srqcolor$ramp(dp$n_distinct(out()[[group]]))) +
-                gg$coord_flip() +
-                scale_y +
-                gg$xlab(NULL) +
-                gg$labs(
-                    x = NULL,
-                    y = NULL, # keep settings from scale_y
-                    title = stash()$title,
-                    subtitle = stash()$subtitle,
-                    caption = paste0("Data uttagen: ", lub$today(), "\nwww.srq.nu")
-                ) +
-                gg$theme_classic() +
-                theme$ggexport
+            ase$plot_bar_export(out(), x, y, group, timeline, stash)
         })
 
         output$bar <- e4r$renderEcharts4r({

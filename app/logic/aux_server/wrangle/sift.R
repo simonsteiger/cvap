@@ -10,7 +10,7 @@ box::use(
 )
 
 box::use(
-    app / logic / aux_server / checks,
+    app / logic / aux_server / misc / checks,
     app / logic / srqlib / srqprep,
     app / logic / srqlib / srqdict,
 )
