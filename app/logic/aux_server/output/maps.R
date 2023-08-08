@@ -2,6 +2,8 @@ box::use(
     gg = ggplot2,
     lub = lubridate,
     pal = palettes,
+    e4r = echarts4r,
+    magrittr[`%>%`],
 )
 
 box::use(
@@ -59,5 +61,45 @@ plot_map_export <- function(.data, y, group, limits, stash) {
         plot_map_export_ungrouped(.data, y, limits, stash)
     } else {
         plot_map_export_facet(.data, y, group, limits, stash)
+    }
+}
+
+plot_map_interactive_core <- function(.data, geo, x, y, group) {
+    .data %>%
+        e4r$e_charts_(x, timeline = if (!is.null(group)) TRUE else FALSE) %>%
+        e4r$e_map_register("Sweden", geo$json) %>%
+        e4r$e_map_(y, map = "Sweden", nameProperty = "NAME_1") %>%
+        e4r$e_visual_map_(
+            min = min(.data[[y]]),
+            max = max(.data[[y]]),
+            color = srqcolor$pal_list$abyss %>% srqcolor$reverse(),
+            textStyle = list(fontFamily = "Roboto")
+        ) %>%
+        e4r$e_theme_custom("app/static/echarts_theme.json")
+}
+
+plot_map_interactive_timeline <- function(e, title) {
+    e %>%
+        e4r$e_timeline_opts(autoPlay = FALSE) %>%
+        e4r$e_timeline_serie(title = title)
+}
+
+plot_map_interactive_ungrouped <- function(e, title) {
+    e %>%
+        e4r$e_title(
+            text = title,
+            paste0("Data uttagen: ", lub$today()),
+            textStyle = list(fontFamily = "Commissioner"),
+            subtextStyle = list(fontFamily = "Roboto")
+        )
+}
+
+#' @export
+plot_map_interactive <- function(.data, geo, x, y, group, title) {
+    core <- plot_map_interactive_core(.data, geo, x, y, group)
+    if (is.null(group)) {
+        plot_map_interactive_ungrouped(core, title)
+    } else {
+        plot_map_interactive_timeline(core, title)
     }
 }

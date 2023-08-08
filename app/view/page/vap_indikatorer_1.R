@@ -88,7 +88,7 @@ server <- function(id, access_page, data, geo, summary) {
                 sifted,
                 .fn = mean,
                 .var = "visit_group",
-                .by = c("lan", "inkluderad"),
+                .by = "lan", # c("lan", "inkluderad") before
                 na.rm = TRUE
             ),
             list(input$go_input, access_page)
@@ -101,19 +101,19 @@ server <- function(id, access_page, data, geo, summary) {
             out_stash
         )
 
-        # Within läns, sort data by `group`
+        # with `before` setting: within läns, sort data by `group`
+        # Now: sort by value unless alphabetical sort enabled
         sum_sort <- sort$server(
             "output",
-            sum_warn,
-            group = "inkluderad"
+            sum_warn
         )
 
         # Create table output
         tbl$server(
             "output",
-            sum_synopsis,
+            sum_sort,
             stash = out_stash,
-            arrange = c("lan", "inkluderad")
+            arrange = "lan" # c("lan", "inkluderad") before
         )
 
         # Create barplot output
@@ -121,7 +121,7 @@ server <- function(id, access_page, data, geo, summary) {
             "output",
             sum_sort,
             stash = out_stash,
-            group = "inkluderad",
+            group = NULL, # "inkluderad" before
             text = title,
             format = "percent"
         )
@@ -132,7 +132,7 @@ server <- function(id, access_page, data, geo, summary) {
             .data = sum_warn,
             geo = geo,
             stash = out_stash,
-            group = "inkluderad",
+            group = NULL, # "inkluderad" before
             text = title,
             format = "percent"
         )

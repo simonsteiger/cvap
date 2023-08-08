@@ -80,3 +80,6 @@ plot_bar_export <- bars$plot_bar_export
 
 #' @export
 plot_map_export <- maps$plot_map_export
+
+#' @export
+plot_map_interactive <- maps$plot_map_interactive

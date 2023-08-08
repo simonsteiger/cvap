@@ -129,45 +129,11 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                 } else {
                     out <- formatted_data()
 
-                    title <- list(
-                        text = text,
-                        subtext = paste0("Data uttagen: ", lub$today()),
-                        textStyle = list(fontFamily = "Commissioner"),
-                        subtextStyle = list(fontFamily = "Roboto")
-                    )
+                    title <- text
                 }
 
                 # Main assembly of echart
-                basic <- out %>%
-                    e4r$e_charts_(x, timeline = if (!is.null(group)) TRUE else FALSE) %>%
-                    e4r$e_map_register("Sweden", geo$json) %>%
-                    e4r$e_map_(y, map = "Sweden", nameProperty = "NAME_1") %>%
-                    # Tooltip would need to be properly formatted for both map and timeline
-                    #e4r$e_tooltip(
-                    #    formatter = ase$format_list[[format]](),
-                    #    textStyle = list(fontFamily = "Roboto")
-                    #) %>%
-                    e4r$e_visual_map_(
-                        min = min(out[[y]]),
-                        max = max(out[[y]]),
-                        color = srqcolor$pal_list$abyss %>% srqcolor$reverse(),
-                        textStyle = list(fontFamily = "Roboto")
-                    ) %>%
-                    e4r$e_theme_custom("app/static/echarts_theme.json")
-
-                if (!is.null(group)) {
-                    basic %>%
-                        e4r$e_timeline_opts(autoPlay = FALSE) %>%
-                        e4r$e_timeline_serie(title = title)
-                } else {
-                    basic %>%
-                        e4r$e_title(
-                            text = text,
-                            paste0("Data uttagen: ", lub$today()),
-                            textStyle = list(fontFamily = "Commissioner"),
-                            subtextStyle = list(fontFamily = "Roboto")
-                        )
-                }
+                ase$plot_map_interactive(out, geo, x, y, group, title)
             }
         })
 
@@ -197,7 +163,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
             },
             content = function(file) {
                 width <- if (!is.null(group)) 10 else 5
-                height <- if (length(unique(.data()[[group]])) > 3) 9 else 7
+                height <- if (!is.null(group) && length(unique(.data()[[group]])) > 3) 9 else 7
                 gg$ggsave(file, res_export(), width = width, height = height)
             }
         )
