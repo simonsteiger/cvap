@@ -112,7 +112,7 @@ server <- function(id, .data, stash, text, x = "lan", y = "outcome", group = NUL
 
         # Create ggplot barplot for download as pdf (echarts offers only poor resolution)
         res_export <- sh$reactive({
-            ase$plot_bar_export(out(), x, outcome_long(), group, timeline, stash())
+            ase$plot_bar_export(out(), x, outcome_long(), group, timeline, stash(), input)
         })
 
         output$bar <- e4r$renderEcharts4r({

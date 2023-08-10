@@ -16,6 +16,8 @@ box::use(
     app / logic / srqlib / srqauto,
 )
 
+EXTEND_AXIS <- 0.1
+
 plot_export_grouped <- function(.data, x, y, group, stash, scale_y) {
     gg$ggplot(.data, gg$aes(.data[[x]], .data[[y]])) +
         gg$geom_col(
@@ -27,8 +29,9 @@ plot_export_grouped <- function(.data, x, y, group, stash, scale_y) {
         ) +
         pal$scale_fill_palette_d(srqcolor$ramp(dp$n_distinct(.data[[group]]))) +
         pal$scale_color_palette_d(srqcolor$ramp(dp$n_distinct(.data[[group]]))) +
-        gg$coord_flip() +
+        gg$scale_x_discrete(labels = c("Riket" = expression(bold(Riket)), parse = TRUE)) +
         scale_y +
+        gg$coord_flip() +
         gg$xlab(NULL) +
         gg$labs(
             x = NULL,
@@ -51,8 +54,9 @@ plot_export_ungrouped <- function(.data, x, y, stash, scale_y) {
                 padding = 0.2
             )
         ) +
-        gg$coord_flip() +
+        gg$scale_x_discrete(labels = c("Riket" = expression(bold(Riket)), parse = TRUE)) +
         scale_y +
+        gg$coord_flip() +
         gg$xlab(NULL) +
         gg$labs(
             x = NULL,
@@ -66,18 +70,21 @@ plot_export_ungrouped <- function(.data, x, y, stash, scale_y) {
 }
 
 #' @export
-plot_bar_export <- function(.data, x, y, group, timeline, stash) {
+plot_bar_export <- function(.data, x, y, group, timeline, stash, input) {
     stopifnot(!sh$is.reactive(stash)) # must pass non-reactive
 
     scale_y <- gg$scale_y_continuous(
         name = NULL,
-        labels = srqauto$guess_label_num("y", .data[[y]])
+        labels = srqauto$guess_label_num("y", .data[[y]]),
+        expand = c(0, 0),
+        limits = c(0, max(.data[[y]]) + max(.data[[y]]) * EXTEND_AXIS)
     )
     if (is.null(group)) {
-        plot_export_ungrouped(.data, x, y, stash, scale_y)
+        p <- plot_export_ungrouped(.data, x, y, stash, scale_y)
     } else {
-        plot_export_grouped(.data, x, y, group, stash, scale_y)
+        p <- plot_export_grouped(.data, x, y, group, stash, scale_y)
     }
+    mark_malniva(p, .data, input, y, type = "gg")
 }
 
 plot_bar_interactive_core <- function(.data, input, x, y, timeline, limit_upper, text) {
@@ -105,7 +112,7 @@ plot_bar_interactive_core <- function(.data, input, x, y, timeline, limit_upper,
         e4r$e_theme_custom("app/static/echarts_theme.json")
 }
 
-mark_malniva <- function(e, .data, input, y) {
+malniva_interactive <- function(e, .data, input, y) {
     if (input$malniva %||% FALSE) {
         riket_val <- .data[[y]][.data[["lan"]] == "Riket"]
         riket_lwr <- riket_val - riket_val * 0.25
@@ -127,6 +134,43 @@ mark_malniva <- function(e, .data, input, y) {
     }
 }
 
+malniva_export <- function(p, .data, input, y) {
+    if (input$malniva %||% FALSE) {
+        riket_val <- .data[[y]][.data[["lan"]] == "Riket"]
+        riket_lwr <- riket_val - riket_val * 0.25
+        riket_upr <- riket_val + riket_val * 0.25
+
+        n_lan <- length(unique(.data[["lan"]]))
+        offset_top <- 0.6
+
+        # coord flip makes this an hline even though it is vertical on final plot
+        p +
+            gg$geom_hline(
+                yintercept = c(riket_lwr, riket_upr),
+                color = "red",
+                alpha = 0.8
+            ) +
+            gg$geom_ribbon(
+                gg$aes(x = seq(0, n_lan + offset_top, length.out = n_lan), ymin = riket_lwr, ymax = riket_upr),
+                fill = "red",
+                alpha = 0.1
+            )
+    } else {
+        NULL
+    }
+}
+
+
+mark_malniva <- function(p, .data, input, y, type) {
+    if (type == "gg") {
+        malniva_export(p, .data, input, y)
+    } else if (type == "e") {
+        malniva_interactive(p, .data, input, y)
+    } else {
+        stop(paste("Unknown type", type))
+    }
+}
+
 format_y <- function(e, format) {
     if (!is.null(format)) {
         e %>%
@@ -143,7 +187,7 @@ plot_bar_interactive <- function(.data, input, x, y, timeline, limit_upper, text
     e <- plot_bar_interactive_core(.data, input, x, y, timeline, limit_upper, text)
 
     e %>%
-        mark_malniva(.data, input, y) %>%
+        mark_malniva(.data, input, y, type = "e") %>%
         format_y(format) %>%
         e4r$e_flip_coords()
 }
