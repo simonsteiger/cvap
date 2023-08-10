@@ -39,15 +39,16 @@ box::use(
   app / view / page / vap_kvalitetssakring_2,
 )
 
+PATH <- "app/logic/data/srq/"
+
 # Read all data files in the data folder, and if there are none, list_df won't exist
-ski$read_dir("app/logic/data/srq/")
+ski$read_dir(PATH)
 
 # If there were no files to read, run the preprocessing scripts and try again
 if (!exists("list_df")) {
-  path <- "app/logic/data/srq/"
-  filenames <- list.files(path, pattern = "^vap_.+\\.R$")
-  pr$walk(paste0(path, filenames), source, .progress = c("Preprocessing datasets..."))
-  ski$read_dir(path)
+  filenames <- list.files(PATH, pattern = "^vap_.+\\.R$")
+  pr$walk(paste0(PATH, filenames), source, .progress = c("Preprocessing datasets..."))
+  ski$read_dir(PATH)
 }
 
 # Load the geo data

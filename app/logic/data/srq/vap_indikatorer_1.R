@@ -10,9 +10,10 @@ box::use(
     ski = app / logic / swissknife / skinit,
     app / logic / srqlib / srqprep,
     app / logic / srqlib / srqdict,
+    local = app / logic / data / PATH,
 )
 
-ski$read_dir("/Users/simonsteiger/Desktop/data/fst/")
+ski$read_dir(local$PATH)
 
 # TODO chuck unnecessary variables
 

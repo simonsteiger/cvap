@@ -4,7 +4,7 @@ The CVAP is an R Shiny app to make selected statistics and visualisations from t
 
 # Running the app locally
 - First, install dependencies with `renv::restore()`
-- Adjust local directory to read SRQ data from *add global variable*
+- Adjust local directory to read SRQ data in `app/logic/data/PATH.R`
 - Run `rhino::app()`
 
 # Maintenance
@@ -21,6 +21,9 @@ All the relevant code is in the `/app` directory.
     │
     ├── logic               # Directory for non-reactive functions
     │   ├── aux_server          # Functions used in servers
+    │   │   ├── output              # Plots, HTML, ...
+    │   │   ├── misc                # Observers, errors
+    │   │   └── wrangle             # Data cleaning
     │   ├── aux_ui              # Functions used in UIs
     │   │   ├── container           # Cards, layouts, ...
     │   │   └── input               # Input widgets
@@ -46,4 +49,4 @@ All the relevant code is in the `/app` directory.
 
 ## The `tests` folder
 
-This folder contains automated tests to make sure that all functions run as intended. Always run these tests after making a change. They may not yet catch _every_ error, but still cover important parts of the code. If a test fails, adress the error before publishing a new version of the app.
+This folder contains automated tests to make sure that all functions run as intended. Always run these tests after making a change. They currently do not catch _every_ error, but still cover important parts of the code. If a test fails, adress the error before publishing a new version of the app.

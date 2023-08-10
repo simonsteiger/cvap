@@ -13,9 +13,10 @@ box::use(
     ski = app / logic / swissknife / skinit,
     app / logic / srqlib / srqprep,
     app / logic / srqlib / srqdict,
+    local = app / logic / data / PATH,
 )
 
-ski$read_dir("/Users/simonsteiger/Desktop/data/fst/")
+ski$read_dir(local$PATH)
 
 bas <- list_df$basdata %>%
     srqprep$prep_recode(diagnoskod_1, srqdict$rec_dxcat, .new_name = dxcat) %>%

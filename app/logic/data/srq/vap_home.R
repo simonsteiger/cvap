@@ -8,9 +8,10 @@ box::use(
 
 box::use(
     ski = app / logic / swissknife / skinit,
+    local = app / logic / data / PATH,
 )
 
-ski$read_dir("/Users/simonsteiger/Desktop/data/fst/")
+ski$read_dir(local$PATH)
 
 vis_t1 <- list_df$besoksdata %>%
     dp$filter(datum < "2022-01-01") %>%

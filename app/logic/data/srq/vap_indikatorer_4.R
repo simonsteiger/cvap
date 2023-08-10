@@ -11,12 +11,12 @@ box::use(
 
 box::use(
     ski = app / logic / swissknife / skinit, # dl data from server in deployment
-    app / logic / srqlib / srqdict, # include in project for deployment?
-    app / logic / srqlib / srqprep, # include in project for deployment?
+    app / logic / srqlib / srqdict,
+    app / logic / srqlib / srqprep,
+    local = app / logic / data / PATH,
 )
 
-# here goes data base download later
-ski$read_dir("/Users/simonsteiger/Desktop/data/fst/")
+ski$read_dir(local$PATH)
 
 # the data needs to go through the qrdf preprocessing, too
 

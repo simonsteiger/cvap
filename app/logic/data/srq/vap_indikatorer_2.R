@@ -11,9 +11,10 @@ box::use(
     app / logic / srqlib / srqprep,
     app / logic / srqlib / srqdict,
     ada = app / logic / data / aux_data,
+    local = app / logic / data / PATH,
 )
 
-ski$read_dir("/Users/simonsteiger/Desktop/data/fst/")
+ski$read_dir(local$PATH)
 
 # Chuck unnecessary variables
 

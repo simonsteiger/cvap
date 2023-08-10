@@ -11,10 +11,10 @@ box::use(
 
 box::use(
     ski = app / logic / swissknife / skinit,
+    local = app / logic / data / PATH,
 )
 
-# here goes data base download later
-ski$read_dir("/Users/simonsteiger/Desktop/data/fst/")
+ski$read_dir(local$PATH)
 
 coverage <- list_df$coverage %>%
     dp$mutate(
