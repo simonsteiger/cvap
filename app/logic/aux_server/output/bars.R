@@ -151,7 +151,11 @@ malniva_export <- function(p, .data, input, y) {
                 alpha = 0.8
             ) +
             gg$geom_ribbon(
-                gg$aes(x = seq(0, n_lan + offset_top, length.out = n_lan), ymin = riket_lwr, ymax = riket_upr),
+                gg$aes(
+                    x = seq(0, n_lan + offset_top, length.out = n_lan),
+                    ymin = riket_lwr,
+                    ymax = riket_upr
+                ),
                 fill = "red",
                 alpha = 0.1
             )

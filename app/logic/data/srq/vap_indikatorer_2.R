@@ -16,8 +16,6 @@ box::use(
 
 ski$read_dir(local$PATH)
 
-# Chuck unnecessary variables
-
 bas_ter <- list_df$basdata %>%
     srqprep$prep_recode(diagnoskod_1, srqdict$rec_dxcat, .new_name = dxcat) %>%
     dp$mutate(lan = ifelse(lan == "Örebro", "Orebro", lan)) %>%

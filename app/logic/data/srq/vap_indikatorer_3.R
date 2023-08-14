@@ -61,16 +61,13 @@ out <-
     tdr$nest(.by = visit_group) %>%
     dp$mutate(
         # keep obs depending on visit_group, see conds in visit_group mutate comments above
-        data = pr$map2(
-            .x = data,
-            .y = c("diff", "patientens_globala"),
-            .f = \(df, .var) {
-                df %>%
-                    dp$arrange(dp$across(ts$all_of(c("patientkod", .var)))) %>%
-                    dp$distinct(.data[["patientkod"]], .keep_all = TRUE)
-            }
-        )
+        data = pr$map2(data, c("diff", "patientens_globala"), \(df, .var) {
+            df %>%
+                dp$arrange(dp$across(ts$all_of(c("patientkod", .var)))) %>%
+                dp$distinct(.data[["patientkod"]], .keep_all = TRUE)
+        })
     ) %>%
-    tdr$unnest(data)
+    tdr$unnest(data) %>%
+    dp$select(-c(id, tillhor, fodelsedag))
 
 fst$write_fst(out, "app/logic/data/srq/vap_indikatorer_3.fst")

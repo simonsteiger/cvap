@@ -53,6 +53,7 @@ out <-
         das28_low = ifelse(das28 < 3.2, TRUE, FALSE),
         cdai_low = ifelse(cdai <= 10, TRUE, FALSE)
     ) %>%
-    dp$arrange(patientkod, das28)
+    dp$arrange(patientkod, das28) %>%
+    dp$select(-c(id, tillhor, fodelsedag))
 
 fst$write_fst(out, "app/logic/data/srq/vap_behandling_3.fst")

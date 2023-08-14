@@ -46,7 +46,7 @@ create_l <- function(data) {
 
 # RA requires 20-60 weeks, SpA/AS/PsA 1-60 months
 # Loop over nested data with category-specific values
-res <- out %>%
+out <- out %>%
     dp$filter(dxcat %in% c("RA", "SpA", "AS", "PsA")) %>%
     dp$mutate(ra_bool = ifelse(dxcat == "RA", TRUE, FALSE)) %>%
     tdr$nest(.by = ra_bool) %>%
@@ -77,7 +77,7 @@ res <- out %>%
             })
     ) %>%
     tdr$unnest(data) %>%
-    dp$select(-c(ra_bool, diff)) %>%
+    dp$select(-c(ra_bool, diff, min_inkl_diag, inkluderad, diagnosdatum1, symtomdebut_1, insatt, utsatt, pagaende)) %>%
     dp$mutate(dxcat = paste("Tidig", dxcat))
 
-fst$write_fst(res, "app/logic/data/srq/vap_inklusionsmatt_1.fst")
+fst$write_fst(out, "app/logic/data/srq/vap_inklusionsmatt_1.fst")

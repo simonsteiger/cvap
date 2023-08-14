@@ -26,7 +26,8 @@ srqprep$prep_recode(diagnoskod_1, srqdict$rec_dxcat, .new_name = dxcat) %>%
         lan = ifelse(lan == "Örebro", "Orebro", lan)
     )
 
-out <- pr$map(c("min_inkl_diag", "diagnosdatum1", "inkluderad"), \(t) {
+out <- pr$map(
+    c("min_inkl_diag", "diagnosdatum1", "inkluderad"), \(t) {
     out %>%
         dp$mutate(start = factor(t)) %>%
         srqprep$prep_dynamic_groups(
@@ -38,6 +39,8 @@ out <- pr$map(c("min_inkl_diag", "diagnosdatum1", "inkluderad"), \(t) {
             .default = FALSE
         )
 }) %>%
-    pr$list_rbind()
+    pr$list_rbind() %>%
+    dp$select(patientkod, inkluderad, kon, visit_group, lan, start, alder)
+
 
 fst$write_fst(out, "app/logic/data/srq/vap_indikatorer_1.fst")

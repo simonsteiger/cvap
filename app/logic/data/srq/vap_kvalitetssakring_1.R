@@ -53,7 +53,7 @@ unit_seq <- seq(from = 4, to = 12, by = 2)
 unit_min <- lub$dmonths(2) / lub$ddays(1)
 
 # TODO currently working with fixed min_ins_ord - correct?
-res <- pr$map(unit_seq, \(t) {
+out <- pr$map(unit_seq, \(t) {
     t_days <- lub$dmonths(t) / lub$ddays(1)
     out %>%
         dp$mutate(diff = as.numeric(datum - min_ins_ord)) %>%
@@ -65,8 +65,7 @@ res <- pr$map(unit_seq, \(t) {
         dp$arrange(patientkod, dp$desc(visit_group)) %>%
         dp$distinct(patientkod, .keep_all = TRUE)
 }) %>%
-    pr$list_rbind()
+    pr$list_rbind() %>%
+    dp$select(-c(id, tillhor, min_ins_ord, fodelsedag, line, diff, insatt, utsatt, pagaende))
 
-
-
-fst$write_fst(res, "app/logic/data/srq/vap_kvalitetssakring_1.fst")
+fst$write_fst(out, "app/logic/data/srq/vap_kvalitetssakring_1.fst")

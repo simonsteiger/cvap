@@ -63,21 +63,15 @@ out <-
     dp$mutate(
         # keep obs depending on visit_group, see conds in visit_group mutate comments above
         data = list(
-            pr$map(
-                c("das28_low", "cdai_low"), \(outer) {
-                    pr$map2(
-                        .x = data,
-                        .y = c("diff", outer),
-                        .f = \(df, inner) {
-                            df %>%
-                                dp$mutate(outcome = outer, iteration = inner) %>%
-                                dp$arrange(dp$across(ts$all_of(c("patientkod", inner)))) %>%
-                                dp$distinct(.data[["patientkod"]], .keep_all = TRUE)
-                        }
-                    ) %>%
-                        pr$list_rbind()
-                }
-            ) %>%
+            pr$map(c("das28_low", "cdai_low"), \(outer) {
+                pr$map2(data, c("diff", outer), \(df, inner) {
+                    df %>%
+                        dp$mutate(outcome = outer, iteration = inner) %>%
+                        dp$arrange(dp$across(ts$all_of(c("patientkod", inner)))) %>%
+                        dp$distinct(.data[["patientkod"]], .keep_all = TRUE)
+                }) %>%
+                    pr$list_rbind()
+            }) %>%
                 pr$list_rbind()
         ) # returns an inflated version of what we need, FIX!
     ) %>%
@@ -86,6 +80,7 @@ out <-
         (visit_group == "Behandlingsstart" & iteration == "diff") |
             (visit_group == "Uppföljning" & iteration != "diff")
     ) %>%
-    dp$distinct(patientkod, visit_group, outcome, .keep_all = TRUE)
+    dp$distinct(patientkod, visit_group, outcome, .keep_all = TRUE) %>%
+    dp$select(-c(id, tillhor, fodelsedag, iteration, insatt, utsatt, pagaende))
 
 fst$write_fst(out, "app/logic/data/srq/vap_indikatorer_4.fst")

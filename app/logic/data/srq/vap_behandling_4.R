@@ -76,16 +76,12 @@ out <-
         data = list(
             pr$map(
                 c("patientens_globala", "haq", "smarta"), \(outer) {
-                    pr$map2(
-                        .x = data,
-                        .y = c(outer, "diff"),
-                        .f = \(df, inner) {
-                            df %>%
-                                dp$mutate(outcome = outer, iteration = inner) %>%
-                                dp$arrange(dp$across(ts$all_of(c("patientkod", inner)))) %>%
-                                dp$distinct(.data[["patientkod"]], .keep_all = TRUE)
-                        }
-                    ) %>%
+                    pr$map2(data, c(outer, "diff"), \(df, inner) {
+                        df %>%
+                            dp$mutate(outcome = outer, iteration = inner) %>%
+                            dp$arrange(dp$across(ts$all_of(c("patientkod", inner)))) %>%
+                            dp$distinct(.data[["patientkod"]], .keep_all = TRUE)
+                    }) %>%
                         pr$list_rbind()
                 }
             ) %>%
@@ -97,6 +93,7 @@ out <-
         (visit_group == "Behandlingsstart" & iteration == "diff") |
             (visit_group == "Uppföljning" & iteration != "diff")
     ) %>%
-    dp$distinct(patientkod, visit_group, outcome, .keep_all = TRUE)
+    dp$distinct(patientkod, visit_group, outcome, .keep_all = TRUE) %>%
+    dp$select(-c(id, tillhor, diagnos_1, diagnos_2, atc_kod, fodelsedag, iteration))
 
 fst$write_fst(out, "app/logic/data/srq/vap_behandling_4.fst")
