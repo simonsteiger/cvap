@@ -38,7 +38,7 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id, .data, stash = NULL, arrange = NULL) {
+server <- function(id, .data, stash = NULL, arrange = "lan") {
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
         stopifnot(sh$is.reactive(stash))

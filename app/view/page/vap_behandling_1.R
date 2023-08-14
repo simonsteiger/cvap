@@ -98,12 +98,15 @@ server <- function(id, access_page, data, geo, summary) {
             group = "dxcat"
         )
 
+        # Variables by which to sort df for table and ggplot
+        arrange <- c("lan", "dxcat")
+
         # Create table output
         tbl$server(
             "output",
             sum_sort,
             stash = out_stash,
-            arrange = c("lan", "dxcat")
+            arrange = arrange
         )
 
         # Create barplot output
@@ -112,7 +115,8 @@ server <- function(id, access_page, data, geo, summary) {
             sum_sort,
             stash = out_stash,
             group = "dxcat",
-            text = title
+            text = title,
+            arrange = arrange
         )
 
         # Create map output

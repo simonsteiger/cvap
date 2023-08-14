@@ -113,7 +113,7 @@ server <- function(id, access_page, data, geo, summary) {
             "output",
             sum_sort,
             stash = out_stash,
-            arrange = "lan" # c("lan", "inkluderad") before
+            # arrange = c("lan", "inkluderad") before, omitted because default is lan
         )
 
         # Create barplot output

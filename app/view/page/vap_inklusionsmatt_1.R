@@ -110,12 +110,15 @@ server <- function(id, access_page, data, geo, summary) {
             group = "timestamp"
         )
 
+        # Variables by which to sort df for table and ggplot
+        arrange <- c("lan", "timestamp")
+
         # Create table output
         tbl$server(
             "output",
             sum_sort,
             stash = out_stash,
-            arrange = c("lan", "timestamp")
+            arrange = arrange
         )
 
         # Create barplot output
@@ -126,7 +129,8 @@ server <- function(id, access_page, data, geo, summary) {
             group = "timestamp",
             text = title,
             format = "percent",
-            timeline = TRUE
+            timeline = TRUE,
+            arrange = arrange
         )
 
         # Create map output

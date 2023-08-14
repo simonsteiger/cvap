@@ -107,12 +107,15 @@ server <- function(id, access_page, data, geo, summary) {
             group = "visit_group"
         )
 
+        # Variables by which to sort df for table and ggplot
+        arrange <- c("lan", "visit_group")
+
         # Create table output
         tbl$server(
             "output",
             sum_sort, # sum_sort
             stash = out_stash,
-            arrange = c("lan", "visit_group")
+            arrange = arrange
         )
 
         # Create barplot output
@@ -122,7 +125,8 @@ server <- function(id, access_page, data, geo, summary) {
             stash = out_stash,
             group = "visit_group",
             text = title,
-            format = "percent"
+            format = "percent",
+            arrange = arrange
         )
 
         # Create map output

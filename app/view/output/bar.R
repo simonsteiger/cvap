@@ -56,7 +56,7 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id, .data, stash, text, x = "lan", y = "outcome", group = NULL, format = "decimal", timeline = FALSE) {
+server <- function(id, .data, stash, text, x = "lan", y = "outcome", group = NULL, format = "decimal", timeline = FALSE, arrange = "lan") {
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
 
@@ -87,9 +87,10 @@ server <- function(id, .data, stash, text, x = "lan", y = "outcome", group = NUL
                             }
                         }
                     ) %>%
-                    dp$group_by(.data[[group]])
+                    dp$group_by(.data[[group]]) %>%
+                    dp$arrange(dp$across(arrange))
             } else {
-                dat_reorder <- .data()
+                dat_reorder <- dp$arrange(.data(), dp$across(arrange))
             }
             dp$rename(dat_reorder, !!outcome_long() := outcome)
         })
@@ -112,7 +113,7 @@ server <- function(id, .data, stash, text, x = "lan", y = "outcome", group = NUL
 
         # Create ggplot barplot for download as pdf (echarts offers only poor resolution)
         res_export <- sh$reactive({
-            ase$plot_bar_export(out(), x, outcome_long(), group, timeline, stash(), input)
+            ase$plot_bar_export(out(), x, outcome_long(), group, timeline, stash(), input, format)
         })
 
         output$bar <- e4r$renderEcharts4r({

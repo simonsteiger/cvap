@@ -70,8 +70,10 @@ plot_export_ungrouped <- function(.data, x, y, stash, scale_y) {
 }
 
 #' @export
-plot_bar_export <- function(.data, x, y, group, timeline, stash, input) {
+plot_bar_export <- function(.data, x, y, group, timeline, stash, input, format) {
     stopifnot(!sh$is.reactive(stash)) # must pass non-reactive
+
+    if (format == "percent") .data[[y]] <- .data[[y]] * 100
 
     scale_y <- gg$scale_y_continuous(
         name = NULL,
@@ -84,7 +86,26 @@ plot_bar_export <- function(.data, x, y, group, timeline, stash, input) {
     } else {
         p <- plot_export_grouped(.data, x, y, group, stash, scale_y)
     }
-    mark_malniva(p, .data, input, y, type = "gg")
+
+    p <- mark_malniva(p, .data, input, y, type = "gg")
+
+    if (is.null(group) || dp$n_distinct(.data[[group]]) < 3) {
+        p +
+            gg$geom_text(
+                gg$aes(label = .data[[y]], y = .data[[y]] + 0.05),
+                position = gg$position_dodge2(
+                    width = 0.9,
+                    preserve = "single",
+                    padding = 0.2
+                ),
+                hjust = -0.2,
+                vjust = 0.5,
+                size = 2,
+                color = "black"
+            )
+    } else {
+        p
+    }
 }
 
 plot_bar_interactive_core <- function(.data, input, x, y, timeline, limit_upper, text) {
@@ -160,7 +181,7 @@ malniva_export <- function(p, .data, input, y) {
                 alpha = 0.1
             )
     } else {
-        NULL
+        p
     }
 }
 

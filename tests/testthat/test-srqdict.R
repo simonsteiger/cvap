@@ -1,13 +1,14 @@
 box::use(
   dp = dplyr,
   lub = lubridate,
+  here,
 )
 
 box::use(
   app / logic / srqlib / srqdict
 )
 
-ref <- read.csv("app/logic/data/test/ongoing.csv", sep = ";") %>%
+ref <- read.csv(here$here("app/logic/data/test/ongoing.csv"), sep = ";") %>%
   dp$mutate(dp$across(ts$where(is.character), lub$as_date))
 
 tt$test_that("fil_ongoing filters correctly", {

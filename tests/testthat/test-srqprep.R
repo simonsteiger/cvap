@@ -4,13 +4,14 @@ box::use(
   magrittr[`%>%`],
   dp = dplyr,
   tt = testthat,
+  here,
 )
 
 box::use(
   app / logic / srqlib / srqprep[...],
 )
 
-ref <- read.csv("app/logic/data/test/ongoing.csv", sep = ";") %>%
+ref <- read.csv(here$here("app/logic/data/test/ongoing.csv"), sep = ";") %>%
   dp$mutate(dp$across(ts$where(is.character), lub$as_date))
 
 tt$test_that("prep_ongoing errors if `.start_var` not in `.data`", {

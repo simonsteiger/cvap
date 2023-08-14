@@ -112,8 +112,8 @@ server <- function(id, access_page, data, geo, summary) {
         tbl$server(
             "output",
             sum_sort,
-            stash = out_stash,
-            arrange = "lan"
+            stash = out_stash
+            # no manual arrange, just "lan", which is default
         )
 
         # Create barplot output

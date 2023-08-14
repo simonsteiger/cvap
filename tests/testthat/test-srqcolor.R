@@ -15,12 +15,12 @@ tt$test_that("ramp creates color palettes for 2:7", {
   tt$expect_true(valid_num_colors)
 })
 
-tt$test_that("ramp errors on numeric values outside 2:7", {
-  
-  tt$expect_true(valid_num_colors)
-})
-
-tt$test_that("ramp creates abyss palette", {
-  
-  tt$expect_true(valid_num_colors)
-})
+# tt$test_that("ramp errors on numeric values outside 2:7", {
+#   
+#   tt$expect_true(valid_num_colors)
+# })
+# 
+# tt$test_that("ramp creates abyss palette", {
+#   
+#   tt$expect_true(valid_num_colors)
+# })

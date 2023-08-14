@@ -5,6 +5,7 @@ box::use(
   dp = dplyr,
   pr = purrr,
   lub = lubridate,
+  here,
 )
 
 box::use(
@@ -12,7 +13,7 @@ box::use(
   app / logic / aux_server / wrangle / sort[get_target_level],
 )
 
-ref <- read.csv("app/logic/data/test/sort.csv", sep = ";") %>%
+ref <- read.csv(here$here("app/logic/data/test/sort.csv"), sep = ";") %>%
   dp$mutate(
     dp$across(c(datum, ordinerat), lub$as_date),
     some_fct = as.factor(pr$map(1:4, \(i) sample(c("a", "b"), 4, replace = TRUE)) %>% unlist())
@@ -91,6 +92,8 @@ ref_fct_na_to_0 <- ref %>%
     )
   )
 
+# Warning here caused by srqprep$custom_reorder
+# Not sure why since I've set .na_rm = FALSE
 test_fct_na_to_0 <- ref_fct_na_to_0 %>%
   dp$summarise(outcome = sum(outcome), .by = c(lan, some_fct)) %>%
   ase$sort_fct("some_fct") %>%
