@@ -108,8 +108,8 @@ plot_bar_export <- function(.data, x, y, group, timeline, stash, input, format) 
     }
 }
 
-plot_bar_interactive_core <- function(.data, input, x, y, timeline, limit_upper, text) {
-    .data %>%
+plot_bar_interactive_core <- function(.data, input, x, y, timeline, text) {
+    e <- .data %>%
         e4r$e_charts_(x, timeline = timeline) %>%
         e4r$e_bar_(y) %>%
         e4r$e_legend(bottom = 0, show = !timeline) %>%
@@ -119,7 +119,6 @@ plot_bar_interactive_core <- function(.data, input, x, y, timeline, limit_upper,
             textStyle = list(fontFamily = "Commissioner"),
             subtextStyle = list(fontFamily = "Roboto")
         ) %>%
-        e4r$e_y_axis_(max = limit_upper) %>%
         e4r$e_x_axis_(
             x,
             formatter = ase$format_list[["riket"]](),
@@ -131,6 +130,12 @@ plot_bar_interactive_core <- function(.data, input, x, y, timeline, limit_upper,
         e4r$e_tooltip(textStyle = list(fontFamily = "Roboto")) %>%
         e4r$e_aria(enabled = input$decal, decal = list(show = TRUE)) %>% # decal patterns
         e4r$e_theme_custom("app/static/echarts_theme.json")
+
+    if (timeline) {
+        e4r$e_y_axis_(e, max = 1)
+    } else {
+        e
+    }
 }
 
 malniva_interactive <- function(e, .data, input, y) {
@@ -206,10 +211,10 @@ format_y <- function(e, format) {
 }
 
 #' @export
-plot_bar_interactive <- function(.data, input, x, y, timeline, limit_upper, text, format) {
+plot_bar_interactive <- function(.data, input, x, y, timeline, text, format) {
     stopifnot(!sh$is.reactive(.data))
 
-    e <- plot_bar_interactive_core(.data, input, x, y, timeline, limit_upper, text)
+    e <- plot_bar_interactive_core(.data, input, x, y, timeline, text)
 
     e %>%
         mark_malniva(.data, input, y, type = "e") %>%

@@ -97,15 +97,12 @@ server <- function(id, .data, stash, text, x = "lan", y = "outcome", group = NUL
 
         # Create echarts barplot
         res_interactive <- sh$reactive({
-            limit_upper <- max(out()[[outcome_long()]], na.rm = TRUE) # get limits for value axis
-
             out_basic <- ase$plot_bar_interactive(
                 out(),
                 input,
                 x,
                 outcome_long(),
                 timeline,
-                limit_upper,
                 text,
                 format
             )

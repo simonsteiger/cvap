@@ -21,7 +21,7 @@ jobs:
           r-version: ${{ env.R_VERSION }}
 
       - name: Setup system dependencies
-        run: |
+        run: >
           sudo apt-get update && sudo apt-get install --yes
           libcurl4-openssl-dev
           sudo apt install libgdal-dev
