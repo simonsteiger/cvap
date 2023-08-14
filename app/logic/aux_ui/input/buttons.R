@@ -48,6 +48,7 @@ btn_modal <- function(id, label, modal_title, footer_confirm = NULL, footer_dism
 
     if (!is.null(dots$class_toggle)) {
         toggle <- sh$tags$button(
+            id = paste("openModal", id, sep = "-"),
             class = dots$class_toggle,
             type = "button",
             `data-bs-toggle` = "modal",
@@ -56,6 +57,7 @@ btn_modal <- function(id, label, modal_title, footer_confirm = NULL, footer_dism
         )
     } else {
         toggle <- sh$tags$button(
+            id = paste("openModal", id, sep = "-"),
             class = "btn btn-secondary hover",
             type = "button",
             `data-bs-toggle` = "modal",
