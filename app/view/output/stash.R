@@ -15,10 +15,10 @@ box::use(
 #' Stash saves user inputs for renaming plots and tables later
 #' This is necessary because inputs are in "input" namespace
 #' and can't simply be accessed from "output" namespace (where plot and table are)
-server <- function(id, title, .var = NULL) {
+server <- function(id, title, .var = NULL, datecompare = FALSE) {
     sh$moduleServer(id, function(input, output, session) {
         subtitle <- sh$reactive({
-            ase$create_subtitle(input, .var)
+            ase$create_subtitle(input, .var, datecompare)
         })
 
         sh$reactive({

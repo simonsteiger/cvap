@@ -304,11 +304,19 @@ spell_outcome <- function(x) {
         sh$tags$b()
 }
 
-spell_period <- function(x) {
+spell_period <- function(x, datecompare) {
     date <- x$inkluderad %||% x$ordinerat %||% x$ongoing %||% return(NULL)
 
+    # Set correct "context" depending if two years are compared or a timeframe is selected
+    if (datecompare) {
+        date_context <- c("år", "jämfort med år")
+        date <- format(date, format = "%Y")
+    } else {
+        date_context <- c("från", "till")
+    }
+
     if (length(date) == 2) {
-        gl$glue("från {date[1]} till {date[2]}")
+        gl$glue("{date_context[1]} {date[1]} {date_context[2]} {date[2]}")
     } else if (is.null(x$lookback)) { # assume that there is a lookback input
         gl$glue("från {date}")
     } else {
@@ -330,14 +338,15 @@ spell_prep_typ <- function(x) {
 }
 
 #' @export
-create_subtitle <- function(input, .var) {
+create_subtitle <- function(input, .var, datecompare) {
     paste0(
         paste(
             "Denna graf visa",
             spell_outcome(input$outcome %||% .var),
             spell_kon(input$kon),
             spell_alder(input$alder),
-            spell_period(input), # can't use `[` to index reactive [pr$map_lgl(input, lub$is.Date)]
+            spell_period(input, datecompare),
+            # can't use `[` to index reactive [pr$map_lgl(input, lub$is.Date)]
             sep = " "
         ), ".",
         if (!is.null(input$dxcat) || !is.null(input$prep_typ)) {

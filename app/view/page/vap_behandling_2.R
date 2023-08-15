@@ -60,7 +60,7 @@ server <- function(id, access_page, data, geo, summary) {
         # Record inputs for later use in plotting and table
         # This bridges space between input and output namespaces in an... OK way?
         out_stash <- sh$bindEvent(
-            stash$server("input", title),
+            stash$server("input", title, datecompare = TRUE),
             list(input$go_input, access_page)
         )
 
