@@ -104,7 +104,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                                 if (!lub$is.Date(.data[[group]]) && !group %in% time_vars) {
                                     as.factor(.data[[group]]) %>% fct$fct_reorder(-.data[[y]])
                                 } else {
-                                    .data[[group]]
+                                    format(.data[[group]], format = "%Y")
                                 }
                             }
                         ) %>%

@@ -294,11 +294,13 @@ spell_alder <- function(x) {
 spell_outcome <- function(x) {
     dp$case_match(
         x,
-        "das28_low" ~ "andelen patienter med DAS28 < 3.2",
-        "cdai_low" ~ "andelen patienter med CDAI <= 10",
+        "das28_low" ~ "percent patienter med DAS28 < 3.2",
+        "cdai_low" ~ "percent patienter med CDAI <= 10",
         "patientens_globala" ~ "medianvärde av allmän hälsa",
         "haq" ~ "medianvärde av HAQ",
         "smarta" ~ "medianvärde av smärta",
+        "per100k" ~ "antal utvalda patienter per 100.000 invånare",
+        "n" ~ "antal utvalda patienter",
         .default = tolower(x)
     ) %>%
         sh$tags$b()
