@@ -31,7 +31,7 @@ ui <- function(id) {
                 class = "d-flex flex-row align-items-center",
                 "Karta",
                 aui$btn_modal(
-                    ns("info-stapel"),
+                    ns("info-karta"),
                     label = sh$icon("circle-info"),
                     modal_title = "Information om karta",
                     footer_confirm = NULL,

@@ -43,4 +43,4 @@ out <- pr$map(
     dp$select(patientkod, inkluderad, kon, visit_group, lan, start, alder)
 
 
-fst$write_fst(out, "app/logic/data/srq/vap_indikatorer_1.fst")
+fst$write_fst(out, "app/logic/data/srq/clean/vap_indikatorer_1.fst")

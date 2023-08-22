@@ -143,6 +143,18 @@
       ],
       "Hash": "45f0398006e83a5b10b72a90663d8d8c"
     },
+    "RMySQL": {
+      "Package": "RMySQL",
+      "Version": "0.10.25",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "DBI",
+        "R",
+        "methods"
+      ],
+      "Hash": "c93263945d2ae96aaee33dd0e16bfe99"
+    },
     "Rcpp": {
       "Package": "Rcpp",
       "Version": "1.0.10",

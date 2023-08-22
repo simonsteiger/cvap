@@ -11,14 +11,14 @@ box::use(
 )
 
 #' @export
-read_dir_fst <- function(dir) {
+read_dir_fst <- function(dir, quiet = TRUE) {
     start <- Sys.time()
     filenames <- list.files(dir)
     only_fst <- str$str_detect(filenames, ".+\\.fst$")
     no_suffix_fst <- str$str_remove(filenames[only_fst], ".fst$")
 
     if (all(!only_fst)) {
-        cli$cli_alert_info("No fst files found in {.path {dir}}.")
+        if (isFALSE(quiet)) cli$cli_alert_info("No fst files found in {.path {dir}}.")
         return(NULL)
     }
 
@@ -28,19 +28,19 @@ read_dir_fst <- function(dir) {
         pr$map(~ tbl$as_tibble(fst$read_fst(paste0(dir, .x, ".fst"))))
 
     dur <- round(lub$as.duration(Sys.time() - start), 2)
-    cli$cli_alert_success("Read {length(list_df_fst)} fst files in {dur}.")
+    if (isFALSE(quiet)) cli$cli_alert_success("Read {length(list_df_fst)} fst files in {dur}.")
 
     list(data = list_df_fst, names = no_suffix_fst)
 }
 
 #' @export
-read_dir_csv <- function(dir) {
+read_dir_csv <- function(dir, quiet = TRUE) {
     start <- Sys.time()
     filenames <- list.files(dir)
     only_csv <- str$str_detect(filenames, ".+\\.csv$")
 
     if (all(!only_csv)) {
-        cli$cli_alert_info("No csv files found in {.path {dir}}.")
+        if (isFALSE(quiet)) cli$cli_alert_info("No csv files found in {.path {dir}}.")
         return(NULL)
     }
 
@@ -52,21 +52,21 @@ read_dir_csv <- function(dir) {
         pr$map(~ tbl$as_tibble(ut$read.csv(paste0(dir, .x, ".csv"))))
 
     dur <- round(lub$as.duration(Sys.time() - start), 2)
-    cli$cli_alert_success("Read {length(list_df_csv)} csv files in {dur}.")
+    if (isFALSE(quiet)) cli$cli_alert_success("Read {length(list_df_csv)} csv files in {dur}.")
 
     list(data = list_df_csv, names = no_suffix_csv)
 }
 
 
 #' @export
-read_dir_xlsx <- function(dir) {
+read_dir_xlsx <- function(dir, quiet = TRUE) {
     start <- Sys.time()
     filenames <- list.files(dir)
     only_xlsx <- str$str_detect(filenames, ".+\\.xlsx$")
     no_suffix_xlsx <- str$str_remove(filenames[only_xlsx], ".xlsx$")
 
     if (all(!only_xlsx)) {
-        cli$cli_alert_info("No xlsx files found in {.path {dir}}.")
+        if (isFALSE(quiet)) cli$cli_alert_info("No xlsx files found in {.path {dir}}.")
         return(NULL)
     }
 
@@ -76,13 +76,13 @@ read_dir_xlsx <- function(dir) {
         pr$map(~ tbl$as_tibble(xl$read_xlsx(paste0(dir, .x, ".xlsx"))))
 
     dur <- round(lub$as.duration(Sys.time() - start), 2)
-    cli$cli_alert_success("Read {length(list_df_xlsx)} excel files in {dur}.")
+    if (isFALSE(quiet)) cli$cli_alert_success("Read {length(list_df_xlsx)} excel files in {dur}.")
 
     list(data = list_df_xlsx, names = no_suffix_xlsx)
 }
 
 #' @export
-read_dir <- function(dir, as_list = TRUE, name = "list_df") {
+read_dir <- function(dir, as_list = TRUE, name = "list_df", quiet = TRUE) {
     start <- Sys.time()
     filenames <- list.files(dir)
 
@@ -95,9 +95,9 @@ read_dir <- function(dir, as_list = TRUE, name = "list_df") {
         ))
     }
 
-    fst <- read_dir_fst(dir)
-    csv <- read_dir_csv(dir)
-    xlsx <- read_dir_xlsx(dir)
+    fst <- read_dir_fst(dir, quiet)
+    csv <- read_dir_csv(dir, quiet)
+    xlsx <- read_dir_xlsx(dir, quiet)
 
     no_suffix <- c(fst$name, csv$name, xlsx$name)
     # TODO check if any suffix is duplicated, if so, add a _.<filetype> suffix
@@ -122,7 +122,9 @@ read_dir <- function(dir, as_list = TRUE, name = "list_df") {
 
     if (as_list) {
         dur <- round(lub$as.duration(Sys.time() - start), 2)
-        cli$cli_alert_success("Attached {length(list_df)} files to {.var {name}} in {dur}.")
+        if (isFALSE(quiet)) {
+            cli$cli_alert_success("Attached {length(list_df)} files to {.var {name}} in {dur}.")
+        }
         assign(name, list_df, envir = rl$caller_env())
     } else {
         for (i in seq_along(list_df)) {

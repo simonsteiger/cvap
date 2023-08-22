@@ -42,9 +42,9 @@ ui <- function(id) {
             ),
             sh$div(
                 class = "d-flex justify-content-between align-items-center gap-4",
+                sh$htmlOutput(ns("inp_malniva")),
                 aui$inp_toggle(ns("decal"), "Ökad Tillg.", value = TRUE),
-                aui$inp_toggle(ns("sort"), "Alfabetisk ordn."),
-                sh$htmlOutput(ns("inp_malniva"))
+                aui$inp_toggle(ns("sort"), "Alfabetisk ordn.")
             )
         ),
         body = e4r$echarts4rOutput(ns("bar")),

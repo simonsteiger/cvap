@@ -62,4 +62,4 @@ simplified_pop <-
 
 out <- dp$left_join(bas_ter, simplified_pop, by = "lan")
 
-fst$write_fst(out, "app/logic/data/srq/vap_indikatorer_2.fst")
+fst$write_fst(out, "app/logic/data/srq/clean/vap_indikatorer_2.fst")

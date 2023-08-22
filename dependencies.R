@@ -17,6 +17,8 @@ library(shinyjs)
 library(waiter)
 library(palmerpenguins)
 library(here)
+library(DBI)
+library(RMySQL)
 
 # sk dependencies
 library(box)

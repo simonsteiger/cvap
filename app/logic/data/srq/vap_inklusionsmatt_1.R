@@ -27,7 +27,21 @@ bas <- list_df$basdata %>%
         lan = ifelse(lan == "Örebro", "Orebro", lan)
     ) %>%
     dp$left_join(list_df$terapi, by = "patientkod", suffix = c("", ".dupl")) %>%
-    dp$select(patientkod, lan, kon, dxcat, prep_typ, ordinerat, pagaende, insatt, utsatt, min_inkl_diag, inkluderad, diagnosdatum1, symtomdebut_1)
+    dp$select(
+        patientkod,
+        lan,
+        kon,
+        dxcat,
+        prep_typ,
+        ordinerat,
+        pagaende,
+        insatt,
+        utsatt,
+        min_inkl_diag,
+        inkluderad,
+        diagnosdatum1,
+        symtomdebut_1
+    )
 # FIX many-to-many join
 
 out <- list_df$besoksdata %>%
@@ -41,7 +55,12 @@ unit_seq_spa <- c(6, 12, 24, 48, 60)
 start_vars <- c("min_inkl_diag", "diagnosdatum1", "inkluderad")
 
 create_l <- function(data) {
-    tbl$tibble(data = data, fn = list(lub$dweeks, lub$dmonths), t = list(unit_seq_ra, unit_seq_spa), s = list(start_vars))
+    tbl$tibble(
+        data = data,
+        fn = list(lub$dweeks, lub$dmonths),
+        t = list(unit_seq_ra, unit_seq_spa),
+        s = list(start_vars)
+    )
 }
 
 # RA requires 20-60 weeks, SpA/AS/PsA 1-60 months
@@ -77,7 +96,19 @@ out <- out %>%
             })
     ) %>%
     tdr$unnest(data) %>%
-    dp$select(-c(ra_bool, diff, min_inkl_diag, inkluderad, diagnosdatum1, symtomdebut_1, insatt, utsatt, pagaende)) %>%
+    dp$select(
+        -c(
+            ra_bool,
+            diff,
+            min_inkl_diag,
+            inkluderad,
+            diagnosdatum1,
+            symtomdebut_1,
+            insatt,
+            utsatt,
+            pagaende
+        )
+    ) %>%
     dp$mutate(dxcat = paste("Tidig", dxcat))
 
-fst$write_fst(out, "app/logic/data/srq/vap_inklusionsmatt_1.fst")
+fst$write_fst(out, "app/logic/data/srq/clean/vap_inklusionsmatt_1.fst")

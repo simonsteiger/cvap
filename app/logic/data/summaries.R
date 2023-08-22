@@ -16,7 +16,7 @@ Annat tidsintervall, åldersgrupp, datum för inklusion eller diagnos, data för
 indikatorer_2 <-
     "Det förvalda diagrammet visar antalet inkluderade individer, 18 år eller äldre, med reumatoid artrit som vid tidpunkten hade en registrerad, pågående behandling med ett biologiskt läkemedel (bDMARD) per 100000 invånare, visat per län och för riket. Diagrammet motsvarar en av indikatorerna i Socialstyrelsens Öppna jämförelser. Det vertikala intervallet representerar målvärdet och motsvarar genomsnittet för riket ±25%.
 Annan tidpunkt, jämförelsetidpunkt, diagnos, data för endast män respektive kvinnor, ålder hos patienterna samt om antal individer eller antal individer/100000 invånare ska visas är valbart. Länen kan sorteras efter länsnummer eller antal individer.
-De data som ligger till grund för diagrammet ses under fliken 'Tabell'. De läkemedel som inkluderas i begreppen biologiska läkemedel (bDMARD) kan ses under XXX.
+De data som ligger till grund för diagrammet ses under fliken 'Tabell'. De läkemedel som inkluderas i begreppen biologiska läkemedel (bDMARD) kan ses under 'Om preparatgrupper' på startsidan.
 I undergrupper med färre än 10 individer visas inga data i diagram eller tabell.
 Uppgifterna om folkmängden är hämtade från Statistiska CentralByrån för vald tidpunkt och avser antalet invånare som är 18 år eller äldre. Ingen modifiering för eventuella skillnader i ålders- eller könsfördelning mellan landsdelarna är gjord."
 
@@ -26,7 +26,7 @@ indikatorer_3 <-
 Som startvärde har använts ett värde på VAS global som registrerats inom tidsintervallet 30 dagar före och 7 dagar efter behandlingsstart. Vid flera värden används det som ligger närmast behandlingsstart. Om startdatum inte är registrerat har ordinationsdatum använts som tidpunkt för start. För patienter med flera besök och registrerade värden på VAS global under uppföljningsperioden har det lägsta värdet använts.
 Tidpunkten för behandlingsstart utgör urvalskriterium för patientgruppen som sedan följs. Också individer som saknar information om VAS global vid behandlingsstart bidrar med värden vid uppföljningsbesöket om sådant finns. Uppföljningsbesök fram till dagens datum, men maximalt 6 månader efter behandlingsstart är inkluderade för patientgruppen. Patienter som saknar värde på VAS global vid uppföljningen kan bidra med värden från behandlingsstart. Antal individer för vilka data saknas vid vardera besökstillfället finns presenterat i tabellen under fliken 'Tabell'.
 Annat tidsintervall för startår, data för endast män respektive kvinnor och åldersintervall vid behandlingsstart är valbart. Det går att välja att visa staplar för endast medianvärden för VAS global vid behandlingsstart eller vid uppföljning. Länen kan sorteras efter länsnummer eller medianvärde. De data som ligger till grund för diagrammet ses under fliken 'Tabell'.
-De läkemedel som inkluderas i begreppet biologiska läkemedel (bDMARD) kan ses under XXX."
+De läkemedel som inkluderas i begreppet biologiska läkemedel (bDMARD) kan ses under 'Om preparatgrupper' på startsidan."
 
 #' @export
 indikatorer_4 <-
@@ -38,14 +38,14 @@ De data som ligger till grund för diagrammet ses under fliken 'Tabell'."
 behandling_1 <-
     "Det förvalda diagrammet visar antalet inkluderade individer, 18 år eller äldre, med alla diagnoser som igår hade en registrerad, pågående behandling med ett biologiskt läkemedel (bDMARD) visat per län. Inom stapeln visas diagnoser för de ingående patienterna.
 Annan tidpunkt, data för endast män respektive kvinnor, personernas ålder, diagnos samt typ av DMARD är valbart. Länen kan sorteras efter länsnummer eller antal individer.
-De data som ligger till grund för diagrammet ses under fliken 'Tabell'. De läkemedel som inkluderas i begreppen biologiska läkemedel (bDMARD) och sDMARD kan ses under XXX.
+De data som ligger till grund för diagrammet ses under fliken 'Tabell'. De läkemedel som inkluderas i begreppen biologiska läkemedel (bDMARD) och sDMARD kan ses under 'Om preparatgrupper' på startsidan.
 I undergrupper med färre än 5 individer visas inga data i diagram eller tabell. Dessa grupper rapporteras i tabellet med benämningen YYY."
 
 #' @export
 behandling_2 <-
     "Det förvalda diagrammet visar antalet inkluderade individer, 18 år eller äldre, med reumatoid artrit som vid tidpunkten hade en registrerad, pågående behandling med ett biologiskt läkemedel (bDMARD) per 100000 invånare, visat per län och för riket. Diagrammet motsvarar en av indikatorerna i Socialstyrelsens Öppna jämförelser. Det vertikala intervallet representerar målvärdet och motsvarar genomsnittet för riket ±25%.
 Annan tidpunkt, jämförelsetidpunkt, diagnos, data för endast män respektive kvinnor, ålder hos patienterna samt om antal individer eller antal individer/100000 invånare ska visas är valbart. Länen kan sorteras efter länsnummer eller antal individer.
-De data som ligger till grund för diagrammet ses under fliken 'Tabell'. De läkemedel som inkluderas i begreppen biologiska läkemedel (bDMARD) kan ses under XXX.
+De data som ligger till grund för diagrammet ses under fliken 'Tabell'. De läkemedel som inkluderas i begreppen biologiska läkemedel (bDMARD) kan ses under 'Om preparatgrupper' på startsidan.
 I undergrupper med färre än 10 individer visas inga data i diagram eller tabell.
 Uppgifterna om folkmängden är hämtade från Statistiska CentralByrån för vald tidpunkt och avser antalet invånare som är 18 år eller äldre. Ingen modifiering för eventuella skillnader i ålders- eller könsfördelning mellan landsdelarna är gjord."
 
@@ -62,7 +62,7 @@ behandling_4 <-
 Som startvärde har använts ett värde på VAS global som registrerats inom tidsintervallet 30 dagar före och 7 dagar efter behandlingsstart. Vid flera värden används det som ligger närmast behandlingsstart. Om startdatum inte är registrerat har ordinationsdatum använts som tidpunkt för start. För patienter med flera besök och registrerade värden på VAS global under uppföljningsperioden har det lägsta värdet använts.
 Tidpunkten för behandlingsstart utgör urvalskriterium för patientgruppen som sedan följs. Också individer som saknar information om VAS global vid behandlingsstart bidrar med värden vid uppföljningsbesöket om sådant finns. Uppföljningsbesök fram till dagens datum, men maximalt 6 månader efter behandlingsstart är inkluderade för patientgruppen. Patienter som saknar värde på VAS global vid uppföljningen kan bidra med värden från behandlingsstart. Antal individer för vilka data saknas vid vardera besökstillfället finns presenterat i tabellen under fliken 'Tabell'.
 'bDMARD', 'csDMARD' eller 'bDMARD eller csDMARD' kan väljas. Observera att valet 'bDMARD eller csDMARD' innebär att för en patient som startat flera typer av DMARD under perioden analyseras endast det första preparatet. Annat tidsintervall för startår, tidsintervall för uppföljning, diagnos, data för endast män respektive kvinnor och åldersintervall vid behandlingsstart är valbart. Det går att välja att visa staplar för endast medianvärden för VAS global vid behandlingsstart eller vid uppföljning. Länen kan sorteras efter länsnummer eller medianvärde. De data som ligger till grund för diagrammet ses under fliken 'Tabell'.
-De läkemedel som inkluderas i begreppen biologiska läkemedel (bDMARD) och konventionella syntetiska DMARD (csDMARD) kan ses under XXX."
+De läkemedel som inkluderas i begreppen biologiska läkemedel (bDMARD) och konventionella syntetiska DMARD (csDMARD) kan ses under 'Om preparatgrupper' på startsidan."
 
 #' @export
 inklusionsmatt_1 <-

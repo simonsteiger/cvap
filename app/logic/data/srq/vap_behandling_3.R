@@ -56,4 +56,4 @@ out <-
     dp$arrange(patientkod, das28) %>%
     dp$select(-c(id, tillhor, fodelsedag))
 
-fst$write_fst(out, "app/logic/data/srq/vap_behandling_3.fst")
+fst$write_fst(out, "app/logic/data/srq/clean/vap_behandling_3.fst")

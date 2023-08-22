@@ -68,4 +68,4 @@ out <- pr$map(unit_seq, \(t) {
     pr$list_rbind() %>%
     dp$select(-c(id, tillhor, min_ins_ord, fodelsedag, line, diff, insatt, utsatt, pagaende))
 
-fst$write_fst(out, "app/logic/data/srq/vap_kvalitetssakring_1.fst")
+fst$write_fst(out, "app/logic/data/srq/clean/vap_kvalitetssakring_1.fst")

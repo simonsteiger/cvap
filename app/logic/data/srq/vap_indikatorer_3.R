@@ -18,8 +18,6 @@ box::use(
 
 ski$read_dir(local$PATH)
 
-# the data needs to go through the qrdf preprocessing, too
-
 list_df$basdata <- list_df$basdata %>%
     srqprep$prep_recode(diagnoskod_1, srqdict$rec_dxcat, .new_name = dxcat) %>%
     dp$filter(dxcat == "RA") %>%
@@ -50,7 +48,7 @@ out <-
     dp$left_join(list_df$bas_bio, list_df$besoksdata, by = "patientkod") %>%
     dp$mutate(
         alder = lub$interval(fodelsedag, datum) / lub$dyears(1),
-        diff = abs(as.numeric(datum - prep_start)),
+        diff = as.numeric(datum - prep_start), # we had abs(...) here before, why did we do that?
         visit_group = factor(dp$case_when(
             diff >= -30 & diff <= 7 ~ "Behandlingsstart", # use diff closest to 0
             diff >= 120 & diff <= 365 ~ "Uppföljning", # use lowest target value (p_glob)
@@ -70,4 +68,4 @@ out <-
     tdr$unnest(data) %>%
     dp$select(-c(id, tillhor, fodelsedag))
 
-fst$write_fst(out, "app/logic/data/srq/vap_indikatorer_3.fst")
+fst$write_fst(out, "app/logic/data/srq/clean/vap_indikatorer_3.fst")

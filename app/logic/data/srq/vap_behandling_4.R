@@ -96,4 +96,4 @@ out <-
     dp$distinct(patientkod, visit_group, outcome, .keep_all = TRUE) %>%
     dp$select(-c(id, tillhor, diagnos_1, diagnos_2, atc_kod, fodelsedag, iteration))
 
-fst$write_fst(out, "app/logic/data/srq/vap_behandling_4.fst")
+fst$write_fst(out, "app/logic/data/srq/clean/vap_behandling_4.fst")
