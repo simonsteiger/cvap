@@ -74,18 +74,15 @@ server <- function(id, access_page, data, geo, summary) {
         })
 
         # Create filtered data
-        sifted <- sift$server("input", sh$reactive(data), "lan", button = FALSE)
+        sifted <- sh$bindEvent(
+            sift$server("input", sh$reactive(data), "lan", button = FALSE),
+            list(input$go_input, access_page)
+        )
+
 
         # Within läns, sort data by `group`
         # Triggered by "go_input" and accessing the page
-        sum_sort <- sh$bindEvent(
-            sort$server(
-                "output",
-                sifted,
-                group = NULL
-            ),
-            list(input$go_input, access_page)
-        )
+        sum_sort <- sort$server("output", sifted, group = NULL)
 
         # Create table output
         tbl$server(

@@ -1,1 +1,0 @@
-Folder for raw data from server, to be cleaned by vap scripts in srq
