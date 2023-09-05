@@ -33,7 +33,7 @@ plot_map_export_ungrouped <- function(.data, y, limits, stash) {
 }
 
 plot_map_export_facet <- function(.data, y, group, limits, stash) {
-    nrow <- if (length(.data[[group]]) > 3) 2 else 1
+    nrow <- if (length(unique(.data[[group]])) > 3) 2 else 1
     gg$ggplot(.data) +
         gg$geom_sf(gg$aes(fill = .data[[y]]), linewidth = 0.1) +
         gg$facet_wrap(~ .data[[group]], nrow = nrow) +

@@ -23,7 +23,11 @@ coverage <- list_df$coverage %>%
     tdr$pivot_longer(!c(Lan, Kod), names_to = "year", values_to = "outcome") %>%
     dp$rename(lan = "Lan") %>%
     dp$mutate(
-        lan = ifelse(lan == "Örebro", "Orebro", lan),
+        lan = dp$case_when(
+            lan == "Örebro" ~ "Orebro",
+            lan == "SWEDEN" ~ "Riket",
+            .default = lan
+        ),
         year = lub$ymd(paste(str$str_remove(year, "Y_"), "12", "31", sep = "-")),
         outcome = ifelse(is.na(outcome), 0, outcome / 100)
         # we want percent as decimals at this point
