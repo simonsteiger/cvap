@@ -234,7 +234,7 @@ icon_samplesmall <- function(id, input, value) {
         sh$div(
             class = "d-flex flex-row align-items-center gap-3",
             sh$tags$i(class = "fa fa-users-slash c-warning"),
-            paste0("Få data i ", length(input), " län")
+            paste0("Lite data i ", length(input), " län")
         ),
         aui$inp_toggle(id = id, label = "Dölj", value = value)
     )
@@ -245,7 +245,7 @@ icon_samplecrit <- function(input) {
     sh$div(
         class = "d-flex flex-row align-items-center gap-3",
         sh$tags$i(class = "fa fa-users-slash c-danger"),
-        paste0("Otillräcklig data i ", length(input), " län")
+        paste0("Otillräckliga data i ", length(input), " län")
     )
 }
 
