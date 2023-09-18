@@ -92,27 +92,30 @@ server <- function(id, access_page, data, geo, summary) {
             arrange = c("lan", "year")
         )
 
-        # Create barplot output
-        bar$server(
-            "output",
-            sum_sort,
-            stash = out_stash,
-            group = "year",
-            text = title,
-            timeline = TRUE,
-            format = "percent"
-        )
+        # When this page is accessed, render outputs
+        sh$observeEvent(access_page, {
+            # Create barplot output
+            bar$server(
+                "output",
+                sum_sort,
+                stash = out_stash,
+                group = "year",
+                text = title,
+                timeline = TRUE,
+                format = "percent"
+            )
 
-        # Create map output
-        map$server(
-            id = "output",
-            .data = sifted,
-            stash = out_stash,
-            geo = geo,
-            group = "year",
-            text = title,
-            format = "percent"
-        )
+            # Create map output
+            map$server(
+                id = "output",
+                .data = sifted,
+                stash = out_stash,
+                geo = geo,
+                group = "year",
+                text = title,
+                format = "percent"
+            )
+        })
 
         # Create text output
         txt$server("output", summary)

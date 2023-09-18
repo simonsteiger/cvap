@@ -128,7 +128,7 @@ plot_bar_interactive_core <- function(.data, input, x, y, timeline, text) {
             )
         ) %>%
         e4r$e_tooltip(textStyle = list(fontFamily = "Roboto")) %>%
-        e4r$e_aria(enabled = input$decal, decal = list(show = TRUE)) %>% # decal patterns
+        e4r$e_aria(enabled = TRUE, decal = list(show = TRUE)) %>% # decal patterns
         e4r$e_theme_custom("app/static/echarts_theme.json")
 
     if (timeline) {
