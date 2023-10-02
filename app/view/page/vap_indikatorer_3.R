@@ -139,6 +139,7 @@ server <- function(id, access_page, data, geo, summary) {
             text = title
         )
 
+
         # Create text output
         txt$server("output", summary)
 

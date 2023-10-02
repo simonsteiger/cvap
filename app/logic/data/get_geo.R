@@ -12,7 +12,7 @@ box::use(
 
 sweden <- gd$gadm(country = "SWEDEN", level = 1, path = "app/logic/data/")
 
-sweden_small <- terra$simplifyGeom(sweden, 0.05) # going to 0.1 gives us a pretty rugged map
+sweden_small <- terra$simplifyGeom(sweden, 0.1) # going to 0.1 gives us a pretty rugged map
 
 terra$writeVector(sweden_small, filename = "app/logic/data/gadm/sweden_test.geojson", filetype = "GeoJSON", overwrite = TRUE)
 

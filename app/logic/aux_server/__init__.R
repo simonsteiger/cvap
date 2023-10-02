@@ -1,5 +1,5 @@
 box::use(
-    app / logic / aux_server / misc / observers,
+    app / logic / aux_server / misc / other,
     app / logic / aux_server / misc / errors,
     app / logic / aux_server / misc / checks,
     app / logic / aux_server / wrangle / sift,
@@ -10,7 +10,13 @@ box::use(
 )
 
 #' @export
-obs_return <- observers$obs_return
+obs_return <- other$obs_return
+
+#' @export
+waiting_screen <- other$waiting_screen
+
+#' @export
+observe_home_waiter <- other$observe_home_waiter
 
 #' @export
 sift_cols <- sift$sift_cols

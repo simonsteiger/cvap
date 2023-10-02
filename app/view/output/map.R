@@ -39,8 +39,7 @@ ui <- function(id) {
                     class_toggle = "btn btn-transparent",
                     info_map
                 )
-            ),
-            aui$inp_toggle(ns("load"), "Visa karta"),
+            )
         ),
         body = e4r$echarts4rOutput(ns("map")),
         footer = sh$div(
@@ -57,24 +56,16 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
         stopifnot(sh$is.reactive(.data))
 
         # Notification to show when map is loading
-        output$notification <- sh$renderUI(
-            sh$div(
-                class = "d-flex flex-row align-items-center gap-2",
-                sh$div(class = "spinner-grow spinner-grow-sm c-warning", role = "status"),
-                "Var god vänta...",
-            )
-        )
+        # output$notification <- sh$renderUI(
+        #     sh$div(
+        #         class = "d-flex flex-row align-items-center gap-2",
+        #         sh$div(class = "spinner-grow spinner-grow-sm c-warning", role = "status"),
+        #         "Var god vänta...",
+        #     )
+        # )
 
         # Default status is hidden
-        shj$hide("notification")
-
-        # Show notification when load switch is turned on
-        sh$observe({
-            if (isTRUE(input$load)) {
-                shj$show("notification")
-                shj$delay(2500, shj$hide("notification"))
-            }
-        })
+        # shj$toggle("notification", condition = !is.null(res_interactive()))
 
         # Convert outcome to percent if formatter is specified to "percent"
         formatted_data <- sh$reactive({
@@ -90,51 +81,47 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
 
         # Create interactive map for in-app view
         res_interactive <- sh$reactive({
-            if (isFALSE(input$load)) { # no plot if load is FALSE
-                NULL
-            } else { # else draw map
-                # Assert that group is not null and there is some data to plot
-                # indexing into .data would otherwise throw an error
-                if (!is.null(group) && nrow(.data()) > 0 && !all(is.na(.data()[[y]]))) {
-                    out <-
-                        formatted_data() %>%
-                        dp$mutate(
-                            !!group := {
-                                # Only sort by y if group does not imply chronological order
-                                if (!lub$is.Date(.data[[group]]) && !group %in% time_vars) {
-                                    as.factor(.data[[group]]) %>% fct$fct_reorder(-.data[[y]])
-                                } else {
-                                    format(.data[[group]], format = "%Y")
-                                }
+            # Assert that group is not null and there is some data to plot
+            # indexing into .data would otherwise throw an error
+            if (!is.null(group) && nrow(.data()) > 0 && !all(is.na(.data()[[y]]))) {
+                out <-
+                    formatted_data() %>%
+                    dp$mutate(
+                        !!group := {
+                            # Only sort by y if group does not imply chronological order
+                            if (!lub$is.Date(.data[[group]]) && !group %in% time_vars) {
+                                as.factor(.data[[group]]) %>% fct$fct_reorder(-.data[[y]])
+                            } else {
+                                format(.data[[group]], format = "%Y")
                             }
-                        ) %>%
-                        dp$group_by(.data[[group]])
-
-
-                    lvls <-
-                        if (is.factor(out[[group]])) {
-                            levels(out[[group]])
-                        } else {
-                            sort(unique(out[[group]]))
                         }
+                    ) %>%
+                    dp$group_by(.data[[group]])
 
-                    # Create the title for element on the timeline
-                    title <- pr$map(lvls, \(x) {
-                        list(
-                            text = paste0(text, ", ", x),
-                            subtext = paste0("Data uttagen: ", lub$today()),
-                            textStyle = list(fontFamily = "Commissioner"),
-                            subtextStyle = list(fontFamily = "Roboto")
-                        )
-                    })
-                } else {
-                    out <- formatted_data()
 
-                    title <- text
-                }
-                # Assemble echart
-                ase$plot_map_interactive(out, geo, x, y, group, title)
+                lvls <-
+                    if (is.factor(out[[group]])) {
+                        levels(out[[group]])
+                    } else {
+                        sort(unique(out[[group]]))
+                    }
+
+                # Create the title for element on the timeline
+                title <- pr$map(lvls, \(x) {
+                    list(
+                        text = paste0(text, ", ", x),
+                        subtext = paste0("Data uttagen: ", lub$today()),
+                        textStyle = list(fontFamily = "Commissioner"),
+                        subtextStyle = list(fontFamily = "Roboto")
+                    )
+                })
+            } else {
+                out <- formatted_data()
+
+                title <- text
             }
+            # Assemble echart
+            ase$plot_map_interactive(out, geo, x, y, group, title)
         })
 
         # Create static map for download
@@ -159,7 +146,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
 
         output$exmap <- sh$downloadHandler(
             filename = function() {
-                paste0(lub$today(), "_vapX_map", ".pdf")
+                paste(lub$today(), session$ns(id), "map.pdf", sep = "_")
             },
             content = function(file) {
                 width <- if (!is.null(group)) 10 else 5

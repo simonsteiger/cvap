@@ -17,12 +17,14 @@ box::use(
   shf = shinyFeedback,
   shj = shinyjs,
   waiter,
+  future,
 )
 
 box::use(
   ski = app / logic / swissknife / skinit,
   app / logic / swissknife / sklang[`%//%`],
   aui = app / logic / aux_ui,
+  ase = app / logic / aux_server,
   app / logic / theme,
   app / logic / data / summaries,
   app / view / page / home,
@@ -74,11 +76,7 @@ ui <- function(id) {
     shf$useShinyFeedback(),
     waiter$useWaiter(),
     waiter$waiterPreloader(
-      html = sh$div(
-        class = "fs-4 d-flex flex-column gap-3",
-        waiter$spin_folding_cube(),
-        "Initiera VAP, var god vänta..."
-      ),
+      html = ase$waiting_screen(sh$h1("Välkommen!"), sh$p("VAP initieras...")),
       fadeout = TRUE,
       color = "#4161ab"
     ),
@@ -181,124 +179,182 @@ server <- function(id) {
 
     home$server("home", aui$navbox_data)
 
-    vap_indikatorer_1$server(
-      "vap_indikatorer_1",
-      access_page = input$vap_indikatorer_1,
-      data = list_df$vap_indikatorer_1,
-      geo = list(json = geo_json, sf = geo_sf),
-      summary = list(
-        text = summaries$indikatorer_1,
-        extra_info = list(icds = summaries$icd_ra)
+    # All servers below load once their actionButton on the home page is clicked first
+    # After this, the observer self-destructs and the page can be reloaded instantly
+
+    # Indikatorer 1
+    ase$observe_home_waiter(
+      id = "vap_indikatorer_1",
+      input = input,
+      vap_indikatorer_1$server(
+        "vap_indikatorer_1",
+        access_page = input$vap_indikatorer_1,
+        data = list_df$vap_indikatorer_1,
+        geo = list(json = geo_json, sf = geo_sf),
+        summary = list(
+          text = summaries$indikatorer_1,
+          extra_info = list(icds = summaries$icd_ra)
+        )
       )
     )
 
-    vap_indikatorer_2$server(
-      "vap_indikatorer_2",
-      access_page = input$vap_indikatorer_2,
-      data = list_df$vap_indikatorer_2,
-      geo = list(json = geo_json, sf = geo_sf),
-      summary = list(
-        text = summaries$indikatorer_2,
-        extra_info = list(icds = summaries$icd_ra)
+    # Indikatorer 2
+    ase$observe_home_waiter(
+      id = "vap_indikatorer_2",
+      input = input,
+      vap_indikatorer_2$server(
+        "vap_indikatorer_2",
+        access_page = input$vap_indikatorer_2,
+        data = list_df$vap_indikatorer_2,
+        geo = list(json = geo_json, sf = geo_sf),
+        summary = list(
+          text = summaries$indikatorer_2,
+          extra_info = list(icds = summaries$icd_ra)
+        )
       )
     )
 
-    vap_indikatorer_3$server(
-      "vap_indikatorer_3",
-      access_page = input$vap_indikatorer_3,
-      data = list_df$vap_indikatorer_3,
-      geo = list(json = geo_json, sf = geo_sf),
-      summary = list(
-        text = summaries$indikatorer_3,
-        extra_info = list(icds = summaries$icd_ra)
+    # Indikatorer 3
+    ase$observe_home_waiter(
+      id = "vap_indikatorer_3",
+      input = input,
+      vap_indikatorer_3$server(
+        "vap_indikatorer_3",
+        access_page = input$vap_indikatorer_3,
+        data = list_df$vap_indikatorer_3,
+        geo = list(json = geo_json, sf = geo_sf),
+        summary = list(
+          text = summaries$indikatorer_3,
+          extra_info = list(icds = summaries$icd_ra)
+        )
       )
     )
 
-    vap_indikatorer_4$server(
-      "vap_indikatorer_4",
-      access_page = input$vap_indikatorer_4,
-      data = list_df$vap_indikatorer_4,
-      geo = list(json = geo_json, sf = geo_sf),
-      summary = list(
-        text = summaries$indikatorer_4,
-        extra_info = list(icds = summaries$icd_ra)
+    # Indikatorer 4
+    ase$observe_home_waiter(
+      id = "vap_indikatorer_4",
+      input = input,
+      vap_indikatorer_4$server(
+        "vap_indikatorer_4",
+        access_page = input$vap_indikatorer_4,
+        data = list_df$vap_indikatorer_4,
+        geo = list(json = geo_json, sf = geo_sf),
+        summary = list(
+          text = summaries$indikatorer_4,
+          extra_info = list(icds = summaries$icd_ra)
+        )
       )
     )
 
-    vap_behandling_1$server(
-      "vap_behandling_1",
-      access_page = input$vap_behandling_1,
-      data = list_df$vap_behandling_1,
-      geo = list(json = geo_json, sf = geo_sf),
-      summary = list(
-        text = summaries$behandling_1,
-        extra_info = list(icds = summaries$icd_ra)
+    # Behandling 1
+    ase$observe_home_waiter(
+      id = "vap_behandling_1",
+      input = input,
+      vap_behandling_1$server(
+        "vap_behandling_1",
+        access_page = input$vap_behandling_1,
+        data = list_df$vap_behandling_1,
+        geo = list(json = geo_json, sf = geo_sf),
+        summary = list(
+          text = summaries$behandling_1,
+          extra_info = list(icds = summaries$icd_ra)
+        )
       )
     )
 
-    vap_behandling_2$server(
-      "vap_behandling_2",
-      access_page = input$vap_behandling_2,
-      data = list_df$vap_behandling_2,
-      geo = list(json = geo_json, sf = geo_sf),
-      summary = list(
-        text = summaries$behandling_2,
-        extra_info = list(icds = summaries$icd_ra)
+    # Behandling 2
+    ase$observe_home_waiter(
+      id = "vap_behandling_2",
+      input = input,
+      vap_behandling_2$server(
+        "vap_behandling_2",
+        access_page = input$vap_behandling_2,
+        data = list_df$vap_behandling_2,
+        geo = list(json = geo_json, sf = geo_sf),
+        summary = list(
+          text = summaries$behandling_2,
+          extra_info = list(icds = summaries$icd_ra)
+        )
       )
     )
 
-    vap_behandling_3$server(
-      "vap_behandling_3",
-      access_page = input$vap_behandling_3,
-      data = list_df$vap_behandling_3,
-      geo = list(json = geo_json, sf = geo_sf),
-      summary = list(
-        text = summaries$behandling_3,
-        extra_info = list(icds = summaries$icd_ra)
+    # Behandling 3
+    ase$observe_home_waiter(
+      id = "vap_behandling_3",
+      input = input,
+      vap_behandling_3$server(
+        "vap_behandling_3",
+        access_page = input$vap_behandling_3,
+        data = list_df$vap_behandling_3,
+        geo = list(json = geo_json, sf = geo_sf),
+        summary = list(
+          text = summaries$behandling_3,
+          extra_info = list(icds = summaries$icd_ra)
+        )
       )
     )
 
-    vap_behandling_4$server(
-      "vap_behandling_4",
-      access_page = input$vap_behandling_4,
-      data = list_df$vap_behandling_4,
-      geo = list(json = geo_json, sf = geo_sf),
-      summary = list(
-        text = summaries$behandling_4,
-        extra_info = list(icds = summaries$icd_ra)
+    # Behandling 4
+    ase$observe_home_waiter(
+      id = "vap_behandling_4",
+      input = input,
+      vap_behandling_4$server(
+        "vap_behandling_4",
+        access_page = input$vap_behandling_4,
+        data = list_df$vap_behandling_4,
+        geo = list(json = geo_json, sf = geo_sf),
+        summary = list(
+          text = summaries$behandling_4,
+          extra_info = list(icds = summaries$icd_ra)
+        )
       )
     )
 
-    vap_inklusionsmatt_1$server(
-      "vap_inklusionsmatt_1",
-      access_page = input$vap_inklusionsmatt_1,
-      data = list_df$vap_inklusionsmatt_1,
-      geo = list(json = geo_json, sf = geo_sf),
-      summary = list(
-        text = summaries$inklusionsmatt_1,
-        extra_info = list(icds = summaries$icd_ra)
+    # Inklusionsmatt 1
+    ase$observe_home_waiter(
+      id = "vap_inklusionsmatt_1",
+      input = input,
+      vap_inklusionsmatt_1$server(
+        "vap_inklusionsmatt_1",
+        access_page = input$vap_inklusionsmatt_1,
+        data = list_df$vap_inklusionsmatt_1,
+        geo = list(json = geo_json, sf = geo_sf),
+        summary = list(
+          text = summaries$inklusionsmatt_1,
+          extra_info = list(icds = summaries$icd_ra)
+        )
       )
     )
 
-    vap_kvalitetssakring_1$server(
-      "vap_kvalitetssakring_1",
-      access_page = input$vap_kvalitetssakring_1,
-      data = list_df$vap_kvalitetssakring_1,
-      geo = list(json = geo_json, sf = geo_sf),
-      summary = list(
-        text = summaries$kvalitetssakring_1,
-        extra_info = list(icds = summaries$icd_ra)
+    # Kvalitetssäkring 1
+    ase$observe_home_waiter(
+      id = "vap_kvalitetssakring_1",
+      input = input,
+      vap_kvalitetssakring_1$server(
+        "vap_kvalitetssakring_1",
+        access_page = input$vap_kvalitetssakring_1,
+        data = list_df$vap_kvalitetssakring_1,
+        geo = list(json = geo_json, sf = geo_sf),
+        summary = list(
+          text = summaries$kvalitetssakring_1,
+          extra_info = list(icds = summaries$icd_ra)
+        )
       )
     )
 
-    vap_kvalitetssakring_2$server(
-      "vap_kvalitetssakring_2",
-      access_page = input$vap_kvalitetssakring_2,
-      data = list_df$vap_kvalitetssakring_2,
-      geo = list(json = geo_json, sf = geo_sf),
-      summary = list(
-        text = summaries$kvalitetssakring_2,
-        extra_info = list(icds = summaries$icd_ra)
+    # Kvalitetssäkring 2
+    ase$observe_home_waiter(
+      id = "vap_kvalitetssakring_2",
+      input = input,
+      vap_kvalitetssakring_2$server(
+        "vap_kvalitetssakring_2",
+        access_page = input$vap_kvalitetssakring_2,
+        data = list_df$vap_kvalitetssakring_2,
+        geo = list(json = geo_json, sf = geo_sf),
+        summary = list(
+          text = summaries$kvalitetssakring_2,
+          extra_info = list(icds = summaries$icd_ra)
+        )
       )
     )
   })

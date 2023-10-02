@@ -126,7 +126,7 @@ server <- function(id, access_page, data, geo, summary) {
             arrange = arrange
         )
 
-        # Create barplot output
+        # Barplot output
         bar$server(
             "output",
             sum_sort,
@@ -137,7 +137,7 @@ server <- function(id, access_page, data, geo, summary) {
         )
 
 
-        # Create map output
+        # Map output
         map$server(
             id = "output",
             .data = sum_synopsis,

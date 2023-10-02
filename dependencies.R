@@ -19,6 +19,7 @@ library(palmerpenguins)
 library(here)
 library(DBI)
 library(RMySQL)
+library(future)
 
 # sk dependencies
 library(box)
