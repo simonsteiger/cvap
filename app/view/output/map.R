@@ -125,7 +125,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
         })
 
         # Create static map for download
-        res_export <- sh$observeEvent(input$exmap, {
+        res_export <- sh$reactive({
             limits <- c(min(.data()[[y]], na.rm = TRUE), max(.data()[[y]], na.rm = TRUE))
 
             joined <- dp$left_join(geo$sf, .data(), dp$join_by("NAME_1" == "lan"))
@@ -146,7 +146,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
 
         output$exmap <- sh$downloadHandler(
             filename = function() {
-                paste0(lub$today(), "_vapX_map", ".pdf")
+                paste(lub$today(), session$ns(id), "map.pdf", sep = "_")
             },
             content = function(file) {
                 width <- if (!is.null(group)) 10 else 5

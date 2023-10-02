@@ -109,29 +109,25 @@ server <- function(id, access_page, data, geo, summary) {
             arrange = arrange
         )
 
-        # When this page is accessed, render outputs
-        sh$observeEvent(access_page, {
-            print(access_page)
-            # Barplot output
-            bar$server(
-                "output",
-                sum_sort,
-                stash = out_stash,
-                group = "dxcat",
-                text = title,
-                arrange = arrange
-            )
+        # Barplot output
+        bar$server(
+            "output",
+            sum_sort,
+            stash = out_stash,
+            group = "dxcat",
+            text = title,
+            arrange = arrange
+        )
 
-            # Map output
-            map$server(
-                id = "output",
-                .data = sum_squash,
-                geo = geo,
-                stash = out_stash,
-                group = "dxcat",
-                text = title
-            )
-        })
+        # Map output
+        map$server(
+            id = "output",
+            .data = sum_squash,
+            geo = geo,
+            stash = out_stash,
+            group = "dxcat",
+            text = title
+        )
 
         # Create text output
         txt$server("output", summary)

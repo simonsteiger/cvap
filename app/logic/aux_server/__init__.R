@@ -16,6 +16,9 @@ obs_return <- other$obs_return
 waiting_screen <- other$waiting_screen
 
 #' @export
+observe_home_waiter <- other$observe_home_waiter
+
+#' @export
 sift_cols <- sift$sift_cols
 
 #' @export

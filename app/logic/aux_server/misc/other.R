@@ -3,6 +3,7 @@ box::use(
   rt = shiny.router,
   rl = rlang,
   waiter,
+  shj = shinyjs,
 )
 
 #' @export
@@ -23,4 +24,17 @@ waiting_screen <- function(...) {
     waiter$spin_folding_cube(),
     !!!dots
   )
+}
+
+#' @export
+#' Wrap a server into an observer which waits for an action button click on the home page
+observe_home_waiter <- function(id, server, input) {
+  sh$observeEvent(input[[paste0("home-", id)]], once = TRUE, {
+    waiter$waiter_show(
+      html = waiting_screen(sh$h1("Var god vänta"), sh$p("Visualiseringar förbereds...")),
+      color = "#4161ab"
+    )
+    server
+    shj$delay(5000, waiter$waiter_hide())
+  })
 }

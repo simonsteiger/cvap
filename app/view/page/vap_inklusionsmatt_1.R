@@ -121,31 +121,28 @@ server <- function(id, access_page, data, geo, summary) {
             arrange = arrange
         )
 
-        # When this page is accessed, render outputs
-        sh$observeEvent(access_page, {
-            # Create barplot output
-            bar$server(
-                "output",
-                sum_sort,
-                stash = out_stash,
-                group = "timestamp",
-                text = title,
-                format = "percent",
-                timeline = TRUE,
-                arrange = arrange
-            )
+        # Create barplot output
+        bar$server(
+            "output",
+            sum_sort,
+            stash = out_stash,
+            group = "timestamp",
+            text = title,
+            format = "percent",
+            timeline = TRUE,
+            arrange = arrange
+        )
 
-            # Create map output
-            map$server(
-                id = "output",
-                .data = sum_warn,
-                geo = geo,
-                stash = out_stash,
-                group = "timestamp",
-                text = title,
-                format = "percent"
-            )
-        })
+        # Create map output
+        map$server(
+            id = "output",
+            .data = sum_warn,
+            geo = geo,
+            stash = out_stash,
+            group = "timestamp",
+            text = title,
+            format = "percent"
+        )
 
         # Create text output
         txt$server("output", summary)
