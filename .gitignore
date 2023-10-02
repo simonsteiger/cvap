@@ -4,6 +4,6 @@
 .Ruserdata
 update.R
 *.sh
-
+.DS_Store
 *.fst
 *.rds
