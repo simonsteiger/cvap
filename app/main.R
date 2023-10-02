@@ -24,6 +24,7 @@ box::use(
   ski = app / logic / swissknife / skinit,
   app / logic / swissknife / sklang[`%//%`],
   aui = app / logic / aux_ui,
+  ase = app / logic / aux_server,
   app / logic / theme,
   app / logic / data / summaries,
   app / view / page / home,
@@ -75,11 +76,7 @@ ui <- function(id) {
     shf$useShinyFeedback(),
     waiter$useWaiter(),
     waiter$waiterPreloader(
-      html = sh$div(
-        class = "fs-4 d-flex flex-column gap-3",
-        waiter$spin_folding_cube(),
-        "Initiera VAP, var god vänta..."
-      ),
+      html = ase$waiting_screen(sh$h1("Välkommen!"), sh$p("VAP initieras...")),
       fadeout = TRUE,
       color = "#4161ab"
     ),
@@ -182,7 +179,11 @@ server <- function(id) {
 
     home$server("home", aui$navbox_data)
 
-    sh$observeEvent(input$vap_indikatorer_1, {
+    sh$observeEvent(input[["home-vap_indikatorer_1"]], once = TRUE, {
+      waiter$waiter_show(
+        html = ase$waiting_screen(sh$h1("Var god vänta"), sh$p("Visualiseringar förbereds...")),
+        color = "#4161ab"
+      )
       vap_indikatorer_1$server(
         "vap_indikatorer_1",
         access_page = input$vap_indikatorer_1,
@@ -193,9 +194,10 @@ server <- function(id) {
           extra_info = list(icds = summaries$icd_ra)
         )
       )
+      shj$delay(5000, waiter$waiter_hide())
     })
 
-    #vap_indikatorer_2$server(
+    # vap_indikatorer_2$server(
     #  "vap_indikatorer_2",
     #  access_page = input$vap_indikatorer_2,
     #  data = list_df$vap_indikatorer_2,
@@ -204,9 +206,9 @@ server <- function(id) {
     #    text = summaries$indikatorer_2,
     #    extra_info = list(icds = summaries$icd_ra)
     #  )
-    #)
-#
-    #vap_indikatorer_3$server(
+    # )
+    #
+    # vap_indikatorer_3$server(
     #  "vap_indikatorer_3",
     #  access_page = input$vap_indikatorer_3,
     #  data = list_df$vap_indikatorer_3,
@@ -215,9 +217,9 @@ server <- function(id) {
     #    text = summaries$indikatorer_3,
     #    extra_info = list(icds = summaries$icd_ra)
     #  )
-    #)
-#
-    #vap_indikatorer_4$server(
+    # )
+    #
+    # vap_indikatorer_4$server(
     #  "vap_indikatorer_4",
     #  access_page = input$vap_indikatorer_4,
     #  data = list_df$vap_indikatorer_4,
@@ -226,9 +228,9 @@ server <- function(id) {
     #    text = summaries$indikatorer_4,
     #    extra_info = list(icds = summaries$icd_ra)
     #  )
-    #)
-#
-    #vap_behandling_1$server(
+    # )
+    #
+    # vap_behandling_1$server(
     #  "vap_behandling_1",
     #  access_page = input$vap_behandling_1,
     #  data = list_df$vap_behandling_1,
@@ -237,9 +239,9 @@ server <- function(id) {
     #    text = summaries$behandling_1,
     #    extra_info = list(icds = summaries$icd_ra)
     #  )
-    #)
-#
-    #vap_behandling_2$server(
+    # )
+    #
+    # vap_behandling_2$server(
     #  "vap_behandling_2",
     #  access_page = input$vap_behandling_2,
     #  data = list_df$vap_behandling_2,
@@ -248,9 +250,9 @@ server <- function(id) {
     #    text = summaries$behandling_2,
     #    extra_info = list(icds = summaries$icd_ra)
     #  )
-    #)
-#
-    #vap_behandling_3$server(
+    # )
+    #
+    # vap_behandling_3$server(
     #  "vap_behandling_3",
     #  access_page = input$vap_behandling_3,
     #  data = list_df$vap_behandling_3,
@@ -259,9 +261,9 @@ server <- function(id) {
     #    text = summaries$behandling_3,
     #    extra_info = list(icds = summaries$icd_ra)
     #  )
-    #)
-#
-    #vap_behandling_4$server(
+    # )
+    #
+    # vap_behandling_4$server(
     #  "vap_behandling_4",
     #  access_page = input$vap_behandling_4,
     #  data = list_df$vap_behandling_4,
@@ -270,9 +272,9 @@ server <- function(id) {
     #    text = summaries$behandling_4,
     #    extra_info = list(icds = summaries$icd_ra)
     #  )
-    #)
-#
-    #vap_inklusionsmatt_1$server(
+    # )
+    #
+    # vap_inklusionsmatt_1$server(
     #  "vap_inklusionsmatt_1",
     #  access_page = input$vap_inklusionsmatt_1,
     #  data = list_df$vap_inklusionsmatt_1,
@@ -281,9 +283,9 @@ server <- function(id) {
     #    text = summaries$inklusionsmatt_1,
     #    extra_info = list(icds = summaries$icd_ra)
     #  )
-    #)
-#
-    #vap_kvalitetssakring_1$server(
+    # )
+    #
+    # vap_kvalitetssakring_1$server(
     #  "vap_kvalitetssakring_1",
     #  access_page = input$vap_kvalitetssakring_1,
     #  data = list_df$vap_kvalitetssakring_1,
@@ -292,9 +294,9 @@ server <- function(id) {
     #    text = summaries$kvalitetssakring_1,
     #    extra_info = list(icds = summaries$icd_ra)
     #  )
-    #)
-#
-    #vap_kvalitetssakring_2$server(
+    # )
+    #
+    # vap_kvalitetssakring_2$server(
     #  "vap_kvalitetssakring_2",
     #  access_page = input$vap_kvalitetssakring_2,
     #  data = list_df$vap_kvalitetssakring_2,
@@ -303,6 +305,6 @@ server <- function(id) {
     #    text = summaries$kvalitetssakring_2,
     #    extra_info = list(icds = summaries$icd_ra)
     #  )
-    #)
+    # )
   })
 }
