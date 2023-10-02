@@ -60,7 +60,7 @@ out <- pr$map(unit_seq, \(t) {
         dp$filter(min_ins_ord <= lub$today() - t_days) %>%
         dp$mutate(
             visit_group = ifelse(diff <= t_days & diff >= unit_min, TRUE, FALSE),
-            timestamp = factor(t)
+            timestamp = t # this was factor(t) – but why would we want that to be a factor here?
         ) %>%
         dp$arrange(patientkod, dp$desc(visit_group)) %>%
         dp$distinct(patientkod, .keep_all = TRUE)
