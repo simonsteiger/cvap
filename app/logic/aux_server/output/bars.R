@@ -108,6 +108,8 @@ plot_bar_export <- function(.data, x, y, group, timeline, stash, input, format) 
     }
 }
 
+left_margin <- "17%" # 17% means no hidden text before responsive breakpoint
+
 plot_bar_interactive_core <- function(.data, input, x, y, timeline, text) {
     e <- .data %>%
         e4r$e_charts_(x, timeline = timeline) %>%
@@ -129,7 +131,8 @@ plot_bar_interactive_core <- function(.data, input, x, y, timeline, text) {
         ) %>%
         e4r$e_tooltip(textStyle = list(fontFamily = "Roboto")) %>%
         e4r$e_aria(enabled = TRUE, decal = list(show = TRUE)) %>% # decal patterns
-        e4r$e_theme_custom("app/static/echarts_theme.json")
+        e4r$e_theme_custom("app/static/echarts_theme.json") %>%
+        e4r$e_grid(left = left_margin) # left margin to avoid names being cut off
 
     if (timeline) {
         e4r$e_y_axis_(e, max = 1)
