@@ -11,6 +11,7 @@ box::use(
     gg = ggplot2,
     pal = palettes,
     shj = shinyjs,
+    str = stringr,
 )
 
 box::use(
@@ -146,7 +147,8 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
 
         output$exmap <- sh$downloadHandler(
             filename = function() {
-                paste(lub$today(), session$ns(id), "map.pdf", sep = "_")
+                active_vap <- str$str_extract(session$ns(id), "vap_\\w+_\\d")
+                paste(lub$today(), active_vap, "karta.pdf", sep = "_")
             },
             content = function(file) {
                 width <- if (!is.null(group)) 10 else 5

@@ -125,7 +125,8 @@ server <- function(id, .data, stash, text, x = "lan", y = "outcome", group = NUL
 
         output$exbar <- sh$downloadHandler(
             filename = function() {
-                paste0(lub$today(), "_vapX_bar", ".pdf")
+                active_vap <- str$str_extract(session$ns(id), "vap_\\w+_\\d")
+                paste(lub$today(), active_vap, "stapel.pdf", sep = "_")
             },
             content = function(file) {
                 gg$ggsave(file, res_export(), width = 5, height = 7)
