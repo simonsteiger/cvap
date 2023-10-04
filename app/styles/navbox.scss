@@ -23,6 +23,7 @@ $spacer-triple: 0.9rem;
   }
 
   .tag {
+    flex-grow: 1;
     background-color: $secondary;
     border-radius: 12px;
     padding: $spacer-double $spacer-triple;
