@@ -43,7 +43,7 @@ sort_fct <- sort$sort_fct
 sort_num <- sort$sort_num
 
 #' @export
-sort_alph <- sort$sort_alph
+sort_scb_id <- sort$sort_scb_id
 
 #' @export
 sort_nogroup <- sort$sort_nogroup

@@ -104,7 +104,7 @@ server <- function(id, access_page, data, geo, summary) {
                     res,
                     .fn = `%per100k%`,
                     .var = "outcome",
-                    .by = c("lan", "ongoing_timestamp", "population"),
+                    .by = c("lan", "lan_scb_id", "ongoing_timestamp", "population"),
                     riket = FALSE,
                     .data[["population"]]
                 )

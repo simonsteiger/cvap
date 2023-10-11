@@ -88,7 +88,7 @@ server <- function(id, access_page, data, geo, summary) {
                 sifted,
                 .fn = mean,
                 .var = "visit_group",
-                .by = "lan", # c("lan", "inkluderad") before
+                .by = c("lan", "lan_scb_id"), # c("lan", "inkluderad") before
                 na.rm = TRUE
             ),
             list(input$go_input, access_page)

@@ -18,7 +18,11 @@ box::use(
 
 ski$read_dir(local$PATH)
 
+lan_coding <- dp$select(list_df$lan_coding, lan_no_suffix, lan_scb_id) %>%
+    dp$mutate(lan_scb_id = as.numeric(lan_scb_id) * -1) # reverse bc coord_flip in bar
+
 bas <- list_df$basdata %>%
+    dp$left_join(lan_coding, dp$join_by(lan == lan_no_suffix)) %>%
     srqprep$prep_recode(diagnoskod_1, srqdict$rec_dxcat, .new_name = dxcat) %>%
     # dp$filter(tidig_ra == 1) %>% # TODO likely need to flexibly determine who is early dxcat
     dp$mutate(
@@ -30,6 +34,7 @@ bas <- list_df$basdata %>%
     dp$select(
         patientkod,
         lan,
+        lan_scb_id,
         kon,
         dxcat,
         prep_typ,

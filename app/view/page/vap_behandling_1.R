@@ -86,7 +86,7 @@ server <- function(id, access_page, data, geo, summary) {
                 "summary",
                 sifted,
                 .fn = dp$n,
-                .by = c("lan", "dxcat", "ongoing_timestamp")
+                .by = c("lan", "lan_scb_id", "dxcat", "ongoing_timestamp")
             ),
             list(input$go_input, access_page)
         )

@@ -18,11 +18,15 @@ box::use(
 
 ski$read_dir(local$PATH)
 
+lan_coding <- dp$select(list_df$lan_coding, lan_no_suffix, lan_scb_id) %>%
+    dp$mutate(lan_scb_id = as.numeric(lan_scb_id) * -1) # reverse bc coord_flip in bar
+
 list_df$basdata <- list_df$basdata %>%
+    dp$left_join(lan_coding, dp$join_by(lan == lan_no_suffix)) %>%
     srqprep$prep_recode(diagnoskod_1, srqdict$rec_dxcat, .new_name = dxcat) %>%
     dp$filter(dxcat == "RA") %>%
     dp$mutate(lan = ifelse(lan == "Örebro", "Orebro", lan)) %>%
-    dp$select(patientkod, fodelsedag, dxcat, lan, tillhor)
+    dp$select(patientkod, fodelsedag, dxcat, lan, lan_scb_id, tillhor)
 
 list_df$besoksdata <- list_df$besoksdata %>%
     dp$select(patientkod, datum, das28, haq, patientens_globala) %>%

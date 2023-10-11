@@ -88,7 +88,7 @@ server <- function(id, access_page, data, geo, summary) {
                 sifted,
                 .fn = stats$median,
                 .var = "patientens_globala",
-                .by = c("lan", "visit_group"),
+                .by = c("lan", "lan_scb_id", "visit_group"),
                 na.rm = TRUE
             ),
             list(input$go_input, access_page)

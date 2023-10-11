@@ -24,12 +24,12 @@ server <- function(id, .data, group = NULL, ...) {
     sh$moduleServer(id, function(input, output, session) {
         dots <- rl$quos(...)
 
-        sh$reactive({
+        out <- sh$reactive({
             # First check if there's sortable data, if not, do nothing
             if (nrow(.data()) > 0 && all(is.na(.data()$outcome))) { # is the nrow check necessary?
                 return(.data())
             } else if (input$sort) { # TRUE = alphabetical
-                return(ase$sort_alph(.data()))
+                return(ase$sort_scb_id(.data()))
             } else if (is.null(group)) { # no custom reordering necessary, just order by outcome
                 return(ase$sort_nogroup(.data()))
             } else if (is.factor(.data()[[group]])) {
@@ -39,6 +39,11 @@ server <- function(id, .data, group = NULL, ...) {
             } else if (is.numeric(.data()[[group]])) {
                 return(ase$sort_num(.data(), group))
             }
+        })
+
+        # Drop lan_scb_id
+        sh$reactive({
+            dp$select(out(), -lan_scb_id)
         })
     })
 }

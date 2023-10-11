@@ -16,7 +16,11 @@ box::use(
 
 ski$read_dir(local$PATH)
 
+lan_coding <- dp$select(list_df$lan_coding, lan_no_suffix, lan_scb_id) %>%
+    dp$mutate(lan_scb_id = as.numeric(lan_scb_id) * -1) # reverse bc coord_flip in bar
+
 bas_ter <- list_df$basdata %>%
+    dp$left_join(lan_coding, dp$join_by(lan == lan_no_suffix)) %>%
     srqprep$prep_recode(diagnoskod_1, srqdict$rec_dxcat, .new_name = dxcat) %>%
     dp$mutate(lan = ifelse(lan == "Örebro", "Orebro", lan)) %>%
     dp$left_join(list_df$terapi, by = "patientkod", suffix = c("", ".dupl")) %>%
@@ -31,7 +35,7 @@ bas_ter <- list_df$basdata %>%
         dxcat == "RA",
         prep_typ == "bioprep"
     ) %>%
-    dp$select(patientkod, lan, kon, inkluderad, ordinerat, pagaende, utsatt)
+    dp$select(patientkod, lan, lan_scb_id, kon, inkluderad, ordinerat, pagaende, utsatt)
 
 pop <-
     dp$left_join(

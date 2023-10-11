@@ -67,11 +67,11 @@ sort_num <- function(.data, group) {
 }
 
 #' @export
-sort_alph <- function(.data) {
+sort_scb_id <- function(.data) {
     stopifnot(!sh$is.reactive(.data))
     .data %>%
-        dp$mutate(lan = as.factor(lan)) %>%
-        dp$arrange(dp$desc(lan))
+        dp$mutate(lan = fct$fct_reorder(as.factor(lan), .data[["lan_scb_id"]])) %>%
+        dp$arrange(lan) # overridden by table and bar server?
 }
 
 #' @export

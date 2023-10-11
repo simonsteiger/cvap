@@ -89,7 +89,7 @@ server <- function(id, access_page, data, geo, summary) {
                 "input", # has input$outcome that must be visible
                 sifted,
                 .fn = mean,
-                .by = "lan",
+                .by = c("lan", "lan_scb_id"),
                 na.rm = TRUE
             ),
             list(input$go_input, access_page)

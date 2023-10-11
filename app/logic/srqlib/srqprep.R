@@ -199,6 +199,7 @@ prep_riket <- function(.data, .var, .fn, .by, ...) {
     riket <- .data %>%
         dp$summarise(
             lan = "Riket",
+            lan_scb_id = 00,
             !!.var := .fn(.data[[var]], !!!dots),
             .by = ts$all_of(.by)
         )

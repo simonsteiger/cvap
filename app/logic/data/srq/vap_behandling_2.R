@@ -51,10 +51,11 @@ pop <-
         # but error is likely so marginal that using the report year should be OK for now
     ) %>%
     dp$summarise(
+        lan_scb_id = as.numeric(Region_ID) * -1, # reverse because of coord_flip in barplot
         population = sum(Population),
-        .by = c(Year, lan_no_suffix)
+        .by = c(Year, lan_no_suffix) # keep lan_scb_id
     ) %>%
-    dp$select(lan = lan_no_suffix, Year, population)
+    dp$select(lan = lan_no_suffix, lan_scb_id, Year, population)
 # recreate Riket later by summarising, can't be matched before
 
 simplified_pop <-

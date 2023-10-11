@@ -19,12 +19,16 @@ box::use(
 
 ski$read_dir(local$PATH)
 
-list_df$basdata <- list_df$basdata %>%
+lan_coding <- dp$select(list_df$lan_coding, lan_no_suffix, lan_scb_id) %>%
+    dp$mutate(lan_scb_id = as.numeric(lan_scb_id) * -1) # reverse bc coord_flip in bar
+
+bas_lan <- list_df$basdata %>%
+    dp$left_join(lan_coding, by = dp$join_by(lan == lan_no_suffix)) %>%
     srqprep$prep_recode(diagnoskod_1, srqdict$rec_dxcat, .new_name = dxcat) %>%
     dp$mutate(lan = ifelse(lan == "Örebro", "Orebro", lan)) %>%
-    dp$select(patientkod, fodelsedag, dxcat, lan, tillhor, avslutad)
+    dp$select(patientkod, fodelsedag, dxcat, lan, lan_scb_id, tillhor, avslutad)
 
-list_df$besoksdata <- list_df$besoksdata %>%
+besoksdata <- list_df$besoksdata %>%
     dp$select(patientkod, datum, smarta, haq, patientens_globala) %>%
     dp$mutate(
         dp$across(ts$all_of(c("patientens_globala", "smarta")), \(x) as.numeric(x))
@@ -38,7 +42,7 @@ list_df$besoksdata <- list_df$besoksdata %>%
 #     dp$right_join(list_df$bio, by = "preparat_kod") %>%
 #     dp$filter(!is.na(prep_typ))
 
-list_df$terapi <- list_df$terapi %>%
+terapi <- list_df$terapi %>%
     dp$full_join(list_df$bio, by = "patientkod", suffix = c("", ".dupl")) %>%
     dp$select(-ts$contains(".dupl")) %>%
     dp$filter(prep_typ %in% c("bioprep", "csdmard")) %>%
@@ -49,9 +53,9 @@ list_df$terapi <- list_df$terapi %>%
         preparat = ifelse(preparat == "Roactemra", "RoActemra", preparat)
     )
 
-list_df$bas_terapi <-
+bas_lan_terapi <-
     dp$inner_join(
-        list_df$terapi, list_df$basdata,
+        terapi, bas_lan,
         by = "patientkod",
         suffix = c("", ".dupl")
     ) %>%
@@ -59,7 +63,7 @@ list_df$bas_terapi <-
     ada$set_utsatt()
 
 out <-
-    dp$left_join(list_df$bas_terapi, list_df$besoksdata, by = "patientkod") %>%
+    dp$left_join(bas_lan_terapi, besoksdata, by = "patientkod") %>%
     dp$mutate(
         alder = lub$interval(fodelsedag, datum) / lub$dyears(1),
         diff = abs(as.numeric(datum - prep_start)),

@@ -18,18 +18,21 @@ box::use(
 
 ski$read_dir(local$PATH)
 
+lan_coding <- dp$select(list_df$lan_coding, lan_no_suffix, lan_scb_id) %>%
+    dp$mutate(lan_scb_id = as.numeric(lan_scb_id) * -1) # reverse for coord_flip in bar
+
 # the data needs to go through the qrdf preprocessing, too
 
-list_df$basdata <- list_df$basdata %>%
+bas_lan <- list_df$basdata %>%
+    dp$left_join(lan_coding, by = dp$join_by(lan == lan_no_suffix)) %>%
     srqprep$prep_recode(diagnoskod_1, srqdict$rec_dxcat, .new_name = dxcat) %>%
     dp$filter(dxcat == "RA") %>%
     dp$mutate(lan = ifelse(lan == "Örebro", "Orebro", lan)) %>%
-    dp$select(patientkod, fodelsedag, dxcat, lan, tillhor, avslutad)
+    dp$select(patientkod, fodelsedag, dxcat, lan, lan_scb_id, tillhor, avslutad)
 
-list_df$besoksdata <- list_df$besoksdata %>%
-    dp$select(patientkod, datum, das28, cdai)
+besoksdata <-  dp$select(list_df$besoksdata, patientkod, datum, das28, cdai)
 
-list_df$bio <- list_df$bio %>%
+bio <- list_df$bio %>%
     dp$arrange(patientkod, ordinerat) %>%
     dp$distinct(patientkod, .keep_all = TRUE) %>%
     dp$mutate(
@@ -37,9 +40,9 @@ list_df$bio <- list_df$bio %>%
         preparat = ifelse(preparat == "Roactemra", "RoActemra", preparat)
     )
 
-list_df$bas_bio <-
+bas_lan_bio <-
     dp$inner_join(
-        list_df$bio, list_df$basdata,
+        bio, bas_lan,
         by = "patientkod",
         suffix = c("", ".dupl")
     ) %>%
@@ -47,7 +50,7 @@ list_df$bas_bio <-
     ada$set_utsatt()
 
 out <-
-    dp$left_join(list_df$bas_bio, list_df$besoksdata, by = "patientkod") %>%
+    dp$left_join(bas_lan_bio, besoksdata, by = "patientkod") %>%
     dp$mutate(
         alder = lub$interval(fodelsedag, datum) / lub$dyears(1),
         das28_low = ifelse(das28 < 3.2, TRUE, FALSE),
