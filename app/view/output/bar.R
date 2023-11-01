@@ -18,7 +18,7 @@ box::use(
     app / logic / swissknife / sklang[`%//%`],
     app / logic / srqlib / srqcolor,
     app / logic / srqlib / srqauto,
-    app / logic / data / summaries[info_bar],
+    app / logic / data / texts,
 )
 
 #' @export
@@ -29,15 +29,15 @@ ui <- function(id) {
             class = "d-flex justify-content-between align-items-center",
             sh$div(
                 class = "d-flex flex-row align-items-center",
-                "Stapeldiagramm",
+                "Stapeldiagram",
                 aui$btn_modal(
                     ns("info-stapel"),
                     label = sh$icon("circle-info"),
-                    modal_title = "Information om stapeldiagramm",
+                    modal_title = "Information om stapeldiagram",
                     footer_confirm = NULL,
                     footer_dismiss = NULL,
                     class_toggle = "btn btn-transparent",
-                    info_bar
+                    texts$info_bar
                 )
             ),
             sh$div(

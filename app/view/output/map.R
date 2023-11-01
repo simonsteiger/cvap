@@ -19,7 +19,7 @@ box::use(
     app / logic / theme,
     aui = app / logic / aux_ui,
     ase = app / logic / aux_server,
-    app / logic / data / summaries[info_map]
+    app / logic / data / texts,
 )
 
 #' @export
@@ -38,7 +38,7 @@ ui <- function(id) {
                     footer_confirm = NULL,
                     footer_dismiss = NULL,
                     class_toggle = "btn btn-transparent",
-                    info_map
+                    texts$info_map
                 )
             )
         ),

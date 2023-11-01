@@ -10,6 +10,7 @@ box::use(
     app / logic / data / texts / inklusionsmatt_1,
     app / logic / data / texts / kvalitetssakring_1,
     app / logic / data / texts / kvalitetssakring_2,
+    app / logic / data / texts / info,
 )
 
 #' @export
@@ -44,3 +45,12 @@ kvalitetssakring_1 <- kvalitetssakring_1$kvalitetssakring_1
 
 #' @export
 kvalitetssakring_2 <- kvalitetssakring_2$kvalitetssakring_2
+
+#' @export
+info_bar <- info$info_bar
+
+#' @export
+info_tbl <- info$info_tbl
+
+#' @export
+info_map <- info$info_map
