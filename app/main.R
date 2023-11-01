@@ -39,6 +39,7 @@ box::use(
   app / view / page / vap_inklusionsmatt_1,
   app / view / page / vap_kvalitetssakring_1,
   app / view / page / vap_kvalitetssakring_2,
+  app / logic / data / texts
 )
 
 # Read all data files in the data folder
@@ -192,7 +193,7 @@ server <- function(id) {
         data = list_df$vap_indikatorer_1,
         geo = list(json = geo_json, sf = geo_sf),
         summary = list(
-          text = summaries$indikatorer_1,
+          text = texts$indikatorer_1,
           extra_info = list(icds = summaries$icd_ra)
         )
       )
@@ -208,7 +209,7 @@ server <- function(id) {
         data = list_df$vap_indikatorer_2,
         geo = list(json = geo_json, sf = geo_sf),
         summary = list(
-          text = summaries$indikatorer_2,
+          text = texts$indikatorer_2,
           extra_info = list(icds = summaries$icd_ra)
         )
       )
@@ -224,7 +225,7 @@ server <- function(id) {
         data = list_df$vap_indikatorer_3,
         geo = list(json = geo_json, sf = geo_sf),
         summary = list(
-          text = summaries$indikatorer_3,
+          text = texts$indikatorer_3,
           extra_info = list(icds = summaries$icd_ra)
         )
       )
@@ -240,7 +241,7 @@ server <- function(id) {
         data = list_df$vap_indikatorer_4,
         geo = list(json = geo_json, sf = geo_sf),
         summary = list(
-          text = summaries$indikatorer_4,
+          text = texts$indikatorer_4,
           extra_info = list(icds = summaries$icd_ra)
         )
       )
@@ -256,7 +257,7 @@ server <- function(id) {
         data = list_df$vap_behandling_1,
         geo = list(json = geo_json, sf = geo_sf),
         summary = list(
-          text = summaries$behandling_1,
+          text = texts$behandling_1,
           extra_info = list(icds = summaries$icd_ra)
         )
       )
@@ -272,7 +273,7 @@ server <- function(id) {
         data = list_df$vap_behandling_2,
         geo = list(json = geo_json, sf = geo_sf),
         summary = list(
-          text = summaries$behandling_2,
+          text = texts$behandling_2,
           extra_info = list(icds = summaries$icd_ra)
         )
       )
@@ -288,7 +289,7 @@ server <- function(id) {
         data = list_df$vap_behandling_3,
         geo = list(json = geo_json, sf = geo_sf),
         summary = list(
-          text = summaries$behandling_3,
+          text = texts$behandling_3,
           extra_info = list(icds = summaries$icd_ra)
         )
       )
@@ -304,7 +305,7 @@ server <- function(id) {
         data = list_df$vap_behandling_4,
         geo = list(json = geo_json, sf = geo_sf),
         summary = list(
-          text = summaries$behandling_4,
+          text = texts$behandling_4,
           extra_info = list(icds = summaries$icd_ra)
         )
       )
@@ -320,7 +321,7 @@ server <- function(id) {
         data = list_df$vap_inklusionsmatt_1,
         geo = list(json = geo_json, sf = geo_sf),
         summary = list(
-          text = summaries$inklusionsmatt_1,
+          text = texts$inklusionsmatt_1,
           extra_info = list(icds = summaries$icd_ra)
         )
       )
@@ -336,7 +337,7 @@ server <- function(id) {
         data = list_df$vap_kvalitetssakring_1,
         geo = list(json = geo_json, sf = geo_sf),
         summary = list(
-          text = summaries$kvalitetssakring_1,
+          text = texts$kvalitetssakring_1,
           extra_info = list(icds = summaries$icd_ra)
         )
       )
@@ -352,7 +353,7 @@ server <- function(id) {
         data = list_df$vap_kvalitetssakring_2,
         geo = list(json = geo_json, sf = geo_sf),
         summary = list(
-          text = summaries$kvalitetssakring_2,
+          text = texts$kvalitetssakring_2,
           extra_info = list(icds = summaries$icd_ra)
         )
       )

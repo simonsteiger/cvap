@@ -53,9 +53,9 @@ pop <-
     ) %>%
     dp$summarise(
         population = sum(Population),
-        .by = c(Year, lan_no_suffix, Region_ID)
+        .by = c(Year, lan_no_suffix)
     ) %>%
-    dp$select(lan = lan_no_suffix, lan_scb_id = Region_ID, Year, population)
+    dp$select(lan = lan_no_suffix, Year, population)
 # recreate Riket later by summarising, can't be matched before
 
 simplified_pop <-
