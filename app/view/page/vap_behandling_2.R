@@ -90,7 +90,7 @@ server <- function(id, access_page, data, geo, summary) {
                 "summary",
                 sifted,
                 .fn = dp$n,
-                .by = c("lan", "ongoing_timestamp", "population")
+                .by = c("lan", "lan_scb_id", "ongoing_timestamp", "population")
             )
 
             if (out_stash()$input$outcome == "per100k") {

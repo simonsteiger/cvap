@@ -19,7 +19,7 @@ box::use(
 ski$read_dir(local$PATH)
 
 lan_coding <- dp$select(list_df$lan_coding, lan_no_suffix, lan_scb_id) %>%
-    dp$mutate(lan_scb_id = as.numeric(lan_scb_id) * -1) # reverse for coord_flip in bar
+    dp$mutate(lan_scb_id = as.numeric(lan_scb_id) * -1) # reverse bc coord_flip in bar
 
 # the data needs to go through the qrdf preprocessing, too
 

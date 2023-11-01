@@ -43,7 +43,7 @@ ui <- function(id) {
             sh$div(
                 class = "d-flex justify-content-between align-items-center gap-4",
                 sh$htmlOutput(ns("inp_malniva")),
-                aui$inp_toggle(ns("sort"), "Sortera värden", value = TRUE) # default sort by SCB ID
+                aui$inp_toggle(ns("sort"), "Sortera län ID", value = TRUE) # default sort by SCB ID
             )
         ),
         body = e4r$echarts4rOutput(ns("bar")),
