@@ -59,6 +59,8 @@ server <- function(id, .data, stash, text, x = "lan", y = "outcome", group = NUL
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
 
+        sh$observeEvent(input$sort, sh$updateActionButton(session = session, "sort", label="Oho"))
+
         output$inp_malniva <- sh$renderUI({
             if ("Riket" %in% .data()$lan) {
                 aui$inp_toggle(session$ns("malniva"), "Visa mål")

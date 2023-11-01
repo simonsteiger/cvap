@@ -26,12 +26,20 @@ waiting_screen <- function(...) {
   )
 }
 
+tips <- c(
+  "Tip: Scrolla ner för att se tabell och sammanfattning",
+  "Tip: Har du redan klickat på info-knappen bredvid kartan?",
+  "Tip: Har du testat hovra över kartans teckenförklaring?",
+  "Tip: Hovra över staplarna för att se exakta värden",
+  "Tip: Klicka på grupprutor nedanför stapeldiagram för att dölja/visa detta grupp"
+)
+
 #' @export
 #' Wrap a server into an observer which waits for an action button click on the home page
 observe_home_waiter <- function(id, server, input) {
   sh$observeEvent(input[[paste0("home-", id)]], once = TRUE, {
     waiter$waiter_show(
-      html = waiting_screen(sh$h1("Var god vänta"), sh$p("Visualiseringar förbereds...")),
+      html = waiting_screen(sh$h1("Visualiseringar förbereds..."), sh$p(sample(tips, 1))),
       color = "#4161ab"
     )
     server
