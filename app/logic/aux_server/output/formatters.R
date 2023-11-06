@@ -366,9 +366,9 @@ create_subtitle <- function(input, .var, datecompare) {
 create_title_suffix <- function(input, title) {
     if (is.null(input$dxcat)) {
         return(title)
-    } else if (input$dxcat != "Tidig RA") {
+    } else if (!"Tidig RA" %in% input$dxcat) {
         return(paste(title, "i månader"))
-    } else if (input$dxcat == "Tidig RA") {
+    } else if ("Tidig RA" %in% input$dxcat) {
         paste(title, "i veckor")
         return(paste(title, "i veckor"))
     } else {

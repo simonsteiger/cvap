@@ -7,6 +7,7 @@ box::use(
   dp = dplyr,
   tdr = tidyr,
   pr = purrr,
+  str = stringr,
   rt = shiny.router,
   gj = geojsonio,
   gjsf = geojsonsf,
@@ -61,9 +62,10 @@ info_dmard <- pr$set_names(c("csdmard", "bioprep")) %>%
     drugs <- list_df$vap_behandling_4 %>%
       dp$filter(prep_typ == type) %>%
       dp$pull(preparat) %>%
-      unique()
+      unique() %>%
+      str$str_to_title()
     sh$div(
-      sh$tags$h6(class = "text-center", type),
+      sh$tags$h6(class = "text-center", ifelse(type == "bioprep", "bDMARD", "csDMARD")),
       sh$tags$ul(class = "small", pr$map(drugs, sh$tags$li))
     )
   }) %>%
