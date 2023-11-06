@@ -363,6 +363,20 @@ create_subtitle <- function(input, .var, datecompare) {
 }
 
 #' @export
+create_title_suffix <- function(input, title) {
+    if (is.null(input$dxcat)) {
+        return(title)
+    } else if (input$dxcat != "Tidig RA") {
+        return(paste(title, "i månader"))
+    } else if (input$dxcat == "Tidig RA") {
+        paste(title, "i veckor")
+        return(paste(title, "i veckor"))
+    } else {
+        stop("no match for create_title_suffix")
+    }
+}
+
+#' @export
 translate_outcome <- function(chr_vec, ...) {
     dots <- rl$list2(...)
 

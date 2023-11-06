@@ -58,6 +58,9 @@ sift_feedback <- sift$sift_feedback
 create_subtitle <- formatters$create_subtitle
 
 #' @export
+create_title_suffix <- formatters$create_title_suffix
+
+#' @export
 iconostasis <- formatters$iconostasis
 
 #' @export

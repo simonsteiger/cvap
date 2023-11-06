@@ -104,7 +104,7 @@ server <- function(id, .data, stash, text, x = "lan", y = "outcome", group = NUL
                 x,
                 outcome_long(),
                 timeline,
-                text,
+                stash()$title,
                 format
             )
         })

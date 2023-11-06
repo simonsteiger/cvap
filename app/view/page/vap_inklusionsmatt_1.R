@@ -1,6 +1,7 @@
 box::use(
     sh = shiny,
     shj = shinyjs,
+    dp = dplyr,
 )
 
 box::use(
@@ -84,7 +85,7 @@ server <- function(id, access_page, data, geo, summary) {
 
         # Summarise data with `.fn`, grouped by `.by`, and optionally pass `...` as args to `.fn`
         # Triggered by "go_input" and accessing the page
-        sum_synopsis <- sh$bindEvent(
+        sum_pre <- sh$bindEvent(
             synopsis$server(
                 "summary",
                 sifted,
@@ -95,6 +96,14 @@ server <- function(id, access_page, data, geo, summary) {
             ),
             list(input$go_input, access_page)
         )
+
+        # If there's a timestamp, that timestamp should be a numeric
+        # During the sift step, timestamp might have to be a factor though
+        # Since sift will automatically filter numerics with ranges or cutoffs
+        # Instead of categorical as would be necessary here
+        sum_synopsis <- sh$reactive({
+            dp$mutate(sum_pre(), timestamp = as.numeric(as.character(timestamp)))
+        })
 
         # Check sum_synopsis for läns with insufficient data
         sum_warn <- warning$server(

@@ -21,9 +21,13 @@ server <- function(id, title, .var = NULL, datecompare = FALSE) {
             ase$create_subtitle(input, .var, datecompare)
         })
 
+        title_suffix <- sh$reactive({
+            ase$create_title_suffix(input, title)
+        })
+
         sh$reactive({
             list(
-                title = title,
+                title = title_suffix(),
                 subtitle = subtitle(),
                 outcome = input$outcome %||% .var, # either input dependent or manually specified
                 input = input

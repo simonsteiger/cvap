@@ -18,7 +18,7 @@ box::use(
     app / view / output / stash,
 )
 
-title <- aui$navbox_data$tag[[4]][[1]]
+title <- paste(aui$navbox_data$tag[[4]][[1]], "i månader")
 
 #' @export
 ui <- function(id, data) {

@@ -56,18 +56,6 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
 
-        # Notification to show when map is loading
-        # output$notification <- sh$renderUI(
-        #     sh$div(
-        #         class = "d-flex flex-row align-items-center gap-2",
-        #         sh$div(class = "spinner-grow spinner-grow-sm c-warning", role = "status"),
-        #         "Var god vänta...",
-        #     )
-        # )
-
-        # Default status is hidden
-        # shj$toggle("notification", condition = !is.null(res_interactive()))
-
         # Convert outcome to percent if formatter is specified to "percent"
         formatted_data <- sh$reactive({
             if (format == "percent") {
@@ -110,7 +98,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                 # Create the title for element on the timeline
                 title <- pr$map(lvls, \(x) {
                     list(
-                        text = paste0(text, ", ", x),
+                        text = stash()$title,
                         subtext = paste0("Data uttagen: ", lub$today()),
                         textStyle = list(fontFamily = "Commissioner"),
                         subtextStyle = list(fontFamily = "Roboto")
@@ -119,7 +107,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
             } else {
                 out <- formatted_data()
 
-                title <- text
+                title <- stash()$title
             }
             # Assemble echart
             ase$plot_map_interactive(out, geo, x, y, group, title)

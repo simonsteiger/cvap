@@ -116,4 +116,10 @@ out <- out %>%
     ) %>%
     dp$mutate(dxcat = paste("Tidig", dxcat))
 
+fct_to_num <- function(f) {
+    as.numeric(as.character(f))
+}
+
+out$timestamp <- fct$fct_reorder(out$timestamp, fct_to_num(out$timestamp))
+
 fst$write_fst(out, "app/logic/data/srq/clean/vap_inklusionsmatt_1.fst")
