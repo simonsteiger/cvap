@@ -36,7 +36,7 @@ out <- bas_lan %>%
     ada$set_utsatt() %>%
     dp$select(-ts$contains(".dupl")) %>%
     dp$mutate(alder = lub$interval(fodelsedag, ordinerat) / lub$dyears(1)) %>%
-    dp$filter(alder >= 18) %>% # QUESTION should the filters in the app take care?
+    dp$filter(alder >= 18, prep_typ == "bioprep") %>% # QUESTION should the filters in the app take care?
     dp$select(patientkod, lan, lan_scb_id, kon, dxcat, prep_typ, ordinerat, pagaende, utsatt)
 
 fst$write_fst(out, "app/logic/data/srq/clean/vap_behandling_1.fst")
