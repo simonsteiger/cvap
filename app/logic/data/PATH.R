@@ -2,4 +2,4 @@
 # Set path for local data import here
 
 #' @export
-PATH <- "/Users/simonsteiger/Desktop/data/fst/"
+PATH <- "/Users/simonsteiger/Documents/data/fst/"
