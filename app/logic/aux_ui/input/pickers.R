@@ -33,12 +33,13 @@ inp_picker_lan <- function(id, choices) {
 
 #' @export
 #' Preset picker for dxcat
-inp_picker_dxcat <- function(id, choices) {
+inp_picker_dxcat <- function(id, choices, multiple = TRUE) {
     inp_picker(
         id,
         label = "Välj diagnos",
         choices = choices,
-        sort = FALSE
+        sort = FALSE,
+        multiple = multiple
     )
 }
 

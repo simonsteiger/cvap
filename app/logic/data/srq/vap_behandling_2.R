@@ -26,15 +26,16 @@ bas_ter <- list_df$basdata %>%
     ada$set_utsatt() %>%
     dp$mutate(
         prep_start = pmax(ordinerat, insatt, na.rm = TRUE), # QUESTION prep_start vs ordinerat?
-        alder = lub$interval(fodelsedag, ordinerat) / lub$dyears(1)
+        alder = lub$interval(fodelsedag, ordinerat) / lub$dyears(1),
+        dxcat = ifelse(!dxcat %in% c("RA", "AS", "SpA", "PsA"), "Annan", dxcat),
+        dxcat = factor(dxcat, c("RA", "AS", "SpA", "PsA", "Annan"))
         ) %>%
     # QUESTION should the age filters in the app take care?
     dp$filter(
-        dxcat == "RA",
         alder >= 18,
         prep_typ == "bioprep"
     ) %>%
-    dp$select(patientkod, lan, kon, ordinerat, pagaende, utsatt)
+    dp$select(patientkod, lan, kon, dxcat, ordinerat, pagaende, utsatt)
 
 pop <-
     dp$left_join(

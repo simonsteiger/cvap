@@ -31,6 +31,7 @@ ui <- function(id, data) {
         aui$inp_datecompare(sh$NS(ns("input"), "ongoing"), "Välj år du vill jämföra"),
         aui$inp_radio_outcome(sh$NS(ns("input"), "outcome"), c("Antal per 100 000" = "per100k", "Total antal" = "n")),
         aui$inp_radio_sex(sh$NS(ns("input"), "kon")),
+        aui$inp_picker_dxcat(sh$NS(ns("input"), "dxcat"), levels(data$dxcat), multiple = FALSE),
         # aui$inp_slider_age(sh$NS(ns("input"), "alder")),
         aui$inp_picker_lan(sh$NS(ns("input"), "lan"), unique(data$lan)),
     )
@@ -135,7 +136,6 @@ server <- function(id, access_page, data, geo, summary) {
             text = title,
             arrange = arrange
         )
-
 
         # Map output
         map$server(
