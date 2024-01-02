@@ -9,6 +9,7 @@ box::use(
     aui = app / logic / aux_ui,
     ase = app / logic / aux_server,
     app / view / wrangle / sift,
+    app / view / wrangle / popjoin,
     app / view / wrangle / squash,
     app / view / wrangle / synopsis,
     app / view / wrangle / sort,
@@ -53,7 +54,7 @@ ui <- function(id, data) {
 }
 
 #' @export
-server <- function(id, access_page, data, geo, summary) {
+server <- function(id, access_page, data, pop, geo, summary) {
     sh$moduleServer(id, function(input, output, session) {
         # Return to home page if return button is clicked
         ase$obs_return(input)
@@ -81,6 +82,8 @@ server <- function(id, access_page, data, geo, summary) {
         # Create filtered data
         sifted <- sift$server("input", sh$reactive(data), "patientkod", datecompare = TRUE)
 
+        joined <- popjoin$server("input", sifted, sh$reactive(pop))
+
         # User-input determines if two summarising steps or one
         # Step 1 is always a column-independent summary
         # Step 2 may convert this summary into a different measure, e.g. rate per 100k,
@@ -89,7 +92,7 @@ server <- function(id, access_page, data, geo, summary) {
         sum_synopsis <- sh$eventReactive(list(input$go_input, access_page), {
             res <- squash$server(
                 "summary",
-                sifted,
+                joined,
                 .fn = dp$n,
                 .by = c("lan", "lan_scb_id", "ongoing_timestamp", "population")
             )

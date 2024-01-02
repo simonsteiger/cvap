@@ -16,12 +16,15 @@ box::use(
 
 ski$read_dir(local$PATH)
 
-bas_ter <- list_df$basdata %>%
+lan_coding <- dp$select(list_df$lan_coding, lan_no_suffix, lan_scb_id) %>%
+    dp$mutate(lan_scb_id = as.numeric(lan_scb_id) * -1) # reverse bc coord_flip in bar
+
+out <- list_df$basdata %>%
     srqprep$prep_recode(diagnoskod_1, srqdict$rec_dxcat, .new_name = dxcat) %>%
     dp$mutate(
         lan = ifelse(lan == "Örebro", "Orebro", lan)
     ) %>%
-    dp$left_join(list_df$terapi, by = "patientkod", suffix = c("", ".dupl")) %>%
+    dp$left_join(list_df$bio, by = "patientkod", suffix = c("", ".dupl")) %>%
     dp$select(-ts$contains(".dupl")) %>%
     ada$set_utsatt() %>%
     dp$mutate(
@@ -29,43 +32,9 @@ bas_ter <- list_df$basdata %>%
         alder = lub$interval(fodelsedag, ordinerat) / lub$dyears(1),
         dxcat = ifelse(!dxcat %in% c("RA", "AS", "SpA", "PsA"), "Annan", dxcat),
         dxcat = factor(dxcat, c("RA", "AS", "SpA", "PsA", "Annan"))
-        ) %>%
+    ) %>%
     # QUESTION should the age filters in the app take care?
-    dp$filter(
-        alder >= 18,
-        prep_typ == "bioprep"
-    ) %>%
+    dp$filter(dp$between(alder, 18, 100)) %>%
     dp$select(patientkod, lan, kon, dxcat, ordinerat, pagaende, utsatt)
-
-pop <-
-    dp$left_join(
-        list_df$pop,
-        list_df$lan_coding,
-        by = c("Region_ID" = "lan_scb_id")
-    ) %>%
-    dp$filter(
-        Region_ID != "00",
-        Age >= 18,
-        Year == max(Year),
-        Sex %in% c("Male", "Female")
-        # most precise results would demand calculating patients / visit per THAT year's population
-        # but error is likely so marginal that using the report year should be OK for now
-    ) %>%
-    dp$summarise(
-        lan_scb_id = as.numeric(Region_ID) * -1, # reverse because of coord_flip in barplot
-        population = sum(Population),
-        .by = c(Year, lan_no_suffix) # keep lan_scb_id
-    ) %>%
-    dp$select(lan = lan_no_suffix, lan_scb_id, Year, population)
-# recreate Riket later by summarising, can't be matched before
-
-simplified_pop <-
-    pop %>%
-    dp$distinct() %>%
-    dp$mutate(lan = ifelse(lan == "Örebro", "Orebro", lan)) %>%
-    dp$filter(Year == max(Year)) %>%
-    dp$select(-Year)
-
-out <- dp$left_join(bas_ter, simplified_pop, by = "lan")
 
 fst$write_fst(out, "app/logic/data/srq/clean/vap_behandling_2.fst")

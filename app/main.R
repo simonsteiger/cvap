@@ -209,6 +209,7 @@ server <- function(id) {
         "vap_indikatorer_2",
         access_page = input$vap_indikatorer_2,
         data = list_df$vap_indikatorer_2,
+        pop = list_df$pop,
         geo = list(json = geo_json, sf = geo_sf),
         summary = list(
           text = texts$indikatorer_2,
@@ -273,6 +274,7 @@ server <- function(id) {
         "vap_behandling_2",
         access_page = input$vap_behandling_2,
         data = list_df$vap_behandling_2,
+        pop = list_df$pop,
         geo = list(json = geo_json, sf = geo_sf),
         summary = list(
           text = texts$behandling_2,
