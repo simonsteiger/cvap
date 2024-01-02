@@ -32,7 +32,15 @@ basdata <- list_df$basdata %>%
 besoksdata <- list_df$besoksdata %>%
     dp$select(patientkod, datum, das28, cdai, besoks_id)
 
-bio <- list_df$bio %>%
+# Old pipeline filters by grouping patients and then selecting min(ordinerat) within each
+# This does not fully overlap with selecting 'first_bio' – which one is more reliable?
+# Checked patient 1114, first_bio is Rixathon in 2022-01-11, but other biopreps before... ?
+# How is first_bio generated?
+terapi <- list_df$terapi %>%
+    dp$filter(prep_typ == "bioprep") %>%
+    dp$group_by(patientkod) %>%
+    dp$filter(ordinerat == min(ordinerat)) %>%
+    dp$ungroup() %>%
     dp$arrange(patientkod, ordinerat) %>%
     dp$distinct(patientkod, .keep_all = TRUE) %>%
     dp$mutate(
@@ -42,7 +50,7 @@ bio <- list_df$bio %>%
 
 bas_bio <-
     dp$inner_join(
-        bio, basdata,
+        terapi, basdata,
         by = "patientkod",
         suffix = c("", ".dupl")
     ) %>%
@@ -62,7 +70,7 @@ out <-
         das28_high = ifelse(das28 <= 3.2, FALSE, TRUE),
         cdai_high = ifelse(cdai <= 10, FALSE, TRUE),
     ) %>%
-    dp$filter(!is.na(visit_group)) %>%
+    dp$filter(!is.na(visit_group), dp$between(alder, 18, 100)) %>%
     tdr$nest(.by = visit_group) %>%
     dp$mutate(
         # keep obs depending on visit_group, see conds in visit_group mutate comments above
@@ -70,6 +78,7 @@ out <-
             pr$map(c("das28_high", "cdai_high"), \(outer) {
                 pr$map2(data, c("diff", outer), \(df, inner) {
                     df %>%
+                        dp$filter(!is.na(.[[ifelse(outer == "das28_high", "das28", "cdai")]])) %>%
                         dp$mutate(outcome = outer, iteration = inner) %>%
                         # This arrange statement sorts the shortest diff to top and also the lowest (FALSE) boolean value
                         # Hence the unintuitive flip above
@@ -93,21 +102,8 @@ out <-
             (visit_group == "Uppföljning" & iteration != "diff")
     ) %>%
     dp$distinct(patientkod, visit_group, outcome, .keep_all = TRUE) %>%
-    dp$mutate(dummy_outcome = outcome) %>%
-    tdr$nest(.by = dummy_outcome) %>%
-    dp$mutate(
-        data = pr$map(data, \(df) {
-            if (unique(df$outcome) == "das28_high") {
-                dp$filter(df, !is.na(das28_high))
-            } else {
-                dp$filter(df, !is.na(cdai_high))
-            }
-        })
-    ) %>%
-    tdr$unnest(cols=c(data)) %>%
-    dp$select(-c(ts$contains("_high"), dummy_outcome, id, tillhor, fodelsedag, iteration, insatt, utsatt, pagaende))
+    dp$select(-c(ts$contains("_high"), id, tillhor, fodelsedag, iteration, insatt, utsatt, pagaende))
 
 fst$write_fst(out, "app/logic/data/srq/clean/vap_indikatorer_4.fst")
 
-# OLD PIPELINE DOES NOT SELECT NEAREST VISIT TO DIAGNOSIS FOR BEHANDLINGSSTART
-# OLD PIPELINE DOES NOT SELECT FIRST BIO
+# Remaining differences are M12.3 diagnoses
