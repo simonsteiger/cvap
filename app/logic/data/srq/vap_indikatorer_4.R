@@ -7,6 +7,7 @@ box::use(
     ts = tidyselect,
     rl = rlang,
     tdr = tidyr,
+    str = stringr,
 )
 
 box::use(
@@ -21,20 +22,17 @@ ski$read_dir(local$PATH)
 lan_coding <- dp$select(list_df$lan_coding, lan_no_suffix, lan_scb_id) %>%
     dp$mutate(lan_scb_id = as.numeric(lan_scb_id) * -1) # reverse bc coord_flip in bar
 
-# the data needs to go through the qrdf preprocessing, too
-
-list_df$basdata <- list_df$basdata %>%
+basdata <- list_df$basdata %>%
     dp$left_join(lan_coding, dp$join_by(lan == lan_no_suffix)) %>%
     srqprep$prep_recode(diagnoskod_1, srqdict$rec_dxcat, .new_name = dxcat) %>%
     dp$filter(dxcat == "RA") %>%
     dp$mutate(lan = ifelse(lan == "Örebro", "Orebro", lan)) %>%
     dp$select(patientkod, fodelsedag, dxcat, lan, lan_scb_id, tillhor)
 
-list_df$besoksdata <- list_df$besoksdata %>%
+besoksdata <- list_df$besoksdata %>%
     dp$select(patientkod, datum, das28, cdai, besoks_id)
 
-list_df$terapi <- list_df$terapi %>%
-    dp$filter(prep_typ == "bioprep" & first_bio == 1) %>%
+bio <- list_df$bio %>%
     dp$arrange(patientkod, ordinerat) %>%
     dp$distinct(patientkod, .keep_all = TRUE) %>%
     dp$mutate(
@@ -42,16 +40,16 @@ list_df$terapi <- list_df$terapi %>%
         preparat = ifelse(preparat == "Roactemra", "RoActemra", preparat)
     )
 
-list_df$bas_ter <-
+bas_bio <-
     dp$inner_join(
-        list_df$terapi, list_df$basdata,
+        bio, basdata,
         by = "patientkod",
         suffix = c("", ".dupl")
     ) %>%
     dp$select(-ts$contains(c(".dupl", "skapad", "andrad")), -c("preparat_kod", "orsak", "ar"))
 
 out <-
-    dp$left_join(list_df$bas_ter, list_df$besoksdata, by = "patientkod") %>%
+    dp$left_join(bas_bio, besoksdata, by = "patientkod") %>%
     dp$mutate(
         alder = lub$interval(fodelsedag, ordinerat) / lub$dyears(1),
         diff = as.numeric(datum - prep_start),
@@ -84,8 +82,12 @@ out <-
         ) # returns an inflated version of what we need, FIX!
     ) %>%
     tdr$unnest(data) %>%
-    # Flip booleans to 
-    dp$mutate(das28_low = !das28_high, cdai_low = !cdai_high) %>%
+    # Flip booleans and outcome string
+    dp$mutate(
+        das28_low = !das28_high,
+        cdai_low = !cdai_high,
+        outcome = str$str_replace(outcome, "high", "low"),
+    ) %>%
     dp$filter( # cleaning out what is not needed later
         (visit_group == "Behandlingsstart" & iteration == "diff") |
             (visit_group == "Uppföljning" & iteration != "diff")

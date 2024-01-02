@@ -23,7 +23,7 @@ bas_ter <- list_df$basdata %>%
     dp$left_join(lan_coding, dp$join_by(lan == lan_no_suffix)) %>%
     srqprep$prep_recode(diagnoskod_1, srqdict$rec_dxcat, .new_name = dxcat) %>%
     dp$mutate(lan = ifelse(lan == "Örebro", "Orebro", lan)) %>%
-    dp$left_join(list_df$terapi, by = "patientkod", suffix = c("", ".dupl")) %>%
+    dp$left_join(list_df$bio, by = "patientkod", suffix = c("", ".dupl")) %>%
     dp$select(-ts$contains(".dupl")) %>%
     ada$set_utsatt() %>%
     dp$mutate(
@@ -33,7 +33,6 @@ bas_ter <- list_df$basdata %>%
     dp$filter(
         alder >= 18, # QUESTION should the filters in the app take care?
         dxcat == "RA",
-        prep_typ == "bioprep"
     ) %>%
     dp$select(patientkod, lan, lan_scb_id, kon, inkluderad, ordinerat, pagaende, utsatt)
 
