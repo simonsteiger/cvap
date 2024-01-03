@@ -23,7 +23,7 @@ lan_coding <- dp$select(list_df$lan_coding, lan_no_suffix, lan_scb_id) %>%
 out <- list_df$basdata %>%
     dp$left_join(lan_coding, by = dp$join_by(lan == lan_no_suffix)) %>%
     srqprep$prep_recode(diagnoskod_1, srqdict$rec_dxcat, .new_name = dxcat) %>%
-    dp$filter(tidig_ra == 1 & dxcat == "RA") %>% # TODO check for dxcat == "RA" correct?
+    dp$filter(tidig_ra == 1 & dxcat == "RA") %>%
     dp$mutate(
         alder = lub$interval(fodelsedag, inkluderad) / lub$dyears(1),
         min_inkl_diag = pmin(diagnosdatum1, inkluderad, na.rm = TRUE),
@@ -45,7 +45,22 @@ out <- pr$map(
     }
 ) %>%
     pr$list_rbind() %>%
-    dp$select(patientkod, inkluderad, kon, visit_group, lan, lan_scb_id, start, alder)
+    dp$select(patientkod, inkluderad, symtomdebut_1, diff, kon, visit_group, lan, lan_scb_id, start, alder)
 
 
 fst$write_fst(out, "app/logic/data/srq/clean/vap_indikatorer_1.fst")
+
+# Replicate relevant part of old pipeline
+
+# library(Epi) # don't want packrat to capture this
+# uncomment when running the chunk below
+
+out$diff2 <- cal.yr(out$inkluderad)-cal.yr(out$symtomdebut_1)
+out$diff2 <- out$diff2 * 365.7 / 7
+out$diff3 <- out$diff2 < 20
+dp$select(out, diff, diff2, visit_group, diff3)
+out$matches <- out$visit_group == out$diff3
+dp$filter(out, !matches)
+
+# Old vap allows negative differences between symptom start and diagnosis date
+# Should this be the case?
