@@ -69,6 +69,7 @@ out <-
         # This is the opposite of the result to allow correct sorting in the double map below
         das28_high = ifelse(das28 <= 3.2, FALSE, TRUE),
         cdai_high = ifelse(cdai <= 10, FALSE, TRUE),
+        abs_diff = abs(diff), # We want the value closest to 0, not the most negative
     ) %>%
     dp$filter(!is.na(visit_group), dp$between(alder, 18, 100)) %>%
     tdr$nest(.by = visit_group) %>%
@@ -76,7 +77,7 @@ out <-
         # keep obs depending on visit_group, see conds in visit_group mutate comments above
         data = list(
             pr$map(c("das28_high", "cdai_high"), \(outer) {
-                pr$map2(data, c("diff", outer), \(df, inner) {
+                pr$map2(data, c("abs_diff", outer), \(df, inner) {
                     df %>%
                         dp$filter(!is.na(.[[ifelse(outer == "das28_high", "das28", "cdai")]])) %>%
                         dp$mutate(outcome = outer, iteration = inner) %>%

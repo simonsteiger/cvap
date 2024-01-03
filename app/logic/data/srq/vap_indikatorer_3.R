@@ -53,20 +53,26 @@ out <-
     dp$mutate(
         alder = lub$interval(fodelsedag, datum) / lub$dyears(1),
         diff = as.numeric(datum - prep_start), # we had abs(...) here before, why did we do that?
-        visit_group = factor(dp$case_when(
-            diff >= -30 & diff <= 7 ~ "Behandlingsstart", # use diff closest to 0
-            diff >= 120 & diff <= 365 ~ "Uppföljning", # use lowest target value (p_glob)
-            .default = NA
-        ))
+        visit_group = factor(
+            dp$case_when(
+                diff >= -30 & diff <= 7 ~ "Behandlingsstart", # use diff closest to 0
+                diff >= 120 & diff <= 365 ~ "Uppföljning", # use lowest target value (p_glob)
+                .default = NA
+            )
+        ),
+        abs_diff = abs(diff) # we want the value closest to 0, not the most negative
     ) %>%
-    dp$filter(!is.na(visit_group)) %>%
+    dp$filter(
+        !is.na(visit_group),
+        !is.na(patientens_globala)
+    ) %>%
     tdr$nest(.by = visit_group) %>%
     dp$mutate(
         # keep obs depending on visit_group, see conds in visit_group mutate comments above
-        data = pr$map2(data, c("diff", "patientens_globala"), \(df, .var) {
+        data = pr$map2(data, c("abs_diff", "patientens_globala"), \(df, .var) {
             df %>%
                 dp$arrange(dp$across(ts$all_of(c("patientkod", .var)))) %>%
-                dp$distinct(.data[["patientkod"]], .keep_all = TRUE)
+                dp$distinct(patientkod, .keep_all = TRUE)
         })
     ) %>%
     tdr$unnest(data) %>%
