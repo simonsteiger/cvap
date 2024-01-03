@@ -31,7 +31,7 @@ bas_lan <- list_df$basdata %>%
 besoksdata <- list_df$besoksdata %>%
     dp$select(patientkod, datum, smarta, haq, patientens_globala) %>%
     dp$mutate(
-        dp$across(ts$all_of(c("patientens_globala", "smarta")), \(x) as.numeric(x))
+        dp$across(ts$all_of(c("patientens_globala", "smarta")), \(x) as.numeric(as.character(x)))
     ) # unparsable strings become NA
 
 # Get prep_typ into list_df$bio
@@ -71,7 +71,8 @@ out <-
             diff >= -30 & diff <= 7 ~ "Behandlingsstart", # use diff closest to 0
             diff >= 120 & diff <= 365 ~ "Uppföljning", # use lowest target value (p_glob)
             .default = NA
-        ))
+        )),
+        abs_diff = abs(diff), # we want closest diff to 0, not most negative
     ) %>%
     dp$filter(!is.na(visit_group)) %>%
     tdr$nest(.by = visit_group) %>%
@@ -80,8 +81,10 @@ out <-
         data = list(
             pr$map(
                 c("patientens_globala", "haq", "smarta"), \(outer) {
-                    pr$map2(data, c(outer, "diff"), \(df, inner) {
+                    pr$map2(data, c(outer, "abs_diff"), \(df, inner) {
                         df %>%
+                            # don't sort missings to top in diff iteration
+                            dp$filter(!is.na(.[[outer]])) %>%
                             dp$mutate(outcome = outer, iteration = inner) %>%
                             dp$arrange(dp$across(ts$all_of(c("patientkod", inner)))) %>%
                             dp$distinct(.data[["patientkod"]], .keep_all = TRUE)
@@ -94,8 +97,8 @@ out <-
     ) %>%
     tdr$unnest(data) %>%
     dp$filter( # cleaning out what is not needed later
-        (visit_group == "Behandlingsstart" & iteration == "diff") |
-            (visit_group == "Uppföljning" & iteration != "diff")
+        (visit_group == "Behandlingsstart" & iteration == "abs_diff") |
+            (visit_group == "Uppföljning" & iteration != "abs_diff")
     ) %>%
     dp$distinct(patientkod, visit_group, outcome, .keep_all = TRUE) %>%
     dp$select(-c(id, tillhor, diagnos_1, diagnos_2, atc_kod, fodelsedag, iteration))

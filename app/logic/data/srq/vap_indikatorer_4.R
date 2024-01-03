@@ -99,8 +99,8 @@ out <-
         outcome = str$str_replace(outcome, "high", "low"),
     ) %>%
     dp$filter( # cleaning out what is not needed later
-        (visit_group == "Behandlingsstart" & iteration == "diff") |
-            (visit_group == "Uppföljning" & iteration != "diff")
+        (visit_group == "Behandlingsstart" & iteration == "abs_diff") |
+            (visit_group == "Uppföljning" & iteration != "abs_diff")
     ) %>%
     dp$distinct(patientkod, visit_group, outcome, .keep_all = TRUE) %>%
     dp$select(-c(ts$contains("_high"), id, tillhor, fodelsedag, iteration, insatt, utsatt, pagaende))
