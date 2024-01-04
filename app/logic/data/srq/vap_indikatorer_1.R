@@ -20,7 +20,7 @@ ski$read_dir(local$PATH)
 lan_coding <- dp$select(list_df$lan_coding, lan_no_suffix, lan_scb_id) %>%
     dp$mutate(lan_scb_id = as.numeric(lan_scb_id) * -1) # reverse bc coord_flip in bar
 
-out <- list_df$basdata %>%
+pre <- list_df$basdata %>%
     dp$left_join(lan_coding, by = dp$join_by(lan == lan_no_suffix)) %>%
     srqprep$prep_recode(diagnoskod_1, srqdict$rec_dxcat, .new_name = dxcat) %>%
     dp$filter(tidig_ra == 1 & dxcat == "RA") %>%
@@ -32,7 +32,8 @@ out <- list_df$basdata %>%
 
 out <- pr$map(
     c("min_inkl_diag", "diagnosdatum1", "inkluderad"), \(t) {
-        out %>%
+        pre %>%
+            dp$filter(!is.na(.data[[t]])) %>%
             dp$mutate(start = factor(t)) %>%
             srqprep$prep_dynamic_groups(
                 .start = lub$ymd("1999-01-01"),
@@ -45,7 +46,7 @@ out <- pr$map(
     }
 ) %>%
     pr$list_rbind() %>%
-    dp$select(patientkod, inkluderad, symtomdebut_1, diff, kon, visit_group, lan, lan_scb_id, start, alder)
+    dp$select(patientkod, inkluderad, diagnosdatum1, min_inkl_diag, symtomdebut_1, diff, kon, visit_group, lan, lan_scb_id, start, alder)
 
 
 fst$write_fst(out, "app/logic/data/srq/clean/vap_indikatorer_1.fst")

@@ -76,17 +76,15 @@ out <- out %>%
     tdr$nest(.by = ra_bool) %>%
     dp$mutate(
         data =
-        # TODO This nested loop is rough and should either be commented in great detail or rewritten
+        # TODO This nested loop is bad and should either be commented in great detail or rewritten
         # Try commenting first, because this solution probably saves space and is better to overlook
             pr$pmap(create_l(data), \(data, fn, s1, t1) { # Numbers = depth of loop 1=outer, 3=inner
                 pr$map2(s1, list(data), \(s2, d2) {
                     pr$map2(t1, list(d2), \(t2, d3) {
                         t_days <- fn(t2) / lub$ddays(1)
-                        # this is goofy / hacky, why can't I subset the data pronoun?
-                        # why do we have to pass dx while min is available in deepest from outer?
                         d3 %>%
-                            dp$mutate(diff = as.numeric(d3[[s2]] - symtomdebut_1)) %>%
-                            dp$filter(d3[[s2]] <= lub$today() - t_days) %>%
+                            dp$mutate(diff = as.numeric(.[[s2]] - symtomdebut_1)) %>%
+                            dp$filter(.[[s2]] <= lub$today() - t_days) %>%
                             dp$mutate(
                                 visit_group = ifelse(diff <= t_days, TRUE, FALSE),
                                 timestamp = factor(t2),
