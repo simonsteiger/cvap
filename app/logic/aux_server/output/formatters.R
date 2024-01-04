@@ -392,6 +392,7 @@ translate_outcome <- function(chr_vec, ...) {
             "haq" = "HAQ",
             "smarta" = "Smärta",
             "das28_low" = "Låg DAS28",
+            "n" = "Total antal",
             "cdai_low" = "Låg CDAI",
             "per100k" = "Antal per 100_000",
             "nonmissing" = "Data tillgänglig",

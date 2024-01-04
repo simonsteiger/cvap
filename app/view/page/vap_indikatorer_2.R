@@ -131,7 +131,8 @@ server <- function(id, access_page, data, pop, geo, summary) {
             "output",
             sum_sort,
             stash = out_stash,
-            arrange = arrange
+            arrange = arrange,
+            drop = c("missing", "nonmissing")
         )
 
         # Create barplot output

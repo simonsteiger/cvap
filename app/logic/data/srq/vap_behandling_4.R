@@ -42,9 +42,7 @@ besoksdata <- list_df$besoksdata %>%
 #     dp$right_join(list_df$bio, by = "preparat_kod") %>%
 #     dp$filter(!is.na(prep_typ))
 
-terapi <- list_df$terapi %>% # TODO Why are we full joining terapi and bio???
-    dp$full_join(list_df$bio, by = "patientkod", suffix = c("", ".dupl")) %>%
-    dp$select(-ts$contains(".dupl")) %>%
+terapi <- list_df$terapi %>%
     dp$filter(prep_typ %in% c("bioprep", "csdmard")) %>%
     dp$arrange(patientkod, ordinerat) %>%
     dp$distinct(patientkod, prep_typ, .keep_all = TRUE) %>%
@@ -81,13 +79,21 @@ out <-
         data = list(
             pr$map(
                 c("patientens_globala", "haq", "smarta"), \(outer) {
-                    pr$map2(data, c(outer, "abs_diff"), \(df, inner) {
+                    # IMPORTANT make sure that Behandlingsstart is first
+                    # so that low abs_diff is sorted to top there
+                    # and Uppföljning is second so that low `outer` is sorted to top there
+                    pr$map2(data, c("abs_diff", outer), \(df, inner) {
                         df %>%
-                            # don't sort missings to top in diff iteration
-                            dp$filter(!is.na(.[[outer]])) %>%
-                            dp$mutate(outcome = outer, iteration = inner) %>%
-                            dp$arrange(dp$across(ts$all_of(c("patientkod", inner)))) %>%
-                            dp$distinct(.data[["patientkod"]], .keep_all = TRUE)
+                            dp$mutate(
+                                outcome = outer,
+                                iteration = inner,
+                                # arrange sorts non-na values to top, then lowest `inner`
+                                isna = is.na(.[[outer]])
+                            ) %>%
+                            dp$group_by(prep_typ) %>%
+                            dp$arrange(dp$across(ts$all_of(c("patientkod", "isna", inner)))) %>%
+                            dp$distinct(.data[["patientkod"]], .keep_all = TRUE) %>%
+                            dp$ungroup()
                     }) %>%
                         pr$list_rbind()
                 }
@@ -100,7 +106,7 @@ out <-
         (visit_group == "Behandlingsstart" & iteration == "abs_diff") |
             (visit_group == "Uppföljning" & iteration != "abs_diff")
     ) %>%
-    dp$distinct(patientkod, visit_group, outcome, .keep_all = TRUE) %>%
-    dp$select(-c(id, tillhor, diagnos_1, diagnos_2, atc_kod, fodelsedag, iteration))
+    dp$distinct(patientkod, visit_group, outcome, prep_typ, .keep_all = TRUE) %>%
+    dp$select(-c(id, tillhor, diagnos_1, diagnos_2, atc_kod, fodelsedag))
 
 fst$write_fst(out, "app/logic/data/srq/clean/vap_behandling_4.fst")

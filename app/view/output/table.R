@@ -3,6 +3,7 @@ box::use(
     sh = shiny,
     dp = dplyr,
     rtbl = reactable,
+    ts = tidyselect,
 )
 
 box::use(
@@ -38,7 +39,7 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id, .data, stash = NULL, arrange = "lan") {
+server <- function(id, .data, stash = NULL, arrange = "lan", drop = NULL) {
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
         stopifnot(sh$is.reactive(stash))
@@ -50,6 +51,7 @@ server <- function(id, .data, stash = NULL, arrange = "lan") {
             # Here say "if data contains dxcat == Tidig RA, then make timestamp '... i veckor"
             rtbl$reactable({
                 temp <- dp$arrange(.data(), dp$across(arrange))
+                if (!is.null(drop)) temp <- dp$select(temp, -ts$any_of(drop))
 
                 # if dxcat is Tidig RA, custom rename - always FALSE if dxcat doesn't exist
                 # convert from tibble to data.frame to avoid "uninitialised column" warning

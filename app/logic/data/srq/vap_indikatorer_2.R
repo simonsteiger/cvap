@@ -34,6 +34,6 @@ out <- list_df$basdata %>%
         dp$between(alder, 18, 100),
         dxcat == "RA",
     ) %>%
-    dp$select(patientkod, lan, lan_scb_id, kon, inkluderad, ordinerat, pagaende, utsatt)
+    dp$select(patientkod, lan, kon, inkluderad, ordinerat, pagaende, utsatt)
 
 fst$write_fst(out, "app/logic/data/srq/clean/vap_indikatorer_2.fst")

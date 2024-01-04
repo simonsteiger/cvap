@@ -64,7 +64,7 @@ out <-
     ) %>%
     dp$filter(
         !is.na(visit_group),
-        !is.na(patientens_globala)
+        #!is.na(patientens_globala)
     ) %>%
     tdr$nest(.by = visit_group) %>%
     dp$mutate(
