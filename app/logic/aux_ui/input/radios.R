@@ -67,12 +67,13 @@ choices <- list(
 
 #' @export
 #' Preset radio for preparat typ
-inp_radio_prep_typ <- function(id) {
+inp_radio_prep_typ <- function(id, choices = c("bDMARD" = "bioprep", "csDMARD" = "csdmard", "Antingen eller" = "Båda")) {
     inp_radio(
         id = id,
         label = "Välj typ av behandling",
-        choices = c("bDMARD" = "bioprep", "csDMARD" = "csdmard", "Antingen eller" = "Båda")
+        choices = choices
         # Båda is a free pass through the filters
+        # but that might be a problem since two entries from the same person can make it through
     )
 }
 

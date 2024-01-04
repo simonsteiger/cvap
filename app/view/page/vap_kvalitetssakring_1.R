@@ -18,7 +18,7 @@ box::use(
     app / view / output / stash,
 )
 
-title <- paste(aui$navbox_data$tag[[4]][[1]], "i månader")
+title <- paste(aui$navbox_data$tag[[4]][[1]])
 
 #' @export
 ui <- function(id, data) {
@@ -26,6 +26,8 @@ ui <- function(id, data) {
 
     inputs <- sh$tagList(
         aui$inp_daterange(sh$NS(ns("input"), "inkluderad"), "Välj tidsfönster för inklusionsdatum"),
+        aui$inp_picker_dxcat(sh$NS(ns("input"), "dxcat"), unique(data$dxcat)),
+        aui$inp_radio_prep_typ(sh$NS(ns("input"), "prep_typ"), c("bDMARD" = "bioprep", "csDMARD" = "csdmard")),
         aui$inp_radio_sex(sh$NS(ns("input"), "kon")),
         aui$inp_slider_age(sh$NS(ns("input"), "alder")),
         aui$inp_picker_lan(sh$NS(ns("input"), "lan"), unique(data$lan)),

@@ -42,7 +42,7 @@ besoksdata <- list_df$besoksdata %>%
 #     dp$right_join(list_df$bio, by = "preparat_kod") %>%
 #     dp$filter(!is.na(prep_typ))
 
-terapi <- list_df$terapi %>%
+terapi <- list_df$terapi %>% # TODO Why are we full joining terapi and bio???
     dp$full_join(list_df$bio, by = "patientkod", suffix = c("", ".dupl")) %>%
     dp$select(-ts$contains(".dupl")) %>%
     dp$filter(prep_typ %in% c("bioprep", "csdmard")) %>%
