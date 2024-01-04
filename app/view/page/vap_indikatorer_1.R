@@ -123,7 +123,8 @@ server <- function(id, access_page, data, geo, summary) {
             stash = out_stash,
             group = NULL, # "inkluderad" before
             text = title,
-            format = "percent"
+            format = "percent",
+            hline = 0.5
         )
 
         # Create map output

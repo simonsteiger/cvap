@@ -55,11 +55,9 @@ ui <- function(id) {
 }
 
 #' @export
-server <- function(id, .data, stash, text, x = "lan", y = "outcome", group = NULL, format = "decimal", timeline = FALSE, arrange = "lan") {
+server <- function(id, .data, stash, text, x = "lan", y = "outcome", group = NULL, format = "decimal", timeline = FALSE, arrange = "lan", hline = NULL) {
     sh$moduleServer(id, function(input, output, session) {
         stopifnot(sh$is.reactive(.data))
-
-        sh$observeEvent(input$sort, sh$updateActionButton(session = session, "sort", label="Oho"))
 
         output$inp_malniva <- sh$renderUI({
             if ("Riket" %in% .data()$lan) {
@@ -105,13 +103,14 @@ server <- function(id, .data, stash, text, x = "lan", y = "outcome", group = NUL
                 outcome_long(),
                 timeline,
                 stash()$title,
-                format
+                format,
+                hline
             )
         })
 
         # Create ggplot barplot for download as pdf (echarts offers only poor resolution)
         res_export <- sh$reactive({
-            ase$plot_bar_export(out(), x, outcome_long(), group, timeline, stash(), input, format)
+            ase$plot_bar_export(out(), x, outcome_long(), group, timeline, stash(), input, format, hline)
         })
 
         output$bar <- e4r$renderEcharts4r({

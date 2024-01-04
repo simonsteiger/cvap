@@ -70,7 +70,7 @@ plot_export_ungrouped <- function(.data, x, y, stash, scale_y) {
 }
 
 #' @export
-plot_bar_export <- function(.data, x, y, group, timeline, stash, input, format) {
+plot_bar_export <- function(.data, x, y, group, timeline, stash, input, format, custom) {
     stopifnot(!sh$is.reactive(stash)) # must pass non-reactive
 
     if (format == "percent") .data[[y]] <- .data[[y]] * 100
@@ -87,7 +87,7 @@ plot_bar_export <- function(.data, x, y, group, timeline, stash, input, format) 
         p <- plot_export_grouped(.data, x, y, group, stash, scale_y)
     }
 
-    p <- mark_malniva(p, .data, input, y, type = "gg")
+    p <- mark_malniva(p, .data, input, y, type = "gg", custom = custom)
 
     if (is.null(group) || dp$n_distinct(.data[[group]]) < 3) {
         p +
@@ -141,8 +141,15 @@ plot_bar_interactive_core <- function(.data, input, x, y, timeline, text) {
     }
 }
 
-malniva_interactive <- function(e, .data, input, y) {
-    if (input$malniva %||% FALSE) {
+malniva_interactive <- function(e, .data, input, y, custom) {
+    if (!is.null(custom) && input$malniva %||% FALSE) {
+        e %>%
+            e4r$e_mark_line(
+                data = list(xAxis = mean(custom)),
+                title = "Målvärde",
+                itemStyle = list(color = "red")
+            )
+    } else if (input$malniva %||% FALSE) {
         riket_val <- .data[[y]][.data[["lan"]] == "Riket"]
         riket_lwr <- riket_val - riket_val * 0.25
         riket_upr <- riket_val + riket_val * 0.25
@@ -163,14 +170,31 @@ malniva_interactive <- function(e, .data, input, y) {
     }
 }
 
-malniva_export <- function(p, .data, input, y) {
-    if (input$malniva %||% FALSE) {
+# Custom can be a vector or a single numeric value
+malniva_export <- function(p, .data, input, y, custom) {
+    n_lan <- length(unique(.data[["lan"]]))
+    offset_top <- 0.6
+
+    if (!is.null(custom) && input$malniva %||% FALSE) { # specific target value or interval
+        p +
+            gg$geom_hline(
+                yintercept = custom,
+                color = "red",
+                alpha = 0.8
+            ) +
+            gg$geom_ribbon(
+                gg$aes(
+                    x = seq(0, n_lan + offset_top, length.out = n_lan),
+                    ymin = min(custom),
+                    ymax = max(custom)
+                ),
+                fill = "red",
+                alpha = 0.1
+            )
+    } else if (input$malniva %||% FALSE) { # default target interval around Riket
         riket_val <- .data[[y]][.data[["lan"]] == "Riket"]
         riket_lwr <- riket_val - riket_val * 0.25
         riket_upr <- riket_val + riket_val * 0.25
-
-        n_lan <- length(unique(.data[["lan"]]))
-        offset_top <- 0.6
 
         # coord flip makes this an hline even though it is vertical on final plot
         p +
@@ -188,17 +212,17 @@ malniva_export <- function(p, .data, input, y) {
                 fill = "red",
                 alpha = 0.1
             )
-    } else {
+    } else { # no interval
         p
     }
 }
 
 
-mark_malniva <- function(p, .data, input, y, type) {
+mark_malniva <- function(p, .data, input, y, type, custom = NULL) {
     if (type == "gg") {
-        malniva_export(p, .data, input, y)
+        malniva_export(p, .data, input, y, custom = custom)
     } else if (type == "e") {
-        malniva_interactive(p, .data, input, y)
+        malniva_interactive(p, .data, input, y, custom = custom)
     } else {
         stop(paste("Unknown type", type))
     }
@@ -214,13 +238,13 @@ format_y <- function(e, format) {
 }
 
 #' @export
-plot_bar_interactive <- function(.data, input, x, y, timeline, text, format) {
+plot_bar_interactive <- function(.data, input, x, y, timeline, text, format, hline = NULL) {
     stopifnot(!sh$is.reactive(.data))
 
     e <- plot_bar_interactive_core(.data, input, x, y, timeline, text)
 
     e %>%
-        mark_malniva(.data, input, y, type = "e") %>%
+        mark_malniva(.data, input, y, type = "e", custom = hline) %>%
         format_y(format) %>%
         e4r$e_flip_coords()
 }
