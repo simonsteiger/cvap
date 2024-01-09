@@ -34,14 +34,6 @@ besoksdata <- list_df$besoksdata %>%
         dp$across(ts$all_of(c("patientens_globala", "smarta")), \(x) as.numeric(as.character(x)))
     ) # unparsable strings become NA
 
-# Get prep_typ into list_df$bio
-# It seems we should not work with bio, but with terapi - need csdmard
-# list_df$bio <- list_df$terapi %>%
-#     dp$select(preparat_kod, prep_typ) %>%
-#     dp$distinct() %>%
-#     dp$right_join(list_df$bio, by = "preparat_kod") %>%
-#     dp$filter(!is.na(prep_typ))
-
 terapi <- list_df$terapi %>%
     dp$filter(prep_typ %in% c("bioprep", "csdmard")) %>%
     dp$arrange(patientkod, ordinerat) %>%

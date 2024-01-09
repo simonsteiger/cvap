@@ -61,7 +61,7 @@ bas_ter_bes <-
 unit_seq <- seq(from = 4, to = 12, by = 2)
 unit_min <- lub$dmonths(2) / lub$ddays(1)
 
-# TODO currently working with fixed min_ins_ord - correct?
+# QUESTION currently working with fixed min_ins_ord - correct?
 out <- pr$map(unit_seq, \(t) {
     t_days <- lub$dmonths(t) / lub$ddays(1)
     bas_ter_bes %>%

@@ -272,7 +272,7 @@ iconostasis <- list(
 # on the downloadable plots
 
 spell_kon <- function(x) {
-    x %||% return(NULL)
+    x %||% return("")
 
     if (x == "Båda") {
         "för båda kön"
@@ -287,7 +287,7 @@ spell_alder <- function(x) {
     if (!is.null(x)) {
         gl$glue("mellan {x[1]} och {x[2]} år")
     } else {
-        NULL
+        ""
     }
 }
 
@@ -307,7 +307,7 @@ spell_outcome <- function(x) {
 }
 
 spell_period <- function(x, datecompare) {
-    date <- x$inkluderad %||% x$ordinerat %||% x$ongoing %||% return(NULL)
+    date <- x$inkluderad %||% x$ordinerat %||% x$ongoing %||% return("")
 
     # Set correct "context" depending if two years are compared or a timeframe is selected
     if (datecompare) {
@@ -328,15 +328,20 @@ spell_period <- function(x, datecompare) {
 }
 
 spell_dxcat <- function(x) {
-    x %||% return(NULL)
+    x %||% return("")
     x[x %in% "Annan"] <- "en diagnos inom kategori 'Annan'"
     gl$glue("diagnosticerad med {paste0(x, collapse = ', ')}")
 }
 
 spell_prep_typ <- function(x) {
-    x %||% return(NULL)
-    x <- if (x == "Båda") "antingen csDMARD eller bDMARD"
-    gl$glue("och behandlad med {x}")
+    x %||% return("")
+    x <- dp$case_match(
+        x,
+        "Båda" ~ "antingen csDMARDs eller bDMARDs",
+        "bioprep" ~ "bDMARDs",
+        "csdmard" ~ "csDMARDs"
+    )
+    gl$glue("behandlade med {x}")
 }
 
 #' @export
@@ -355,6 +360,7 @@ create_subtitle <- function(input, .var, datecompare) {
             paste0(paste(
                 " Alla personer är",
                 spell_dxcat(input$dxcat),
+                if (is.null(input$dxcat)) "" else "och",
                 spell_prep_typ(input$prep_typ),
                 sep = " "
             ), ".")

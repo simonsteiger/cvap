@@ -89,7 +89,7 @@ out <-
                     pr$list_rbind()
             }) %>%
                 pr$list_rbind()
-        ) # returns an inflated version of what we need, FIX!
+        )
     ) %>%
     tdr$unnest(data) %>%
     # Flip booleans and outcome string

@@ -33,7 +33,6 @@ out <- list_df$basdata %>%
         dxcat = ifelse(!dxcat %in% c("RA", "AS", "SpA", "PsA"), "Annan", dxcat),
         dxcat = factor(dxcat, c("RA", "AS", "SpA", "PsA", "Annan"))
     ) %>%
-    # QUESTION should the age filters in the app take care?
     dp$filter(dp$between(alder, 18, 100)) %>%
     dp$select(patientkod, lan, kon, dxcat, ordinerat, pagaende, utsatt)
 

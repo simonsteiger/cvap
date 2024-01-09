@@ -62,10 +62,7 @@ out <-
         ),
         abs_diff = abs(diff) # we want the value closest to 0, not the most negative
     ) %>%
-    dp$filter(
-        !is.na(visit_group),
-        #!is.na(patientens_globala)
-    ) %>%
+    dp$filter(!is.na(visit_group)) %>%
     tdr$nest(.by = visit_group) %>%
     dp$mutate(
         # keep obs depending on visit_group, see conds in visit_group mutate comments above

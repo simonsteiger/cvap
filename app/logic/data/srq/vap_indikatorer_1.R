@@ -15,8 +15,6 @@ box::use(
 
 ski$read_dir(local$PATH)
 
-# TODO chuck unnecessary variables
-
 lan_coding <- dp$select(list_df$lan_coding, lan_no_suffix, lan_scb_id) %>%
     dp$mutate(lan_scb_id = as.numeric(lan_scb_id) * -1) # reverse bc coord_flip in bar
 
@@ -46,7 +44,20 @@ out <- pr$map(
     }
 ) %>%
     pr$list_rbind() %>%
-    dp$select(patientkod, inkluderad, diagnosdatum1, min_inkl_diag, symtomdebut_1, diff, kon, visit_group, lan, lan_scb_id, start, alder)
+    dp$select(
+        patientkod,
+        inkluderad,
+        diagnosdatum1,
+        min_inkl_diag,
+        symtomdebut_1,
+        diff,
+        kon,
+        visit_group,
+        lan,
+        lan_scb_id,
+        start,
+        alder
+    )
 
 
 fst$write_fst(out, "app/logic/data/srq/clean/vap_indikatorer_1.fst")
@@ -56,7 +67,7 @@ fst$write_fst(out, "app/logic/data/srq/clean/vap_indikatorer_1.fst")
 # library(Epi) # don't want packrat to capture this
 # uncomment when running the chunk below
 
-out$diff2 <- cal.yr(out$inkluderad)-cal.yr(out$symtomdebut_1)
+out$diff2 <- cal.yr(out$inkluderad) - cal.yr(out$symtomdebut_1)
 out$diff2 <- out$diff2 * 365.7 / 7
 out$diff3 <- out$diff2 < 20
 dp$select(out, diff, diff2, visit_group, diff3)
