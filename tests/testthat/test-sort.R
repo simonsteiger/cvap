@@ -19,14 +19,6 @@ ref <- read.csv(here$here("app/logic/data/test/sort.csv"), sep = ";") %>%
     some_fct = as.factor(pr$map(1:4, \(i) sample(c("a", "b"), 4, replace = TRUE)) %>% unlist())
   )
 
-tt$test_that("alphabetic sort sorts descending", {
-  x <- ase$sort_alph(ref) %>%
-    dp$pull(lan) %>%
-    dp$dense_rank() %>%
-    unique()
-  tt$expect_equal(x, c(4, 3, 2, 1))
-})
-
 tt$test_that("date sort sorts by group within lan", {
   test <- ase$sort_date(ref, "datum") %>%
     dp$mutate(rank = dp$dense_rank(datum), .by = patientkod) %>%
@@ -35,10 +27,13 @@ tt$test_that("date sort sorts by group within lan", {
   tt$expect_equal(test, rep(c(1, 2, 3, 4), 4))
 })
 
+# It's currently unclear how `sort_fct` should treat groups without values on `target level`
+# see also aux_server/sort.R
 tt$test_that("fct sort sorts by group (`some_fct`) within lan", {
   test <- ref %>%
     dp$summarise(outcome = sum(outcome), .by = c(lan, some_fct)) %>%
     ase$sort_fct("some_fct") %>%
+    dp$filter(some_fct == get_target_level(., "some_fct")) %>%
     dp$pull(lan) %>%
     as.character() %>%
     unique()

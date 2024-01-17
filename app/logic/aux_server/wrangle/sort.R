@@ -37,6 +37,7 @@ sort_fct <- function(.data, group) {
         .reorder = "lan",
         .by = "outcome",
         .data[[group_var]] == target_level
+        # This does not currently sort groups with missing `target_value` to the bottom
     )
 }
 
