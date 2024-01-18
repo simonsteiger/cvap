@@ -7,6 +7,7 @@ box::use(
     e4r = echarts4r,
     magrittr[`%>%`],
     rl = rlang[`%||%`],
+    htw = htmlwidgets,
 )
 
 box::use(
@@ -110,7 +111,7 @@ plot_bar_export <- function(.data, x, y, group, timeline, stash, input, format, 
 
 left_margin <- "17%" # 17% means no hidden text before responsive breakpoint
 
-plot_bar_interactive_core <- function(.data, input, x, y, timeline, text) {
+plot_bar_interactive_core <- function(.data, input, x, y, timeline, text, format) {
     e <- .data %>%
         e4r$e_charts_(x, timeline = timeline) %>%
         e4r$e_bar_(y) %>%
@@ -129,7 +130,18 @@ plot_bar_interactive_core <- function(.data, input, x, y, timeline, text) {
                 rich = list(b = list(fontWeight = "bold"))
             )
         ) %>%
-        e4r$e_tooltip(textStyle = list(fontFamily = "Roboto")) %>%
+        e4r$e_tooltip(
+            textStyle = list(fontFamily = "Roboto"),
+            formatter = if (format == "percent") {
+                htw$JS("
+                    function(params){
+                        return('Län: ' + params.value[1] + '<br />Andel: ' + Math.floor(params.value[0] * 100) + '%')
+                    }
+                ") # formatting Län and Andel to bold would be cool, but currently bold text doesn't work well (Roboto)
+            } else {
+                NULL
+            }
+        ) %>%
         e4r$e_aria(enabled = TRUE, decal = list(show = TRUE)) %>% # decal patterns
         e4r$e_theme_custom("app/static/echarts_theme.json") %>%
         e4r$e_grid(left = left_margin) # left margin to avoid names being cut off
@@ -241,7 +253,7 @@ format_y <- function(e, format) {
 plot_bar_interactive <- function(.data, input, x, y, timeline, text, format, hline = NULL) {
     stopifnot(!sh$is.reactive(.data))
 
-    e <- plot_bar_interactive_core(.data, input, x, y, timeline, text)
+    e <- plot_bar_interactive_core(.data, input, x, y, timeline, text, format)
 
     e %>%
         mark_malniva(.data, input, y, type = "e", custom = hline) %>%
