@@ -133,7 +133,7 @@ server <- function(id, access_page, data, geo, summary) {
         # Create map output
         map$server(
             id = "output",
-            .data = sum_synopsis,
+            .data = sum_warn,
             geo = geo,
             stash = out_stash,
             group = "visit_group",
