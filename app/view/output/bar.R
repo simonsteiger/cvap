@@ -9,6 +9,7 @@ box::use(
     pal = palettes,
     shj = shinyjs,
     rl = rlang[`%||%`],
+    str = stringr,
 )
 
 box::use(

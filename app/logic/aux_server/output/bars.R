@@ -8,6 +8,7 @@ box::use(
     magrittr[`%>%`],
     rl = rlang[`%||%`],
     htw = htmlwidgets,
+    sc = scales,
 )
 
 box::use(
@@ -75,10 +76,11 @@ plot_bar_export <- function(.data, x, y, group, timeline, stash, input, format, 
     stopifnot(!sh$is.reactive(stash)) # must pass non-reactive
 
     if (format == "percent") .data[[y]] <- .data[[y]] * 100
+    suffix <- ifelse(format == "percent", "%", "")
 
     scale_y <- gg$scale_y_continuous(
         name = NULL,
-        labels = srqauto$guess_label_num("y", .data[[y]]),
+        labels = sc$label_number(suffix = suffix),
         expand = c(0, 0),
         limits = c(0, max(.data[[y]]) + max(.data[[y]]) * EXTEND_AXIS)
     )
@@ -93,7 +95,7 @@ plot_bar_export <- function(.data, x, y, group, timeline, stash, input, format, 
     if (is.null(group) || dp$n_distinct(.data[[group]]) < 3) {
         p +
             gg$geom_text(
-                gg$aes(label = .data[[y]], y = .data[[y]] + 0.05),
+                gg$aes(label = paste(.data[[y]], suffix), y = .data[[y]] + 0.05),
                 position = gg$position_dodge2(
                     width = 0.9,
                     preserve = "single",

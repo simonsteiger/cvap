@@ -5,6 +5,8 @@ box::use(
     magrittr[`%>%`],
 )
 
+# I think this is obsolete
+
 #' @export
 guess_label_num <- function(axis, v, .scale = NULL, quiet = FALSE) {
   if (!is.null(.scale)) {
