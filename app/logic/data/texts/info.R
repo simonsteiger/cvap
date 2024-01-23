@@ -15,7 +15,8 @@ info_bar <- sh$div(
 #' @export
 info_tbl <- sh$div(
     sh$tags$ul(
-        sh$tags$li("Klicka på ", sh$tags$b("Ladda ner"), " för att ladda ner den aktuella tabellen i csv-format.")
+        sh$tags$li("Klicka på ", sh$tags$b("Ladda ner"), " för att ladda ner den aktuella tabellen i csv-format."),
+        sh$tags$li("Om du använder en liten skärm, klicka på ", sh$tags$b("Expandera"), " knappen i det nedre högra hörnet för att kunna bläddra igenom alla sidor.")
     )
 )
 

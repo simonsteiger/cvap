@@ -27,11 +27,12 @@ waiting_screen <- function(...) {
 }
 
 tips <- c(
-  "Tip: Scrolla ner för att se tabell och sammanfattning",
-  "Tip: Har du redan klickat på info-knappen bredvid kartan?",
-  "Tip: Har du testat hovra över kartans teckenförklaring?",
-  "Tip: Hovra över staplarna för att se exakta värden",
-  "Tip: Klicka på grupprutor nedanför stapeldiagram för att dölja/visa detta grupp"
+  "Tips! Skrolla ner för att se en sammanfattning och tabeller",
+  "Tips! Klicka på infoknappen i vyns övre vänstra hörn så kan du läsa mer om funktionerna",
+  "Tips! Hovra över kartans reglage för att se motsvarande data på kartan",
+  "Tips! Hovra över staplarna för att se exakta värden",
+  "Tips! Klicka på rutorna nedanför stapeldiagram för att dölja eller visa en kategori",
+  "Tips! Visste du att du kan expandera alla vyer med hjälp av symbolen i vyns nedre högra hörn?"
 )
 
 #' @export
