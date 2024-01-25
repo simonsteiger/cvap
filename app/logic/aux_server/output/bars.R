@@ -75,7 +75,10 @@ plot_export_ungrouped <- function(.data, x, y, stash, scale_y) {
 plot_bar_export <- function(.data, x, y, group, timeline, stash, input, format, custom) {
     stopifnot(!sh$is.reactive(stash)) # must pass non-reactive
 
-    if (format == "percent") .data[[y]] <- .data[[y]] * 100
+    if (format == "percent") {
+        .data[[y]] <- .data[[y]] * 100
+        custom <- custom * 100
+    }
     suffix <- ifelse(format == "percent", "%", "")
 
     scale_y <- gg$scale_y_continuous(

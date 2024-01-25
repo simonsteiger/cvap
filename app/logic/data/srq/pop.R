@@ -7,8 +7,6 @@ box::use(
 )
 
 box::use(
-    srqlib / srqdict,
-    srqlib / srqprep,
     ski = app / logic / swissknife / skinit,
     ada = app / logic / data / aux_data,
     local = app / logic / data / PATH,
