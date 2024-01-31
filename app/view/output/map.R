@@ -57,6 +57,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
         stopifnot(sh$is.reactive(.data))
 
         # Convert outcome to percent if formatter is specified to "percent"
+        # Always remove missings here
         formatted_data <- sh$reactive({
             if (format == "percent") {
                 dp$mutate(.data(), !!y := round(.data[[y]] * 100, 0))
@@ -110,14 +111,16 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                 title <- stash()$title
             }
             # Assemble echart
-            ase$plot_map_interactive(out, geo, x, y, group, title)
+            out %>%
+                dp$filter(!is.na(outcome)) %>% # No missings for interactive plot, but keep for export!
+                ase$plot_map_interactive(geo, x, y, group, title)
         })
 
         # Create static map for download
         res_export <- sh$reactive({
-            limits <- c(min(.data()[[y]], na.rm = TRUE), max(.data()[[y]], na.rm = TRUE))
+            limits <- c(min(formatted_data()[[y]], na.rm = TRUE), max(formatted_data()[[y]], na.rm = TRUE))
 
-            joined <- dp$left_join(geo$sf, .data(), dp$join_by("NAME_1" == "lan"))
+            joined <- dp$left_join(geo$sf, formatted_data(), dp$join_by("NAME_1" == "lan"))
 
             ase$plot_map_export(joined, y, group, limits, stash)
         })

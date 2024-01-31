@@ -307,7 +307,7 @@ spell_outcome <- function(x) {
 }
 
 spell_period <- function(x, datecompare) {
-    date <- x$inkluderad %||% x$ordinerat %||% x$ongoing %||% return("")
+    date <- x$inkluderad %||% x$ordinerat %||% x$ongoing %||% x$year %||% return("")
 
     # Set correct "context" depending if two years are compared or a timeframe is selected
     if (datecompare) {
@@ -317,7 +317,9 @@ spell_period <- function(x, datecompare) {
         date_context <- c("från", "till")
     }
 
-    if (length(date) == 2) {
+    if (length(date) > 2) {
+        gl$glue("{date_context[1]} {min(date)} {date_context[2]} {max(date)}")
+    } else if (length(date) == 2) {
         gl$glue("{date_context[1]} {date[1]} {date_context[2]} {date[2]}")
     } else if (is.null(x$lookback)) { # assume that there is a lookback input
         gl$glue("från {date}")

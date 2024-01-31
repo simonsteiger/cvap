@@ -116,11 +116,16 @@ server <- function(id, .data, stash) {
         sh$reactive({
             if (input$exclude_low_n %||% FALSE) {
                 .data() %>%
-                    dp$filter(nonmissing >= 10 | lan == "Riket")
+                    dp$mutate(outcome = ifelse(nonmissing >= 10 | lan == "Riket", outcome, NA))
+                    # Try with mutate as above, filter solution below may cause issue with maps
+                    # The mutate solution has the downside of the table showing NAs,
+                    # and the upside of the table being "complete"
                     # Not sure if we should allow deleting Riket at this stage
+                    # dp$filter(nonmissing >= 10 | lan == "Riket")
             } else {
                 .data() %>%
-                    dp$filter(nonmissing >= 5)
+                    dp$mutate(outcome = ifelse(nonmissing >= 5, outcome, NA))
+                    # dp$filter(nonmissing >= 5)
             }
         })
     })
