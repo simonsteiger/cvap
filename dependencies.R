@@ -20,6 +20,7 @@ library(here)
 library(DBI)
 library(RMySQL)
 library(future)
+library(R6)
 
 # sk dependencies
 library(box)
