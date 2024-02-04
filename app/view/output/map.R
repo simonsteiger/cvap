@@ -22,6 +22,19 @@ box::use(
     app / logic / data / texts,
 )
 
+worker <- ase$initialize_worker()
+
+forward_args <- function(args) {
+    ase$plot_map_interactive(
+        .data = args$.data,
+        geo = args$geo,
+        x = args$x,
+        y = args$y,
+        group = args$group,
+        title = args$title
+    )
+}
+
 #' @export
 ui <- function(id) {
     ns <- sh$NS(id)
@@ -58,7 +71,7 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
 
         # Convert outcome to percent if formatter is specified to "percent"
         # Always remove missings here
-        formatted_data <- sh$reactive({
+        data_formatted <- sh$reactive({
             if (format == "percent") {
                 dp$mutate(.data(), !!y := round(.data[[y]] * 100, 0))
             } else {
@@ -70,12 +83,12 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
         time_vars <- c("visit_group", "timestamp") # used below in res_interactive
 
         # Create interactive map for in-app view
-        res_interactive <- sh$reactive({
+        args_map_interactive <- sh$reactive({
             # Assert that group is not null and there is some data to plot
             # indexing into .data would otherwise throw an error
             if (!is.null(group) && nrow(.data()) > 0 && !all(is.na(.data()[[y]]))) {
                 out <-
-                    formatted_data() %>%
+                    data_formatted() %>%
                     dp$mutate(
                         !!group := {
                             # Only sort by y if group does not imply chronological order
@@ -106,28 +119,45 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
                     )
                 })
             } else {
-                out <- formatted_data()
+                out <- data_formatted()
 
                 title <- stash()$title
             }
-            # Assemble echart
-            out %>%
-                dp$filter(!is.na(outcome)) %>% # No missings for interactive plot, but keep for export!
-                ase$plot_map_interactive(geo, x, y, group, title)
+
+            # No missings for interactive plot, but keep for export!
+            data_interactive <- dp$filter(out, !is.na(outcome))
+
+            # Return list with all arguments for ase$plot_map_interactive
+            list(
+                .data = data_interactive,
+                geo = geo,
+                x = x,
+                y = y,
+                group = group,
+                title = title
+            )
+        })
+
+        promise_map <- worker$run_job(
+            paste0("map_pid", paste0(sample(0:9, 4), collapse = "")),
+            forward_args, # wraps plot_map_interactive
+            args_map_interactive
+        )
+
+        output$map <- e4r$renderEcharts4r({
+            sh$req(nrow(.data()) > 0 && !all(is.na(.data()[[y]])))
+            if (!is.null(promise_map()$result)) {
+                promise_map()$result
+            }
         })
 
         # Create static map for download
         res_export <- sh$reactive({
-            limits <- c(min(formatted_data()[[y]], na.rm = TRUE), max(formatted_data()[[y]], na.rm = TRUE))
+            limits <- c(min(data_formatted()[[y]], na.rm = TRUE), max(data_formatted()[[y]], na.rm = TRUE))
 
-            joined <- dp$left_join(geo$sf, formatted_data(), dp$join_by("NAME_1" == "lan"))
+            joined <- dp$left_join(geo$sf, data_formatted(), dp$join_by("NAME_1" == "lan"))
 
             ase$plot_map_export(joined, y, group, limits, stash)
-        })
-
-        output$map <- e4r$renderEcharts4r({
-            sh$req(nrow(.data()) > 0 && !all(is.na(.data()[[y]])))
-            res_interactive()
         })
 
         # Deactivate download button if no data

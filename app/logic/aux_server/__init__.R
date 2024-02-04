@@ -98,3 +98,6 @@ plot_map_interactive <- maps$plot_map_interactive
 
 #' @export
 plot_bar_interactive <- bars$plot_bar_interactive
+
+#' @export
+initialize_worker <- other$initialize_worker
