@@ -39,22 +39,7 @@ forward_args <- function(args) {
 ui <- function(id) {
     ns <- sh$NS(id)
     aui$card(
-        header = sh$div(
-            class = "d-flex flex-row justify-content-between align-items-center",
-            sh$div(
-                class = "d-flex flex-row align-items-center",
-                "Karta",
-                aui$btn_modal(
-                    ns("info-karta"),
-                    label = sh$icon("circle-info"),
-                    modal_title = "Information om karta",
-                    footer_confirm = NULL,
-                    footer_dismiss = NULL,
-                    class_toggle = "btn btn-transparent",
-                    texts$info_map
-                )
-            )
-        ),
+        header = sh$htmlOutput(ns("header")),
         body = e4r$echarts4rOutput(ns("map")),
         footer = sh$div(
             class = "d-flex justify-content-between align-items-center gap-3",
@@ -138,16 +123,52 @@ server <- function(id, .data, geo, stash = NULL, x = "lan", y = "outcome", group
             )
         })
 
+        # Async job for map rendering
         promise_map <- worker$run_job(
             paste0("map_pid", paste0(sample(0:9, 4), collapse = "")),
             forward_args, # wraps plot_map_interactive
             args_map_interactive
         )
 
+        # Render map when ready
         output$map <- e4r$renderEcharts4r({
             sh$req(nrow(.data()) > 0 && !all(is.na(.data()[[y]])))
             if (!is.null(promise_map()$result)) {
                 promise_map()$result
+            }
+        })
+
+        # Create header for map card which indicates when the map is loading
+        output$header <- sh$renderUI({
+            task <- promise_map()
+            if (!task$resolved) {
+                sh$tagList(
+                    sh$div(
+                        class = "d-flex justify-content-between align-items-center",
+                        sh$div(
+                            class = "py-card-header",
+                            sh$tags$strong("Ritar karta, var god vänta...")
+                        ),
+                        sh$div(
+                            class = "spinner-border spinner-border-sm",
+                            role = "status"
+                        )
+                    )
+                )
+            } else {
+                sh$div(
+                    class = "d-flex flex-row align-items-center",
+                    "Karta",
+                    aui$btn_modal(
+                        session$ns("info-karta"),
+                        label = sh$icon("circle-info"),
+                        modal_title = "Information om karta",
+                        footer_confirm = NULL,
+                        footer_dismiss = NULL,
+                        class_toggle = "btn btn-transparent",
+                        texts$info_map
+                    )
+                )
             }
         })
 
