@@ -7,3 +7,4 @@ update.R
 .DS_Store
 *.fst
 *.rds
+.env
