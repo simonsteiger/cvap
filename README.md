@@ -2,18 +2,13 @@
 
 The CVAP is an R Shiny app to make selected statistics and visualisations from the [Swedish Rheumatology Quality Register](www.srq.nu) accessible to clinicians and the wider public.
 
-# Running the app locally
-- First, install dependencies with `renv::restore()`
-- Adjust local directory to read SRQ data in `app/logic/data/PATH.R`
-- Run `rhino::app()`
+# Can I run the app locally?
+
+No, the underlying data are confidential. The purpose of this repository is to help other programmers create similar applications using Shiny.
 
 # Maintenance
 
-This goal of this section is to allow the reader to make simple changes without breaking the app. Let's begin by having a look at how the code is organised.
-
-## The `app` folder
-
-All the relevant code is in the `/app` directory.
+TLDR; All the relevant code is in the `app` directory, `app/view` contains shiny modules, and `app/logic` non-reactive code such as functions, data-cleaning scripts, etc.
 
 ```
 └── app
