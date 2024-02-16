@@ -21,6 +21,7 @@ library(DBI)
 library(RMySQL)
 library(future)
 library(R6)
+library(dotenv)
 
 # sk dependencies
 library(box)

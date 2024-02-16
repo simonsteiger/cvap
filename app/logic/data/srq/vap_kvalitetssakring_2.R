@@ -7,14 +7,17 @@ box::use(
     fct = forcats,
     lub = lubridate,
     magrittr[`%>%`],
+    here,
+    dotenv,
 )
 
 box::use(
     ski = app / logic / swissknife / skinit,
-    local = app / logic / data / PATH,
 )
 
-ski$read_dir(local$PATH)
+dotenv$load_dot_env(file = here$here(".env"))
+
+ski$read_dir(Sys.getenv("PATH"))
 
 lan_coding <- dp$select(list_df$lan_coding, lan_no_suffix, lan_scb_id) %>%
     dp$mutate(lan_scb_id = as.numeric(lan_scb_id) * -1) # reverse bc coord_flip in bar

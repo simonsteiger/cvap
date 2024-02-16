@@ -7,16 +7,19 @@ box::use(
     tdr = tidyr,
     tbl = tibble,
     fct = forcats,
+    here,
+    dotenv,
 )
 
 box::use(
     ski = app / logic / swissknife / skinit,
     app / logic / srqlib / srqprep,
     app / logic / srqlib / srqdict,
-    local = app / logic / data / PATH,
 )
 
-ski$read_dir(local$PATH)
+dotenv$load_dot_env(file = here$here(".env"))
+
+ski$read_dir(Sys.getenv("PATH"))
 
 lan_coding <- dp$select(list_df$lan_coding, lan_no_suffix, lan_scb_id) %>%
     dp$mutate(lan_scb_id = as.numeric(lan_scb_id) * -1) # reverse bc coord_flip in bar

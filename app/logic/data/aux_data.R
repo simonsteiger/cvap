@@ -14,7 +14,7 @@ set_utsatt <- function(.data) {
                 0, status
             ),
             utsatt = lub$as_date(
-                ifelse(status == 0, pmin(avslutad, lub$today() + lub$days(1), na.rm = TRUE), utsatt)
+                ifelse(status == 0, pmin(avslutad, lub$today() + lub$dmonths(1), na.rm = TRUE), utsatt)
             ),
             pagaende = ifelse(utsatt < lub$today(), 0, pagaende)
         ) %>%

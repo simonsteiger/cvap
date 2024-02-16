@@ -3,9 +3,11 @@ box::use(
     lub = lubridate,
 )
 
+last_day_prev_month <- lub$floor_date(lub$today(), "months") - lub$ddays(1)
+
 #' @export
 #' Wrapper with presets for single date input
-inp_date <- function(id, label, value = lub$today()) {
+inp_date <- function(id, label, value = last_day_prev_month) {
     sh$div(
         class = "mb-4 mx-1",
         sh$dateInput(
@@ -13,7 +15,7 @@ inp_date <- function(id, label, value = lub$today()) {
             label = label,
             value = value,
             min = lub$ymd("1999-01-01"),
-            max = lub$today(),
+            max = last_day_prev_month,
             format = "yyyy-mm-dd",
             startview = "year",
             language = "sv"
@@ -31,6 +33,8 @@ inp_daterange <- function(id, label, start = lub$ymd("2020-01-01"), end = lub$ym
             label = label,
             start = start,
             end = end,
+            min = lub$ymd("1999-01-01"),
+            max = last_day_prev_month,
             format = "yyyy-mm-dd",
             startview = "year",
             language = "sv",
@@ -49,6 +53,8 @@ inp_datecompare <- function(id, label, start = lub$ymd("2020-01-01"), end = lub$
             label = label,
             start = start,
             end = end,
+            min = lub$ymd("1999-01-01"),
+            max = last_day_prev_month,
             format = "yyyy",
             startview = "year",
             language = "sv",

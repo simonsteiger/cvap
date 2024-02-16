@@ -4,6 +4,7 @@ box::use(
     rt = shiny.router,
     bsl = bslib,
     bsi = bsicons,
+    shj = shinyjs,
 )
 
 box::use(
@@ -83,6 +84,24 @@ ui <- function(id, data, info) {
                         )
                     )
                 )
+            ),
+            aui$row2(
+                class = "row m-4 pt-2",
+                colwidths = list(4, 4, 4),
+                content = list(
+                    NULL,
+                    sh$div(
+                        class = "d-flex flex-row align-items-center justify-content-center",
+                        sh$div(
+                            class = "d-flex flex-row align-items-center justify-content-center gap-2",
+                            style = "background-color: #f8b859; padding: 0.5rem; border-radius: 1rem;",
+                            sh$icon("screwdriver-wrench"),
+                            "Utvecklingen pågår fortfarande på några VAPs.",
+                            sh$icon("screwdriver-wrench")
+                        )
+                    ),
+                    NULL
+                )
             )
         )
     )
@@ -101,6 +120,11 @@ server <- function(id, data) {
                 })
             })
         }
+
+        # Disable those VAPs that have errors
+        shj$disable("vap_indikatorer_2")
+        shj$disable("vap_behandling_2")
+        shj$disable("vap_behandling_3")
 
         pr$map(seq_len(nrow(data)), \(r) wrap_change_page(data[r, ]))
     })

@@ -4,15 +4,18 @@ box::use(
     dp = dplyr,
     ts = tidyselect,
     lub = lubridate,
+    dotenv,
+    here,
 )
 
 box::use(
     ski = app / logic / swissknife / skinit,
     ada = app / logic / data / aux_data,
-    local = app / logic / data / PATH,
 )
 
-ski$read_dir(local$PATH)
+dotenv$load_dot_env(file = here$here(".env"))
+
+ski$read_dir(Sys.getenv("PATH"))
 
 pop <-
     dp$left_join(

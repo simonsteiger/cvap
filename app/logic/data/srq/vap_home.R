@@ -4,6 +4,8 @@ box::use(
     dp = dplyr,
     lub = lubridate,
     pr = purrr,
+    here,
+    dotenv,
 )
 
 box::use(
@@ -11,7 +13,9 @@ box::use(
     local = app / logic / data / PATH,
 )
 
-ski$read_dir(local$PATH)
+dotenv$load_dot_env(file = here$here(".env"))
+
+ski$read_dir(Sys.getenv("PATH"))
 
 vis_t1 <- list_df$besoksdata %>%
     dp$filter(datum < "2022-01-01") %>%
